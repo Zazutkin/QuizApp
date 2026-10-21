@@ -3925,6 +3925,14 @@
             <option value="qwen3.5:9b" selected>qwen3.5:9b (флагман 2026, 9 млрд — быстрая ⚡)</option>
             <option value="qwen2.5:14b">qwen2.5:14b (мощная 14 млрд — глубокая 🧠)</option>
           </select>
+          <div style="margin-top:7px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;">
+            <span style="font-size:11px;color:#34d399;font-weight:700;display:flex;align-items:center;gap:4px;">
+              ⭐ Выбор автора: <b>qwen3.5:9b</b>
+            </span>
+            <button type="button" class="preset-btn" onclick="showTab('settings')" style="font-size:10.5px;padding:2px 8px;border-radius:6px;">
+              ⚙️ Добавить / Настроить свою
+            </button>
+          </div>
         </div>
 
         <!-- ЯЗЫК -->
@@ -5003,6 +5011,26 @@
 
         <!-- БЛОК 1: НАСТРОЙКИ ЛОКАЛКИ (OLLAMA / КАСТОМ IP И МОДЕЛЬ) -->
         <div id="sectionOllamaSettings">
+          <!-- КАРТОЧКА РЕКОМЕНДАЦИИ АВТОРА QWEN 3.5 (9B) -->
+          <div style="margin-bottom:14px;padding:12px 14px;background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(139,92,246,0.12));border:1px solid rgba(16,185,129,0.35);border-radius:10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:4px;">
+              <span style="font-size:13px;font-weight:700;color:#34d399;display:flex;align-items:center;gap:6px;">
+                ⭐ Рекомендованная автором модель: Qwen 3.5 (9B)
+              </span>
+              <span style="font-size:10.5px;padding:2px 7px;background:rgba(16,185,129,0.25);color:#6ee7b7;border-radius:4px;font-weight:700;">100% точность · без бреда</span>
+            </div>
+            <div style="font-size:11.5px;color:var(--text-muted);margin-bottom:10px;line-height:1.5;">
+              Идеальный баланс скорости и интеллекта: летает на любой современной GPU, настроена на тесты без галлюцинаций, строго держит JSON и формулирует вопросы академически точно.
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+              <button type="button" class="preset-btn active" onclick="selectRecommendedModel()" style="font-size:11.5px;padding:6px 14px;font-weight:700;">
+                ⚡ Выбрать qwen3.5:9b в приложении
+              </button>
+              <button type="button" class="preset-btn" onclick="copyOllamaCommand()" style="font-size:11.5px;padding:6px 14px;">
+                📋 Скопировать команду: ollama run qwen3.5:9b
+              </button>
+            </div>
+          </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
             <div>
               <label style="font-size:12px;font-weight:700;color:#c4b5fd;display:block;margin-bottom:6px;">Адрес сервера (Любой кастомный IP / Порт / Сеть)</label>
@@ -5235,6 +5263,35 @@
     if (mod) safeStorageSet('quiz_api_model', mod);
     if (key !== undefined) safeStorageSet('quiz_api_key', key);
     updateFooterModel();
+  }
+
+    function selectRecommendedModel() {
+    const sel = document.getElementById('modelSelect');
+    if (sel) {
+      let opt = Array.from(sel.options).find(o => o.value === 'qwen3.5:9b');
+      if (!opt) {
+        opt = new Option('qwen3.5:9b (флагман 2026, 9 млрд — быстрая ⚡)', 'qwen3.5:9b', true, true);
+        sel.add(opt, 0);
+      }
+      sel.value = 'qwen3.5:9b';
+      updateFooterModel();
+    }
+    const custInp = document.getElementById('customModelInput');
+    if (custInp) custInp.value = 'qwen3.5:9b';
+    safeStorageSet('quiz_custom_model', 'qwen3.5:9b');
+    showNotificationToast('⭐ Рекомендованная модель Qwen 3.5 (9B) активирована!');
+  }
+
+  function copyOllamaCommand() {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText('ollama run qwen3.5:9b').then(() => {
+        showNotificationToast('📋 Команда "ollama run qwen3.5:9b" скопирована в буфер!');
+      }).catch(() => {
+        alert('Команда для скачивания: ollama run qwen3.5:9b');
+      });
+    } else {
+      alert('Команда для скачивания: ollama run qwen3.5:9b');
+    }
   }
 
   function saveCustomHost() {

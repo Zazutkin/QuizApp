@@ -3749,6 +3749,28 @@
       }
     }
 
+  
+    /* === PRESET VOICE CARDS === */
+    .preset-voice-card {
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .preset-voice-card:hover {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.4);
+      transform: translateY(-2px);
+    }
+    .preset-voice-card.active {
+      background: rgba(139,92,246,0.22);
+      border-color: #a78bfa;
+      box-shadow: 0 0 15px rgba(139,92,246,0.25);
+    }
+
   </style>
 </head>
 <body>
@@ -4875,39 +4897,72 @@
     <div class="glass-card">
       <div class="card-title">⚙️ Настройки локального сервера Ollama</div>
       
-      <!-- НАСТРОЙКИ ГОЛОСА ОЗВУЧКИ (TTS v1.2+) -->
-      <div style="margin-bottom:20px;padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--card-border);border-radius:10px;">
-        <div style="font-size:13px;font-weight:700;color:#93c5fd;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
-          <span>🎙️ Настройки голоса и озвучки (Приятный дикторский голос)</span>
+      <!-- НАСТРОЙКИ ГОЛОСА ОЗВУЧКИ (TTS v1.2+ МУЛЬТИ-ДИКТОР) -->
+      <div style="margin-bottom:20px;padding:18px;background:rgba(255,255,255,0.02);border:1px solid var(--card-border);border-radius:12px;">
+        <div style="font-size:14px;font-weight:700;color:#93c5fd;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <span>🎙️ Выбор диктора и голоса озвучки (6 уникальных голосов)</span>
+          <span id="activeVoiceBadge" style="font-size:11px;padding:3px 10px;border-radius:6px;background:rgba(139,92,246,0.18);border:1px solid #8b5cf6;color:#c4b5fd;font-weight:700;">🌟 Google Студийный</span>
         </div>
-        <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">
-          Выбери приятный голос, скорость и высоту тона для комфортного прослушивания теории и карточек:
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">
+          Выбери персонажа для озвучки карточек, вопросов и теории. Кликни по карточке любого диктора — он сразу поздоровается своим голосом:
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
-          <div>
-            <label style="font-size:11.5px;color:#c4b5fd;display:block;margin-bottom:4px;">Голос диктора:</label>
-            <select id="voiceSelect" onchange="onVoiceChange()" style="width:100%;font-size:12px;padding:7px;background:rgba(15,12,30,0.85);color:#fff;border:1px solid var(--card-border);border-radius:8px;">
-              <option value="">Автовыбор (Самый мягкий / Natural)</option>
-            </select>
+
+        <!-- КАРТОЧКИ-ПРЕСЕТЫ 6 ГОЛОСОВ -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:10px;margin-bottom:16px;">
+          <div class="preset-voice-card active" id="vcard_google" onclick="setVoicePreset('google')">
+            <div style="font-weight:700;font-size:13px;color:#38bdf8;margin-bottom:2px;">🌟 Google Студийный</div>
+            <div style="font-size:11px;color:#94a3b8;">Мягкий женский, как в Google Ассистенте (Онлайн)</div>
           </div>
-          <div>
-            <label style="font-size:11.5px;color:#c4b5fd;display:flex;justify-content:space-between;margin-bottom:4px;">
-              <span>Скорость речи:</span>
-              <span id="voiceRateVal" style="color:#94a3b8;">0.95x</span>
-            </label>
-            <input type="range" id="voiceRateSlider" min="0.75" max="1.25" step="0.05" value="0.95" oninput="onVoiceRateChange(this.value)" style="width:100%;">
+          <div class="preset-voice-card" id="vcard_alisa" onclick="setVoicePreset('alisa')">
+            <div style="font-weight:700;font-size:13px;color:#f472b6;margin-bottom:2px;">🌸 Алиса</div>
+            <div style="font-size:11px;color:#94a3b8;">Молодой и нежный женский тембр (Офлайн)</div>
           </div>
-          <div>
-            <label style="font-size:11.5px;color:#c4b5fd;display:flex;justify-content:space-between;margin-bottom:4px;">
-              <span>Высота тона:</span>
-              <span id="voicePitchVal" style="color:#94a3b8;">1.02</span>
-            </label>
-            <input type="range" id="voicePitchSlider" min="0.85" max="1.15" step="0.02" value="1.02" oninput="onVoicePitchChange(this.value)" style="width:100%;">
+          <div class="preset-voice-card" id="vcard_prof" onclick="setVoicePreset('prof')">
+            <div style="font-weight:700;font-size:13px;color:#34d399;margin-bottom:2px;">👨‍🏫 Профессор</div>
+            <div style="font-size:11px;color:#94a3b8;">Мужской баритон, авторитетный лектор (Офлайн)</div>
+          </div>
+          <div class="preset-voice-card" id="vcard_mentor" onclick="setVoicePreset('mentor')">
+            <div style="font-weight:700;font-size:13px;color:#fbbf24;margin-bottom:2px;">⚡ Наставник</div>
+            <div style="font-size:11px;color:#94a3b8;">Бодрый, энергичный темп речи (Офлайн)</div>
+          </div>
+          <div class="preset-voice-card" id="vcard_calm" onclick="setVoicePreset('calm')">
+            <div style="font-weight:700;font-size:13px;color:#a78bfa;margin-bottom:2px;">🌙 Спокойный чтец</div>
+            <div style="font-size:11px;color:#94a3b8;">Размеренная аудиокнига для релакса (Офлайн)</div>
+          </div>
+          <div class="preset-voice-card" id="vcard_sys" onclick="setVoicePreset('sys')">
+            <div style="font-weight:700;font-size:13px;color:#cbd5e1;margin-bottom:2px;">🤖 Windows Стандарт</div>
+            <div style="font-size:11px;color:#94a3b8;">Классический голос без модуляции</div>
           </div>
         </div>
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-          <button type="button" class="preset-btn" onclick="testVoicePlayback()" style="padding:6px 16px;font-size:12px;">▶ Прослушать образец голоса</button>
-          <span style="font-size:11.5px;color:var(--text-muted);">Приоритет: Google Русский / Microsoft Natural (без скрипучего робот-акцента)</span>
+
+        <!-- РАСШИРЕННЫЕ ТОЧНЫЕ НАСТРОЙКИ (ПОЛЗУНКИ + СИСТЕМНЫЙ ВЫБОР) -->
+        <div style="background:rgba(0,0,0,0.25);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:10px;">
+            <div>
+              <label style="font-size:11.5px;color:#c4b5fd;display:block;margin-bottom:4px;">Системный движок:</label>
+              <select id="voiceSelect" onchange="onVoiceChange()" style="width:100%;font-size:11.5px;padding:6px;background:rgba(15,12,30,0.85);color:#fff;border:1px solid var(--card-border);border-radius:8px;">
+                <option value="">Автовыбор (По умолчанию)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11.5px;color:#c4b5fd;display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span>Скорость речи:</span>
+                <span id="voiceRateVal" style="color:#94a3b8;">0.95x</span>
+              </label>
+              <input type="range" id="voiceRateSlider" min="0.75" max="1.25" step="0.05" value="0.95" oninput="onVoiceRateChange(this.value)" style="width:100%;">
+            </div>
+            <div>
+              <label style="font-size:11.5px;color:#c4b5fd;display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span>Высота тона:</span>
+                <span id="voicePitchVal" style="color:#94a3b8;">1.02</span>
+              </label>
+              <input type="range" id="voicePitchSlider" min="0.65" max="1.35" step="0.02" value="1.02" oninput="onVoicePitchChange(this.value)" style="width:100%;">
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <button type="button" class="preset-btn" onclick="testVoicePlayback()" style="padding:6px 16px;font-size:12px;">▶ Тест текущего голоса</button>
+            <span style="font-size:11px;color:var(--text-muted);">При выборе карточки диктора ползунки настраиваются автоматически под его характер.</span>
+          </div>
         </div>
       </div>
 
@@ -5326,9 +5381,36 @@
     showNotificationToast('✅ Системный промпт сброшен на эталонный!');
   }
 
+    // ==========================================================
+  //  🎙️ УПРАВЛЕНИЕ ПРЕСЕТАМИ ГОЛОСОВ И СИСТЕМНЫМ СЕЛЕКТОРОМ
   // ==========================================================
-  //  🎙️ УЛУЧШЕННЫЙ ЕСТЕСТВЕННЫЙ ГОЛОС ДЛЯ ОЗВУЧКИ (TTS v1.2+)
-  // ==========================================================
+  function setVoicePreset(presetId, playTest = true) {
+    const p = VOICE_PRESETS[presetId] || VOICE_PRESETS.google;
+    safeStorageSet('quiz_voice_preset', presetId);
+    safeStorageSet('quiz_voice_rate', p.rate);
+    safeStorageSet('quiz_voice_pitch', p.pitch);
+
+    document.querySelectorAll('.preset-voice-card').forEach(c => c.classList.remove('active'));
+    const activeCard = document.getElementById(`vcard_${presetId}`);
+    if (activeCard) activeCard.classList.add('active');
+
+    const badge = document.getElementById('activeVoiceBadge');
+    if (badge) badge.textContent = p.name;
+
+    const rateSlider = document.getElementById('voiceRateSlider');
+    const pitchSlider = document.getElementById('voicePitchSlider');
+    const rateVal = document.getElementById('voiceRateVal');
+    const pitchVal = document.getElementById('voicePitchVal');
+    if (rateSlider) rateSlider.value = p.rate;
+    if (pitchSlider) pitchSlider.value = p.pitch;
+    if (rateVal) rateVal.textContent = `${p.rate}x`;
+    if (pitchVal) pitchVal.textContent = p.pitch;
+
+    if (playTest) {
+      speakText(p.testPhrase);
+    }
+  }
+
   function getBestRussianVoice(synth) {
     if (!synth) synth = window.speechSynthesis;
     if (!synth) return null;
@@ -5348,15 +5430,12 @@
       return voices.find(v => /russian|русск/i.test(v.name)) || null;
     }
 
-    // 1. Google русский (самый плавный и мягкий диктор в Chromium)
     const googleRu = ruVoices.find(v => /google/i.test(v.name));
     if (googleRu) return googleRu;
 
-    // 2. Microsoft Natural / Online / Neural
     const naturalRu = ruVoices.find(v => /natural|online|neural|svetlana|dmitry|dariya/i.test(v.name));
     if (naturalRu) return naturalRu;
 
-    // 3. Мягкие голоса без приставки Desktop
     const smoothRu = ruVoices.find(v => !/desktop/i.test(v.name));
     if (smoothRu) return smoothRu;
 
@@ -5383,7 +5462,9 @@
   }
 
   function testVoicePlayback() {
-    speakText('Привет! Это обновлённый приятный голос QuizApp. Теперь теория и карточки звучат мягко и без роботизированного акцента.');
+    const presetId = safeStorageGet('quiz_voice_preset', 'google');
+    const p = VOICE_PRESETS[presetId] || VOICE_PRESETS.google;
+    speakText(p.testPhrase);
   }
 
   function populateVoiceList() {
@@ -5398,7 +5479,7 @@
     });
 
     const saved = safeStorageGet('quiz_selected_voice', '');
-    sel.innerHTML = '<option value="">Автовыбор (Самый мягкий / Natural)</option>';
+    sel.innerHTML = '<option value="">Автовыбор (По умолчанию)</option>';
     ruVoices.forEach(v => {
       const opt = document.createElement('option');
       opt.value = v.name;
@@ -5407,8 +5488,16 @@
       sel.appendChild(opt);
     });
 
-    const savedRate = safeStorageGet('quiz_voice_rate', '0.95');
-    const savedPitch = safeStorageGet('quiz_voice_pitch', '1.02');
+    const curPreset = safeStorageGet('quiz_voice_preset', 'google');
+    const p = VOICE_PRESETS[curPreset] || VOICE_PRESETS.google;
+    document.querySelectorAll('.preset-voice-card').forEach(c => c.classList.remove('active'));
+    const activeCard = document.getElementById(`vcard_${curPreset}`);
+    if (activeCard) activeCard.classList.add('active');
+    const badge = document.getElementById('activeVoiceBadge');
+    if (badge) badge.textContent = p.name;
+
+    const savedRate = safeStorageGet('quiz_voice_rate', p.rate);
+    const savedPitch = safeStorageGet('quiz_voice_pitch', p.pitch);
     const rateSlider = document.getElementById('voiceRateSlider');
     const pitchSlider = document.getElementById('voicePitchSlider');
     const rateVal = document.getElementById('voiceRateVal');
@@ -5424,7 +5513,47 @@
     setTimeout(populateVoiceList, 150);
   }
 
-  // ЕДИНАЯ УНИВЕРСАЛЬНАЯ ФУНКЦИЯ ДЛЯ ВЫЗОВА ЛЮБОЙ НЕЙРОСЕТИ (Ollama / Cloud API)
+function initAiProviderSettings() {
+    const savedProv = safeStorageGet('quiz_ai_provider', 'ollama');
+    const savedHost = safeStorageGet('quiz_custom_host', 'http://localhost:11434');
+    const savedCustomModel = safeStorageGet('quiz_custom_model', '');
+    const savedEp = safeStorageGet('quiz_api_endpoint', 'https://api.groq.com/openai/v1/chat/completions');
+    const savedModel = safeStorageGet('quiz_api_model', 'llama-3.3-70b-versatile');
+    const savedKey = safeStorageGet('quiz_api_key', '');
+
+    const hostInp = document.getElementById('ollamaHost');
+    const custModInp = document.getElementById('customModelInput');
+    const epInp = document.getElementById('apiEndpointInput');
+    const modInp = document.getElementById('apiModelInput');
+    const keyInp = document.getElementById('apiKeyInput');
+
+    if (hostInp && savedHost) hostInp.value = savedHost;
+    if (custModInp && savedCustomModel) custModInp.value = savedCustomModel;
+    if (epInp && savedEp) epInp.value = savedEp;
+    if (modInp && savedModel) modInp.value = savedModel;
+    if (keyInp && savedKey) keyInp.value = savedKey;
+
+    if (savedCustomModel) {
+      const sel = document.getElementById('modelSelect');
+      if (sel) {
+        const opt = new Option(`⚡ ${savedCustomModel} (Кастомная модель)`, savedCustomModel, true, true);
+        sel.add(opt, 0);
+        sel.value = savedCustomModel;
+      }
+    }
+
+    const savedSysPrompt = safeStorageGet('quiz_custom_system_prompt', DEFAULT_AI_SYSTEM_PROMPT);
+    const sysPromptEl = document.getElementById('customSystemPromptInput');
+    if (sysPromptEl) sysPromptEl.value = savedSysPrompt;
+    populateVoiceList();
+
+    switchAiProvider(savedProv);
+  }
+
+
+  // ==========================================================
+  //  🛡️ СИСТЕМНЫЙ ПРОМПТ ПО УМОЛЧАНИЮ ДЛЯ КАСТОМНЫХ МОДЕЛЕЙ (v1.2+)
+   // ЕДИНАЯ УНИВЕРСАЛЬНАЯ ФУНКЦИЯ ДЛЯ ВЫЗОВА ЛЮБОЙ НЕЙРОСЕТИ (Ollama / Cloud API)
   async function callUnifiedAi({ prompt, systemPrompt, format, temperature = 0.2, maxTokens = 2000 }) {
     const provider = safeStorageGet('quiz_ai_provider', 'ollama');
 
@@ -7003,8 +7132,76 @@ function togglePomodoro() {
   // ==========================================================
   let _activeSpeakBtn = null; // Глобальная ссылка на активную кнопку TTS
 
-  // Полная остановка синтеза речи и сброс всех кнопок
+  // ==========================================================
+  //  🎙️ МУЛЬТИ-ДИКТОР И АУДИОПЛЕЕР (TTS v1.2+)
+  // ==========================================================
+  let _currentTtsAudio = null;
+  let _ttsQueue = [];
+  let _ttsQueueIndex = 0;
+
+  const VOICE_PRESETS = {
+    google: {
+      id: 'google',
+      name: '🌟 Google Студийный',
+      mode: 'google',
+      rate: 1.0,
+      pitch: 1.0,
+      testPhrase: 'Привет! Это Google Студийный голос. Звучу чисто, мягко и естественно.'
+    },
+    alisa: {
+      id: 'alisa',
+      name: '🌸 Алиса',
+      mode: 'synth',
+      rate: 0.96,
+      pitch: 1.15,
+      testPhrase: 'Привет! Это мягкий голос Алисы, приятно познакомиться. Готова учить с тобой уроки!'
+    },
+    prof: {
+      id: 'prof',
+      name: '👨‍🏫 Профессор',
+      mode: 'synth',
+      rate: 0.88,
+      pitch: 0.70,
+      testPhrase: 'Здравствуйте. Я Профессор. Будем обстоятельно и глубоко изучать теорию.'
+    },
+    mentor: {
+      id: 'mentor',
+      name: '⚡ Наставник',
+      mode: 'synth',
+      rate: 1.10,
+      pitch: 1.04,
+      testPhrase: 'Привет! Погнали ботать код, всё схватываем на лету!'
+    },
+    calm: {
+      id: 'calm',
+      name: '🌙 Спокойный чтец',
+      mode: 'synth',
+      rate: 0.85,
+      pitch: 0.94,
+      testPhrase: 'Размеренное и спокойное чтение. Идеально для запоминания сложных терминов.'
+    },
+    sys: {
+      id: 'sys',
+      name: '🤖 Windows Стандарт',
+      mode: 'synth',
+      rate: 1.0,
+      pitch: 1.0,
+      testPhrase: 'Стандартный системный диктор операционной системы Windows.'
+    }
+  };
+
+  // Остановка любого воспроизведения (Google Audio + SpeechSynthesis)
   function stopSpeaking() {
+    if (_currentTtsAudio) {
+      try {
+        _currentTtsAudio.pause();
+        _currentTtsAudio.currentTime = 0;
+      } catch (e) {}
+      _currentTtsAudio = null;
+    }
+    _ttsQueue = [];
+    _ttsQueueIndex = 0;
+
     if ('speechSynthesis' in window) {
       try {
         window.speechSynthesis.cancel();
@@ -7020,20 +7217,113 @@ function togglePomodoro() {
       delete b.dataset.speaking;
     });
 
-    // Скрываем плавающую кнопку остановки
     const floatingPill = document.getElementById('globalSpeechStopPill');
     if (floatingPill) floatingPill.style.display = 'none';
   }
 
-  // Озвучка текста с надёжным тогглом Стоп/Старт
-  function speakText(text, btnEl) {
+  // Нарезка текста на смысловые фрагменты для стабильного онлайн-плеера
+  function chunkTextForTts(text, maxLen = 140) {
+    const rawSentences = text.match(/[^.!?\n]+[.!?\n]*/g) || [text];
+    const chunks = [];
+    let current = '';
+
+    for (let s of rawSentences) {
+      s = s.trim();
+      if (!s) continue;
+      if (current.length + s.length + 1 <= maxLen) {
+        current = current ? (current + ' ' + s) : s;
+      } else {
+        if (current) chunks.push(current);
+        if (s.length <= maxLen) {
+          current = s;
+        } else {
+          // Разбиваем очень длинное предложение по словам
+          const words = s.split(' ');
+          let sub = '';
+          for (let w of words) {
+            if (sub.length + w.length + 1 <= maxLen) {
+              sub = sub ? (sub + ' ' + w) : w;
+            } else {
+              if (sub) chunks.push(sub);
+              sub = w;
+            }
+          }
+          current = sub;
+        }
+      }
+    }
+    if (current) chunks.push(current);
+    return chunks;
+  }
+
+  // Воспроизведение цепочки аудио через Google TTS
+  function playGoogleTtsChunks(chunks, onEnd, onError) {
+    if (!chunks || chunks.length === 0) {
+      if (onEnd) onEnd();
+      return;
+    }
+    _ttsQueue = chunks;
+    _ttsQueueIndex = 0;
+
+    function playNext() {
+      if (_ttsQueueIndex >= _ttsQueue.length) {
+        if (onEnd) onEnd();
+        return;
+      }
+      const chunkText = _ttsQueue[_ttsQueueIndex++];
+      const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ru&client=tw-ob&q=${encodeURIComponent(chunkText)}`;
+      const audio = new Audio(url);
+      _currentTtsAudio = audio;
+
+      audio.onended = () => {
+        playNext();
+      };
+
+      audio.onerror = (e) => {
+        console.warn('Google TTS chunk playback error, falling back:', e);
+        if (onError) onError();
+      };
+
+      audio.play().catch(e => {
+        console.warn('Audio play was prevented or offline:', e);
+        if (onError) onError();
+      });
+    }
+
+    playNext();
+  }
+
+  // Воспроизведение через встроенный Web SpeechSynthesis
+  function speakWithSynthesis(clean) {
     if (!('speechSynthesis' in window)) {
-      alert('Синтез речи не поддерживается данным браузером.');
+      stopSpeaking();
       return;
     }
     const synth = window.speechSynthesis;
+    try { synth.cancel(); } catch(e) {}
 
-    // КРИТИЧЕСКИЙ ФИКС: Проверяем, нажали ли мы на кнопку, которая УЖЕ говорит
+    setTimeout(() => {
+      const utter = new SpeechSynthesisUtterance(clean);
+      utter.lang = 'ru-RU';
+      utter.rate = parseFloat(safeStorageGet('quiz_voice_rate', '0.96'));
+      utter.pitch = parseFloat(safeStorageGet('quiz_voice_pitch', '1.02'));
+
+      const voice = getBestRussianVoice(synth);
+      if (voice) utter.voice = voice;
+
+      utter.onend = () => stopSpeaking();
+      utter.onerror = () => stopSpeaking();
+
+      try {
+        synth.speak(utter);
+      } catch (e) {
+        stopSpeaking();
+      }
+    }, 40);
+  }
+
+  // Единая главная функция озвучки для всех кнопок в приложении
+  function speakText(text, btnEl) {
     const isCurrentlySpeakingThis = (
       btnEl && (
         btnEl.dataset.speaking === 'true' ||
@@ -7042,13 +7332,11 @@ function togglePomodoro() {
       )
     );
 
-    // Если эта кнопка УЖЕ озвучивает текст — МГНОВЕННО останавливаем и выходим!
     if (isCurrentlySpeakingThis) {
       stopSpeaking();
       return;
     }
 
-    // Если синтезатор уже говорил что-то другое — останавливаем предыдущую речь
     stopSpeaking();
 
     const clean = String(text)
@@ -7063,46 +7351,29 @@ function togglePomodoro() {
 
     if (!clean) return;
 
-    // Гарантированный сброс очереди синтезатора браузера
-    try {
-      synth.cancel();
-    } catch (e) {}
+    if (btnEl) {
+      btnEl.classList.add('btn-speak-active');
+      btnEl.innerHTML = '⏹️ Стоп';
+      btnEl.dataset.speaking = 'true';
+      _activeSpeakBtn = btnEl;
+    }
 
-    // Небольшая задержка перед стартом нового utterance для стабильности Chromium/Windows
-    setTimeout(() => {
-      const utter = new SpeechSynthesisUtterance(clean);
-      utter.lang = 'ru-RU';
-      utter.rate = parseFloat(safeStorageGet('quiz_voice_rate', '0.95'));
-      utter.pitch = parseFloat(safeStorageGet('quiz_voice_pitch', '1.02'));
+    const floatingPill = document.getElementById('globalSpeechStopPill');
+    if (floatingPill) floatingPill.style.display = 'flex';
 
-      const bestVoice = getBestRussianVoice(synth);
-      if (bestVoice) utter.voice = bestVoice;
+    const presetId = safeStorageGet('quiz_voice_preset', 'google');
+    const preset = VOICE_PRESETS[presetId] || VOICE_PRESETS.google;
 
-      if (btnEl) {
-        btnEl.classList.add('btn-speak-active');
-        btnEl.innerHTML = '⏹️ Стоп';
-        btnEl.dataset.speaking = 'true';
-        _activeSpeakBtn = btnEl;
-      }
-
-      // Показываем плавающую плашку экстренной остановки в правом нижнем углу
-      const floatingPill = document.getElementById('globalSpeechStopPill');
-      if (floatingPill) floatingPill.style.display = 'flex';
-
-      utter.onend = () => {
+    if (preset.mode === 'google' && navigator.onLine) {
+      const chunks = chunkTextForTts(clean);
+      playGoogleTtsChunks(chunks, () => {
         stopSpeaking();
-      };
-
-      utter.onerror = () => {
-        stopSpeaking();
-      };
-
-      try {
-        synth.speak(utter);
-      } catch (e) {
-        stopSpeaking();
-      }
-    }, 40);
+      }, () => {
+        speakWithSynthesis(clean);
+      });
+    } else {
+      speakWithSynthesis(clean);
+    }
   }
 
   // Горячая клавиша Escape для мгновенной остановки озвучки в любой момент

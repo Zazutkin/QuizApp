@@ -1,0 +1,13 @@
+# Temporary & logs
+*.tmp
+*.bak
+*.log
+check.js
+temp_check.js
+scratch_script_*
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

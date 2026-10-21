@@ -4875,6 +4875,42 @@
     <div class="glass-card">
       <div class="card-title">⚙️ Настройки локального сервера Ollama</div>
       
+      <!-- НАСТРОЙКИ ГОЛОСА ОЗВУЧКИ (TTS v1.2+) -->
+      <div style="margin-bottom:20px;padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--card-border);border-radius:10px;">
+        <div style="font-size:13px;font-weight:700;color:#93c5fd;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
+          <span>🎙️ Настройки голоса и озвучки (Приятный дикторский голос)</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">
+          Выбери приятный голос, скорость и высоту тона для комфортного прослушивания теории и карточек:
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
+          <div>
+            <label style="font-size:11.5px;color:#c4b5fd;display:block;margin-bottom:4px;">Голос диктора:</label>
+            <select id="voiceSelect" onchange="onVoiceChange()" style="width:100%;font-size:12px;padding:7px;background:rgba(15,12,30,0.85);color:#fff;border:1px solid var(--card-border);border-radius:8px;">
+              <option value="">Автовыбор (Самый мягкий / Natural)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11.5px;color:#c4b5fd;display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span>Скорость речи:</span>
+              <span id="voiceRateVal" style="color:#94a3b8;">0.95x</span>
+            </label>
+            <input type="range" id="voiceRateSlider" min="0.75" max="1.25" step="0.05" value="0.95" oninput="onVoiceRateChange(this.value)" style="width:100%;">
+          </div>
+          <div>
+            <label style="font-size:11.5px;color:#c4b5fd;display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span>Высота тона:</span>
+              <span id="voicePitchVal" style="color:#94a3b8;">1.02</span>
+            </label>
+            <input type="range" id="voicePitchSlider" min="0.85" max="1.15" step="0.02" value="1.02" oninput="onVoicePitchChange(this.value)" style="width:100%;">
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <button type="button" class="preset-btn" onclick="testVoicePlayback()" style="padding:6px 16px;font-size:12px;">▶ Прослушать образец голоса</button>
+          <span style="font-size:11.5px;color:var(--text-muted);">Приоритет: Google Русский / Microsoft Natural (без скрипучего робот-акцента)</span>
+        </div>
+      </div>
+
       <!-- Выбор шрифта интерфейса -->
       <div style="margin-bottom:20px;padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--card-border);border-radius:10px;">
         <div style="font-size:13px;font-weight:700;color:#93c5fd;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
@@ -4967,6 +5003,20 @@
             <button type="button" class="btn-primary" onclick="testApiConnection()" style="padding:8px 20px;">⚡ Проверить подключение к API</button>
             <span id="apiTestStatus" style="font-size:12.5px;font-weight:600;"></span>
           </div>
+        </div>
+
+        <!-- БЛОК 3: СИСТЕМНЫЙ ПРОМПТ ПО УМОЛЧАНИЮ ДЛЯ КАСТОМОК (v1.2+) -->
+        <div style="margin-top:16px;padding:14px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.25);border-radius:10px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:8px;">
+            <label style="font-size:12.5px;font-weight:700;color:#c4b5fd;display:flex;align-items:center;gap:6px;">
+              🛡️ Системный промпт для кастомных моделей (Анти-бред и авто-JSON)
+            </label>
+            <button type="button" class="preset-btn" onclick="resetDefaultSystemPrompt()" style="font-size:11px;padding:3px 10px;">Сбросить на эталонный</button>
+          </div>
+          <div style="font-size:11.5px;color:var(--text-muted);margin-bottom:8px;">
+            Этот эталонный системный промпт автоматически передаётся во все кастомные модели (Ollama, LM Studio, Groq, OpenRouter), чтобы они отвечали академично, строго соблюдали JSON и не выдавали лишнего текста:
+          </div>
+          <textarea id="customSystemPromptInput" rows="4" style="width:100%;font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:10px;line-height:1.5;resize:vertical;" onchange="saveCustomSystemPrompt()"></textarea>
         </div>
       </div>
 
@@ -5244,7 +5294,134 @@
       }
     }
 
+    const savedSysPrompt = safeStorageGet('quiz_custom_system_prompt', DEFAULT_AI_SYSTEM_PROMPT);
+    const sysPromptEl = document.getElementById('customSystemPromptInput');
+    if (sysPromptEl) sysPromptEl.value = savedSysPrompt;
+    populateVoiceList();
+
     switchAiProvider(savedProv);
+  }
+
+
+  // ==========================================================
+  //  🛡️ СИСТЕМНЫЙ ПРОМПТ ПО УМОЛЧАНИЮ ДЛЯ КАСТОМНЫХ МОДЕЛЕЙ (v1.2+)
+  // ==========================================================
+  const DEFAULT_AI_SYSTEM_PROMPT = `Ты — профессиональный ИИ-методист и преподаватель образовательной платформы QuizApp AI Pro.
+Твоя задача — давать предельно точные, академически выверенные и лаконичные ответы на русском языке.
+Правила работы:
+1. Если требуется JSON — отвечай СТРОГО чистым валидным объектом JSON без вступительных слов, без markdown-обёрток (\`\`\`json) и без посторонних комментариев.
+2. Не придумывай лишнего, формулируй вопросы, карточки и объяснения строго по заданной теме, чётко, грамотно и без «воды».
+3. Всегда в точности соблюдай структуру данных и ключи (questions, question, options, answer, explanation, cards, front, back).
+4. Не используй вступительные приветствия вроде «Конечно!», «Вот ваш тест:» — сразу возвращай результат.`;
+
+  function saveCustomSystemPrompt() {
+    const p = (document.getElementById('customSystemPromptInput')?.value || '').trim();
+    safeStorageSet('quiz_custom_system_prompt', p);
+  }
+
+  function resetDefaultSystemPrompt() {
+    const el = document.getElementById('customSystemPromptInput');
+    if (el) el.value = DEFAULT_AI_SYSTEM_PROMPT;
+    safeStorageSet('quiz_custom_system_prompt', DEFAULT_AI_SYSTEM_PROMPT);
+    showNotificationToast('✅ Системный промпт сброшен на эталонный!');
+  }
+
+  // ==========================================================
+  //  🎙️ УЛУЧШЕННЫЙ ЕСТЕСТВЕННЫЙ ГОЛОС ДЛЯ ОЗВУЧКИ (TTS v1.2+)
+  // ==========================================================
+  function getBestRussianVoice(synth) {
+    if (!synth) synth = window.speechSynthesis;
+    if (!synth) return null;
+    const voices = synth.getVoices() || [];
+    const savedName = safeStorageGet('quiz_selected_voice', '');
+    if (savedName) {
+      const found = voices.find(v => v.name === savedName);
+      if (found) return found;
+    }
+
+    const ruVoices = voices.filter(v => {
+      const l = (v.lang || '').toLowerCase();
+      return l.startsWith('ru') || l.includes('ru_ru') || l.includes('ru-ru');
+    });
+
+    if (!ruVoices.length) {
+      return voices.find(v => /russian|русск/i.test(v.name)) || null;
+    }
+
+    // 1. Google русский (самый плавный и мягкий диктор в Chromium)
+    const googleRu = ruVoices.find(v => /google/i.test(v.name));
+    if (googleRu) return googleRu;
+
+    // 2. Microsoft Natural / Online / Neural
+    const naturalRu = ruVoices.find(v => /natural|online|neural|svetlana|dmitry|dariya/i.test(v.name));
+    if (naturalRu) return naturalRu;
+
+    // 3. Мягкие голоса без приставки Desktop
+    const smoothRu = ruVoices.find(v => !/desktop/i.test(v.name));
+    if (smoothRu) return smoothRu;
+
+    return ruVoices[0];
+  }
+
+  function onVoiceChange() {
+    const sel = document.getElementById('voiceSelect');
+    if (sel) {
+      safeStorageSet('quiz_selected_voice', sel.value);
+    }
+  }
+
+  function onVoiceRateChange(val) {
+    safeStorageSet('quiz_voice_rate', val);
+    const label = document.getElementById('voiceRateVal');
+    if (label) label.textContent = `${val}x`;
+  }
+
+  function onVoicePitchChange(val) {
+    safeStorageSet('quiz_voice_pitch', val);
+    const label = document.getElementById('voicePitchVal');
+    if (label) label.textContent = val;
+  }
+
+  function testVoicePlayback() {
+    speakText('Привет! Это обновлённый приятный голос QuizApp. Теперь теория и карточки звучат мягко и без роботизированного акцента.');
+  }
+
+  function populateVoiceList() {
+    if (!('speechSynthesis' in window)) return;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const sel = document.getElementById('voiceSelect');
+    if (!sel) return;
+
+    const ruVoices = voices.filter(v => {
+      const l = (v.lang || '').toLowerCase();
+      return l.startsWith('ru') || /russian|русск/i.test(v.name);
+    });
+
+    const saved = safeStorageGet('quiz_selected_voice', '');
+    sel.innerHTML = '<option value="">Автовыбор (Самый мягкий / Natural)</option>';
+    ruVoices.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v.name;
+      opt.textContent = `${v.name} (${v.lang})`;
+      if (v.name === saved) opt.selected = true;
+      sel.appendChild(opt);
+    });
+
+    const savedRate = safeStorageGet('quiz_voice_rate', '0.95');
+    const savedPitch = safeStorageGet('quiz_voice_pitch', '1.02');
+    const rateSlider = document.getElementById('voiceRateSlider');
+    const pitchSlider = document.getElementById('voicePitchSlider');
+    const rateVal = document.getElementById('voiceRateVal');
+    const pitchVal = document.getElementById('voicePitchVal');
+    if (rateSlider) rateSlider.value = savedRate;
+    if (rateVal) rateVal.textContent = `${savedRate}x`;
+    if (pitchSlider) pitchSlider.value = savedPitch;
+    if (pitchVal) pitchVal.textContent = savedPitch;
+  }
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = populateVoiceList;
+    setTimeout(populateVoiceList, 150);
   }
 
   // ЕДИНАЯ УНИВЕРСАЛЬНАЯ ФУНКЦИЯ ДЛЯ ВЫЗОВА ЛЮБОЙ НЕЙРОСЕТИ (Ollama / Cloud API)
@@ -5260,9 +5437,10 @@
         throw new Error('Укажи API-ключ во вкладке «Настройки»!');
       }
 
+      const effectiveSystemPrompt = systemPrompt || safeStorageGet('quiz_custom_system_prompt', DEFAULT_AI_SYSTEM_PROMPT);
       const messages = [];
-      if (systemPrompt) {
-        messages.push({ role: 'system', content: systemPrompt });
+      if (effectiveSystemPrompt) {
+        messages.push({ role: 'system', content: effectiveSystemPrompt });
       }
       messages.push({ role: 'user', content: prompt });
 
@@ -5318,7 +5496,8 @@
         }
       };
 
-      if (systemPrompt) payload.system = systemPrompt;
+      const effectiveSystemPrompt = systemPrompt || safeStorageGet('quiz_custom_system_prompt', DEFAULT_AI_SYSTEM_PROMPT);
+      if (effectiveSystemPrompt) payload.system = effectiveSystemPrompt;
       if (format === 'json' && !activeModel.includes('3.5')) payload.format = 'json';
 
       const resp = await fetch(`${host.replace(/\/+$/, '')}/api/generate`, {
@@ -6873,8 +7052,12 @@ function togglePomodoro() {
     stopSpeaking();
 
     const clean = String(text)
+      .replace(/```[\s\S]*?```/g, ' [Блок кода опущен] ')
+      .replace(/`([^`]+)`/g, '$1')
       .replace(/<[^>]+>/g, ' ')
-      .replace(/[#*_`]/g, '')
+      .replace(/[#*_~\[\]{}()\\\/<>=+]/g, ' ')
+      .replace(/-->|->|<-|<=|>=/g, ' ')
+      .replace(/\b([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\b/g, '$1 $2')
       .replace(/\s+/g, ' ')
       .trim();
 
@@ -6889,12 +7072,11 @@ function togglePomodoro() {
     setTimeout(() => {
       const utter = new SpeechSynthesisUtterance(clean);
       utter.lang = 'ru-RU';
-      utter.rate = 1.0;
-      utter.pitch = 1.0;
+      utter.rate = parseFloat(safeStorageGet('quiz_voice_rate', '0.95'));
+      utter.pitch = parseFloat(safeStorageGet('quiz_voice_pitch', '1.02'));
 
-      const voices = synth.getVoices();
-      const ruVoice = voices.find(v => (v.lang || '').toLowerCase().includes('ru'));
-      if (ruVoice) utter.voice = ruVoice;
+      const bestVoice = getBestRussianVoice(synth);
+      if (bestVoice) utter.voice = bestVoice;
 
       if (btnEl) {
         btnEl.classList.add('btn-speak-active');

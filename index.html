@@ -9049,37 +9049,19 @@ ${JSON.stringify(draftQuiz, null, 2)}
   function startQuiz(quiz) {
     stopSpeaking();
 
-    // Семантическая дедупликация и защита от повторяющихся / аналогичных вопросов:
+    // Защита от точных дубликатов вопросов (сохраняем все уникальные вопросы пользователя)
     if (quiz && quiz.questions && quiz.questions.length > 1) {
-      const stopWords = new Set(['какой', 'какая', 'какое', 'какие', 'каком', 'какую', 'когда', 'почему', 'зачем', 'сколько', 'который', 'которая', 'которое', 'которые', 'этом', 'этого', 'этой', 'было', 'были', 'быть', 'произошло', 'является', 'называется', 'согласно', 'после', 'перед', 'между', 'через', 'вместе', 'касательно', 'слова', 'текст', 'тема', 'года', 'году', 'годах', 'века', 'веке', 'числе', 'свой', 'своих', 'своем']);
-      function getStems(str) {
-        const words = (str || '').toLowerCase().match(/[a-zA-Zа-яА-ЯёЁ]{3,}/g) || [];
-        return new Set(words.filter(w => !stopWords.has(w)).map(w => w.slice(0, 4)));
-      }
-      const cleanQ = [];
-      const seenData = [];
+      const uniqueQ = [];
+      const seenTexts = new Set();
       for (const q of quiz.questions) {
         if (!q || !q.question || !q.options || q.options.length < 2) continue;
-        const qStems = getStems(q.question);
-        const cIdx = typeof q.correctIndex === 'number' && q.correctIndex >= 0 && q.correctIndex < q.options.length ? q.correctIndex : 0;
-        const ansStems = getStems(q.options[cIdx]);
-        let isDup = false;
-        for (const prev of seenData) {
-          let commonAns = 0;
-          for (const s of ansStems) { if (prev.ansStems.has(s)) commonAns++; }
-          if (ansStems.size > 0 && commonAns > 0) { isDup = true; break; }
-          let commonQ = 0;
-          for (const s of qStems) { if (prev.qStems.has(s)) commonQ++; }
-          const unionQ = new Set([...qStems, ...prev.qStems]).size;
-          const jaccard = unionQ > 0 ? (commonQ / unionQ) : 0;
-          if (jaccard >= 0.25 || commonQ >= 2) { isDup = true; break; }
-        }
-        if (!isDup) {
-          seenData.push({ qStems, ansStems });
-          cleanQ.push(q);
+        const norm = q.question.trim().toLowerCase();
+        if (!seenTexts.has(norm)) {
+          seenTexts.add(norm);
+          uniqueQ.push(q);
         }
       }
-      if (cleanQ.length >= 2) quiz.questions = cleanQ;
+      if (uniqueQ.length >= 1) quiz.questions = uniqueQ;
     }
 
     currentQuiz = quiz;

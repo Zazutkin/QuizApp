@@ -4757,6 +4757,7 @@
 
           <div class="chat-quick-tags">
             <span style="font-size:11px;color:var(--text-muted);align-self:center;">Быстрые вопросы:</span>
+            <button class="preset-btn" onclick="quickChat('Какие самые свежие главные новости сегодня в России и мире?')">🔥 Свежие новости сегодня</button>
             <button class="preset-btn" onclick="quickChat('Сколько стоит доллар и юань в рублях по курсу ЦБ РФ?')">💵 Курс валют ЦБ РФ</button>
             <button class="preset-btn" onclick="quickChat('Какой сейчас год и точная дата?')">📅 Какой сейчас год?</button>
             <button class="preset-btn" onclick="quickChat('Подробно объясни конфликт Катерины и Кабанихи в Грозе Островского и дай ссылки на статьи')">⚡ Конфликт в «Грозе»</button>
@@ -9722,7 +9723,7 @@ function clearCurrentChat() {
     sendBtn.disabled = true;
 
     const typingId = 'typing_' + Date.now();
-    const typingDiv = addChatMsg('ai', '<div style="display:flex;align-items:center;gap:8px;"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span><span style="font-size:11.5px;color:var(--text-muted);">⚡ Qwen 3.5 генерирует ответ...</span></div>', typingId, false, false);
+    const typingDiv = addChatMsg('ai', '<div style="display:flex;align-items:center;gap:8px;"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span><span style="font-size:11.5px;color:#38bdf8;">🌐 Поиск в интернете в реальном времени & проверка фактов...</span></div>', typingId, false, false);
 
     const session = getActiveSession();
     const historyPayload = (session && session.messages ? session.messages : [])
@@ -9751,7 +9752,7 @@ function clearCurrentChat() {
 
         let html = '';
         if (bData.searched) {
-          html += `<div class="search-badge">🌐 Поиск в интернете: <b>${escH(bData.query || 'факты')}</b> (${(bData.sources || []).length} источников)</div>`;
+          html += `<div class="search-badge">🌐 Поиск в интернете в реальном времени: <b>${escH(bData.query || 'факты')}</b> (${(bData.sources || []).length} источников)</div>`;
         }
         html += formattedText;
 

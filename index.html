@@ -3834,6 +3834,41 @@
       box-shadow: 0 0 15px rgba(139,92,246,0.25);
     }
 
+    /* === CHAT BACKGROUND & BADGE STYLES === */
+    .chat-tab-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-left: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      vertical-align: middle;
+      transition: all 0.25s ease;
+    }
+    .chat-tab-badge.thinking {
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.6);
+      color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+      animation: pulseBadge 1.4s infinite ease-in-out;
+    }
+    .chat-tab-badge.unread {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border: 1px solid rgba(16, 185, 129, 0.8);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+      animation: bounceBadge 0.6s ease;
+    }
+    @keyframes pulseBadge {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.06); }
+    }
+    @keyframes bounceBadge {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
   </style>
 </head>
 <body>
@@ -3891,7 +3926,7 @@
     <button class="tab-btn teacher-tab" style="background:rgba(234,179,8,0.15);border:1px solid rgba(234,179,8,0.45);color:#fde047;font-weight:700;" onclick="switchTab('teacher')">📖 Кабинет учителя (А4 · 2 варианта)</button>
     <button class="tab-btn python-tab" onclick="switchTab('python')">🐍 Python с нуля</button>
     <button class="tab-btn" onclick="switchTab('flashcards')">🎴 Карточки</button>
-    <button class="tab-btn" onclick="switchTab('chat')">💬 ИИ-Ассистент</button>
+    <button class="tab-btn" id="tabBtnChat" onclick="switchTab('chat')">💬 ИИ-Ассистент <span id="chatTabBadge" style="display:none;" class="chat-tab-badge"></span></button>
     <button class="tab-btn" onclick="switchTab('mistakes')">📓 Ошибки (<span id="mistakesBadgeCount">0</span>)</button>
     <button class="tab-btn" onclick="switchTab('profile')">👤 Профиль</button>
     <button class="tab-btn" onclick="switchTab('history')">📚 Мои тесты (<span id="historyCount">0</span>)</button>
@@ -5675,7 +5710,7 @@ function initAiProviderSettings() {
   // ==========================================================
   //  🛡️ СИСТЕМНЫЙ ПРОМПТ ПО УМОЛЧАНИЮ ДЛЯ КАСТОМНЫХ МОДЕЛЕЙ (v1.2+)
    // ЕДИНАЯ УНИВЕРСАЛЬНАЯ ФУНКЦИЯ ДЛЯ ВЫЗОВА ЛЮБОЙ НЕЙРОСЕТИ (Ollama / Cloud API)
-  async function callUnifiedAi({ prompt, systemPrompt, format, temperature = 0.2, maxTokens = 2000 }) {
+  async function callUnifiedAi({ prompt, systemPrompt, format, temperature = 0.2, maxTokens = 4096 }) {
     const provider = safeStorageGet('quiz_ai_provider', 'ollama');
 
     if (provider === 'api') {
@@ -5742,7 +5777,8 @@ function initAiProviderSettings() {
         stream: false,
         options: {
           temperature: temperature,
-          num_predict: maxTokens
+          num_predict: maxTokens,
+          num_ctx: 8192
         }
       };
 
@@ -6638,7 +6674,7 @@ ${userCode}
           prompt,
           think: false,
           stream: false,
-          options: { temperature: 0.25, num_predict: 350 }
+          options: { temperature: 0.25, num_predict: 2048, num_ctx: 8192 }
         })
       });
 
@@ -7055,6 +7091,7 @@ ${userCode}
   //  ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
   // ==========================================================
   function switchTab(tab) {
+    window._currentActiveTab = tab;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     ['tabCreate','tabTeacher','tabPython','tabQuiz','tabResult','tabHistory','tabSettings','tabChat','tabProfile','tabFlashcards','tabMistakes'].forEach(id => {
       const el = document.getElementById(id);
@@ -7085,6 +7122,8 @@ ${userCode}
     if (tab === 'flashcards' && typeof renderFlashcardsUI === 'function') renderFlashcardsUI();
     if (tab === 'mistakes' && typeof renderMistakesUI === 'function') renderMistakesUI();
     if (tab === 'chat') {
+      window._chatUnreadCount = 0;
+      updateChatTabIndicator();
       if (typeof renderChatSessionsUI === 'function') renderChatSessionsUI();
       if (typeof renderActiveChatMessages === 'function') renderActiveChatMessages();
     }
@@ -7988,7 +8027,7 @@ function addManualFlashcard() {
         cards = data.cards || [];
       } else {
         const prompt = `Составь ровно 6 карточек для запоминания по теме: "${topic}". Верни строго валидный JSON: {"cards":[{"front":"Краткий вопрос или понятие","back":"Чёткий ответ или определение","mnemonic":"Короткая ассоциация или мнемоника"}]}`;
-        const rawFcText = await callUnifiedAi({ prompt, format: 'json', maxTokens: 1500 });
+        const rawFcText = await callUnifiedAi({ prompt, format: 'json', maxTokens: 4096 });
         const parsed = (typeof parseOllamaJson === 'function') ? parseOllamaJson(rawFcText) : JSON.parse(rawFcText || '{}');
         cards = parsed.cards || [];
       }
@@ -8932,7 +8971,7 @@ ${partInstruction}
           prompt: p1,
           format: 'json',
           temperature: isShortInput ? 0.2 : 0.3,
-          maxTokens: Math.max(2000, count1 * 300)
+          maxTokens: Math.max(4096, count1 * 500)
         });
         const d1 = parseOllamaJson(res1Text);
         if (d1.questions && d1.questions.length) draftQuestions.push(...d1.questions);
@@ -8952,8 +8991,8 @@ ${partInstruction}
             stream: false,
             options: {
               temperature: isShortInput ? 0.2 : 0.3,
-              num_predict: Math.max(2000, count2 * 300),
-              num_ctx: 4096
+              num_predict: Math.max(4096, count2 * 500),
+              num_ctx: 8192
             }
           })
         });
@@ -8977,8 +9016,8 @@ ${partInstruction}
             stream: false,
             options: {
               temperature: isShortInput ? 0.2 : 0.3,
-              num_predict: Math.max(2500, totalCount * 300),
-              num_ctx: 4096
+              num_predict: Math.max(4096, totalCount * 500),
+              num_ctx: 8192
             }
           })
         });
@@ -9058,8 +9097,8 @@ ${JSON.stringify(draftQuiz, null, 2)}
             stream: false,
             options: {
               temperature: 0.1,
-              num_predict: Math.max(2500, draftQuiz.questions.length * 300),
-              num_ctx: 4096
+              num_predict: Math.max(4096, draftQuiz.questions.length * 500),
+              num_ctx: 8192
             }
           })
         });
@@ -9755,6 +9794,12 @@ function clearCurrentChat() {
     session.messages.forEach(m => {
       addChatMsg(m.role, m.content, null, m.isHtml, false);
     });
+    // Если ИИ генерирует ответ в фоне для этой сессии — восстанавливаем плашку ожидания
+    if (window._chatGenerating && activeSessionId === window._chatGeneratingTargetSessionId) {
+      addChatMsg('ai', '<div style="display:flex;align-items:center;gap:8px;"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span><span style="font-size:11.5px;color:#38bdf8;">⏳ ИИ ищет данные в сети и формулирует ответ... (генерация в фоне)</span></div>', 'active_background_typing', false, false);
+      const sendBtn = document.getElementById('chatSendBtn');
+      if (sendBtn) sendBtn.disabled = true;
+    }
     wrap.scrollTop = wrap.scrollHeight;
   }
 
@@ -9839,23 +9884,70 @@ function clearCurrentChat() {
     return '<div class="chat-ai-text">' + text + '</div>';
   }
 
+  // --- ИИ-ЧАТ В ФОНЕ (Генерация продолжается при смене вкладок) ---
+  window._chatGenerating = false;
+  window._chatGeneratingTargetSessionId = null;
+  window._chatUnreadCount = 0;
+  window._currentActiveTab = 'create';
+
+  function updateChatTabIndicator() {
+    const badge = document.getElementById('chatTabBadge');
+    if (!badge) return;
+    if (window._chatGenerating) {
+      badge.style.display = 'inline-flex';
+      badge.className = 'chat-tab-badge thinking';
+      badge.innerHTML = '⏳ Думает...';
+    } else if (window._chatUnreadCount > 0 && window._currentActiveTab !== 'chat') {
+      badge.style.display = 'inline-flex';
+      badge.className = 'chat-tab-badge unread';
+      badge.innerHTML = `● ${window._chatUnreadCount} нов.`;
+    } else {
+      badge.style.display = 'none';
+      badge.innerHTML = '';
+    }
+  }
+
+  function playChatDoneSound() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+      gain.gain.setValueAtTime(0.09, ctx.currentTime);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.36);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.38);
+    } catch(e) {}
+  }
+
   async function sendChatMessage() {
     const input = document.getElementById('chatInput');
     const text  = input.value.trim();
     if (!text) return;
+    if (window._chatGenerating) return;
+
     input.value = '';
     
-    // Запоминаем ID сессии, в которой отправлен запрос (защита от race condition)
     const targetSessionId = activeSessionId;
     addChatMsg('user', escH(text));
+
+    window._chatGenerating = true;
+    window._chatGeneratingTargetSessionId = targetSessionId;
+    updateChatTabIndicator();
 
     const host  = document.getElementById('ollamaHost').value || config.host;
     const model = document.getElementById('modelSelect').value || config.model;
     const sendBtn = document.getElementById('chatSendBtn');
-    sendBtn.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
 
     const typingId = 'typing_' + Date.now();
-    const typingDiv = addChatMsg('ai', '<div style="display:flex;align-items:center;gap:8px;"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span><span style="font-size:11.5px;color:#38bdf8;">🌐 Поиск в интернете в реальном времени & проверка фактов...</span></div>', typingId, false, false);
+    addChatMsg('ai', '<div style="display:flex;align-items:center;gap:8px;"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span><span style="font-size:11.5px;color:#38bdf8;">🌐 Поиск в интернете в реальном времени & проверка фактов...</span></div>', typingId, false, false);
 
     const session = getActiveSession();
     const historyPayload = (session && session.messages ? session.messages : [])
@@ -9865,6 +9957,35 @@ function clearCurrentChat() {
         role: m.role === 'user' ? 'user' : 'assistant',
         content: m.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
       }));
+
+    function cleanupTypingAndIndicator() {
+      window._chatGenerating = false;
+      window._chatGeneratingTargetSessionId = null;
+      updateChatTabIndicator();
+      document.querySelectorAll('[id^="typing_"], #active_background_typing').forEach(el => el.remove());
+      const curSendBtn = document.getElementById('chatSendBtn');
+      if (curSendBtn) curSendBtn.disabled = false;
+    }
+
+    function onAiReplyReady(html) {
+      cleanupTypingAndIndicator();
+      window._currentChatTargetSessionId = targetSessionId;
+      addChatMsg('ai', html, null, true, true);
+      window._currentChatTargetSessionId = null;
+      globalStats.chats++;
+      userProfile.dailyQuests.chat = true;
+      addXp(20);
+      saveStats();
+      saveProfile();
+      updateFooterStats();
+
+      if (window._currentActiveTab !== 'chat') {
+        window._chatUnreadCount = (window._chatUnreadCount || 0) + 1;
+        updateChatTabIndicator();
+        playChatDoneSound();
+        showNotificationToast('💬 <b>ИИ-Наставник ответил!</b> <button onclick="switchTab(\'chat\')" style="margin-left:8px;background:#6366f1;color:#fff;border:none;border-radius:6px;padding:3px 9px;font-size:12px;cursor:pointer;font-weight:700;">Открыть чат →</button>');
+      }
+    }
 
     // 1. ЕСЛИ ПОДКЛЮЧЕН RE-ACT ВЕБ-МОСТ -> ЖИВОЙ ВЫХОД В ИНТЕРНЕТ
     if (hasInternetBridge) {
@@ -9904,17 +10025,7 @@ function clearCurrentChat() {
           html += `</div></div>`;
         }
 
-        typingDiv.remove();
-        window._currentChatTargetSessionId = targetSessionId;
-        addChatMsg('ai', html, null, true, true);
-        window._currentChatTargetSessionId = null;
-        globalStats.chats++;
-        userProfile.dailyQuests.chat = true;
-        addXp(20);
-        saveStats();
-        saveProfile();
-        updateFooterStats();
-        sendBtn.disabled = false;
+        onAiReplyReady(html);
         return;
       } catch(bridgeErr) {
         console.warn('Bridge request failed, falling back to Ollama:', bridgeErr);
@@ -9923,9 +10034,9 @@ function clearCurrentChat() {
 
     // 2. ВЫЗОВ ВЫБРАННОЙ НЕЙРОСЕТИ (Ollama / Cloud API) С МИНИ-RAG
     const detectedFacts = findKnowledgeContext(text);
-    let prompt = `Ты — лаконичный и точный учебный ассистент.
-ПРАВИЛО КРАТКОСТИ: Отвечай максимально ёмко, прямо и коротко (не более 2-4 предложений). Никакой лишней воды, длинных вступлений и лекций — сразу переходи к сути.
-Отвечай на чистом грамотном русском языке. Сегодня 2026 год.`;
+    let prompt = `Ты — эрудированный, живой, внимательный и общительный учебный ассистент с доступом к актуальным данным.
+СТИЛЬ ОБЩЕНИЯ: Отвечай развёрнуто, общительно, структурно и интересно. Разделяй мысли на удобные абзацы, используй списки с маркерами (•), выделяй ключевые термины и названия жирным шрифтом (**термин**). Давай подробные, понятные и глубокие ответы, полностью раскрывая тему вопроса.
+Отвечай на чистом грамотном русском языке. Сегодня октябрь 2026 года.`;
 
     if (detectedFacts) {
       prompt += `\n\nПРОВЕРЕННАЯ ИСТОРИЧЕСКАЯ СПРАВКА ПО ВОПРОСУ (ОБЯЗАТЕЛЬНО ОПИРАЙСЯ НА ЭТИ ТОЧНЫЕ ФАКТЫ!):\n${detectedFacts}\n`;
@@ -9941,7 +10052,7 @@ function clearCurrentChat() {
 Вопрос студента: ${text}`;
 
     try {
-      let rawResp = await callUnifiedAi({ prompt, temperature: 0.2, maxTokens: 350 });
+      let rawResp = await callUnifiedAi({ prompt, temperature: 0.2, maxTokens: 2048 });
 
       let sources = [];
       const srcMatch = rawResp.match(/\[SOURCES\]([\s\S]*?)\[\/SOURCES\]/);
@@ -9971,19 +10082,12 @@ function clearCurrentChat() {
         html += `</div></div>`;
       }
 
-      typingDiv.remove();
-      addChatMsg('ai', html, null, true, true);
-      globalStats.chats++;
-      userProfile.dailyQuests.chat = true;
-      addXp(15);
-      saveStats();
-      saveProfile();
-      updateFooterStats();
+      onAiReplyReady(html);
     } catch(err) {
-      typingDiv.remove();
-      addChatMsg('ai', `Ошибка: ${escH(err.message)}. Убедись, что Ollama запущена на компьютере.`, null, false, true);
-    } finally {
-      sendBtn.disabled = false;
+      cleanupTypingAndIndicator();
+      window._currentChatTargetSessionId = targetSessionId;
+      addChatMsg('ai', `⚠️ Ошибка: ${escH(err.message)}. Убедись, что Ollama запущена на компьютере.`, null, false, true);
+      window._currentChatTargetSessionId = null;
     }
   }
 
@@ -10516,8 +10620,8 @@ if (typeof initChatSessions === 'function') initChatSessions();
             stream: false,
             options: {
               temperature: 0.15,
-              num_predict: Math.max(2500, count * 2 * 280),
-              num_ctx: 4096
+              num_predict: Math.max(4096, count * 2 * 450),
+              num_ctx: 8192
             }
           })
         });

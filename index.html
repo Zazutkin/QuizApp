@@ -5240,79 +5240,167 @@
         <div id="videoGenPanel" style="display:none;">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
             <div>
-              <div class="card-title" style="color:#38bdf8;">🎬 MiniMax H3 Video Station & AI Motion</div>
-              <div class="card-subtitle">Создавай динамичные кинематографичные видеоролики по текстовому описанию или анимируй свои фото!</div>
+              <div class="card-title" style="color:#38bdf8;">🎬 MiniMax H3 Video Station & Многоголосая Озвучка</div>
+              <div class="card-subtitle">Создавай кинематографичные видеоролики по тексту или фото, добавляй многоголосую озвучку персонажей и рендери на своей видеокарте RTX 4060!</div>
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
-              <span style="font-size:12px;padding:4px 10px;border-radius:6px;background:rgba(56,189,248,0.15);border:1px solid #38bdf8;color:#38bdf8;font-weight:700;">⚡ MiniMax H3 Relay 2.0</span>
+              <span style="font-size:12px;padding:4px 10px;border-radius:6px;background:rgba(56,189,248,0.15);border:1px solid #38bdf8;color:#38bdf8;font-weight:700;">⚡ MiniMax H3 & Edge Voice</span>
             </div>
           </div>
 
-          <!-- Плашка статуса ComfyUI & MiniMax H3 на видеокарте -->
+          <!-- Понятная плашка статуса твоей видеокарты и ComfyUI -->
           <div class="comfy-minimax-box">
-            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;">
               <div>
-                <div style="font-weight:700;font-size:13.5px;color:#f8fafc;display:flex;align-items:center;gap:6px;">
-                  <span>🚀 Локальная рабочая станция MiniMax H3 ComfyUI</span>
-                  <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:#059669;color:#fff;">NVIDIA GPU Ready</span>
+                <div style="font-weight:700;font-size:14px;color:#f8fafc;display:flex;align-items:center;gap:8px;">
+                  <span>🖥️ Твоя локальная видео-студия на видеокарте NVIDIA RTX 4060 (8 ГБ VRAM)</span>
+                  <span style="font-size:11px;padding:3px 9px;border-radius:6px;background:#059669;color:#fff;font-weight:700;">🟢 ComfyUI активен (порт 8188)</span>
                 </div>
-                <div class="minimax-badge-row">
-                  <span class="minimax-badge">💎 LoRA v1.5 (155 Мб) ✅</span>
-                  <span class="minimax-badge">⚡ Turbo 8-step BF16 (1.86 Гб) ✅</span>
-                  <span class="minimax-badge">📐 H3 Relay Workflows ✅</span>
-                  <span class="minimax-badge" id="baseModelStatusBadge">⏳ Base Model Suite (фон)</span>
+                <div style="font-size:12px;color:#94a3b8;margin-top:4px;">
+                  Рендеринг на твоем компьютере <b>без ограничений по времени, без очередей и без интернета</b>:
+                </div>
+                <div class="minimax-badge-row" style="margin-top:8px;">
+                  <span class="minimax-badge" title="Умная замена персонажей и лиц без искажений">💎 LoRA v1.5 (155 Мб) ✅ Установлена</span>
+                  <span class="minimax-badge" title="Турбо-ускоритель: генерирует видео всего за 8 шагов вместо 50">⚡ Turbo 8-step (1.86 Гб) ✅ Установлен</span>
+                  <span class="minimax-badge" title="Готовые схемы соединения блоков для ComfyUI">📐 H3 Relay Workflows ✅ В наличии</span>
+                  <span class="minimax-badge" id="baseModelStatusBadge" title="Базовые веса модели MiniMax">💾 Base Model Suite (фон ~50%)</span>
                 </div>
               </div>
-              <button type="button" class="btn-comfy-launch" onclick="launchComfyUIWorkstation()" title="Открыть графическую рабочую станцию ComfyUI в браузере (порт 8188)">
-                <span>🚀 Запустить ComfyUI MiniMax (WebUI 8188)</span>
-              </button>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button type="button" class="btn-comfy-launch" onclick="launchComfyUIWorkstation()" title="Открыть графическую рабочую станцию ComfyUI в браузере (порт 8188)">
+                  <span>🚀 Открыть ComfyUI (WebUI 8188)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Раскрывающийся гид: «Что всё это значит?» -->
+          <div style="margin-bottom:16px;background:rgba(15,23,42,0.5);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleVideoFaq()">
+              <div style="font-weight:700;font-size:13px;color:#fde047;display:flex;align-items:center;gap:8px;">
+                <span>💡 Что всё это значит и как устроена генерация видео? (Нажми, чтобы развернуть объяснение)</span>
+              </div>
+              <span id="videoFaqArrow" style="font-size:13px;color:#94a3b8;">▼</span>
+            </div>
+            <div id="videoFaqContent" style="display:none;margin-top:12px;font-size:12px;color:#cbd5e1;line-height:1.6;border-top:1px solid rgba(255,255,255,0.08);padding-top:10px;">
+              <p style="margin-bottom:8px;"><b>1. Почему вылезала ошибка 500?</b> Кнопка «Сгенерировать видео» в облаке отправляла запрос на бесплатный сервер HuggingFace, у которого сегодня закончились бесплатные секунды на IP. Но прямо на твоем компьютере уже запущен <b>ComfyUI</b> — он рендерит на твоей видеокарте RTX 4060 совершенно бесплатно и без лимитов!</p>
+              <p style="margin-bottom:8px;"><b>2. Что такое LoRA v1.5?</b> Это файл весов на 155 Мб, который учит нейросеть точно менять лица и тела людей в кадре без размытия.</p>
+              <p style="margin-bottom:8px;"><b>3. Что такое Turbo 8-step?</b> Обычно видео создается за 50 шагов (15-20 минут). Turbo-адаптер ускоряет рендер в 6 раз — всего 8 шагов!</p>
+              <p><b>4. Что такое 60 FPS?</b> FPS (Frames Per Second) — число кадров в секунду. 24 FPS — кино, 60 FPS — супер-плавная плавная картинка без рывков.</p>
             </div>
           </div>
 
           <!-- Поле промпта для видео -->
           <div style="margin-bottom:14px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-              <label style="font-size:13px;font-weight:700;color:var(--text-color);">Сюжет и динамика видео (Промпт):</label>
+              <label style="font-size:13px;font-weight:700;color:var(--text-color);">Сюжет, персонажи и действие (Промпт):</label>
               <button type="button" class="btn-enhance-prompt" onclick="enhanceVideoPrompt()" title="Улучшить кинематографичный промпт через Qwen">
                 ✨ Кинематографичный Qwen
               </button>
             </div>
-            <textarea id="videoPromptInput" class="art-prompt-input" rows="3" placeholder="Опиши действие и движение камеры (например: Киберпанк летающий кар проносится сквозь неоновые небоскребы под дождем, камера облетает вокруг, 8k)..."></textarea>
+            <textarea id="videoPromptInput" class="art-prompt-input" rows="3" placeholder="Опиши действие и персонажей (например: братья в бане, аниме стиль, парятся вениками и отдыхают, 60 fps, кинематографичный свет)..."></textarea>
             
             <!-- Быстрые кинематографичные идеи для видео -->
             <div class="art-prompt-chips">
-              <span class="art-chip" onclick="applyVideoChip('Адам Смешер стреляет наплечными ракетами, взрывы отражаются в кибер-броне, замедленная съемка 8k', 160)">💥 Адам Смешер (Экшен)</span>
+              <span class="art-chip" onclick="applyVideoChip('Два друга в деревянной бане, аниме стиль, пар клубится, дружеская беседа, slow motion, 8k', 127)">🧖 Братья в бане</span>
+              <span class="art-chip" onclick="applyVideoChip('Адам Смешер стреляет наплечными ракетами, взрывы отражаются в кибер-броне, замедленная съемка 8k', 180)">💥 Адам Смешер (Экшен)</span>
               <span class="art-chip" onclick="applyVideoChip('Летающий спиннер парит над залитым дождем неоновым городом будущего, кинематографичный облет камеры 360', 140)">🌃 Неоновый пролет</span>
-              <span class="art-chip" onclick="applyVideoChip('Космический кот в скафандре крутит руль звездолета среди звездной туманности, мягкое покачивание', 110)">🐱 Космо-кот</span>
-              <span class="art-chip" onclick="applyVideoChip('Эпичный дракон расправляет огненные крылья на вершине заснеженной горы, кинематографичный slow-mo', 150)">🐉 Дракон Slow-Mo</span>
-              <span class="art-chip" onclick="applyVideoChip('Осенний золотой лес, камера плавно скользит вперед над зеркальным лесным озером, туман', 90)">🍂 Дрон над озером</span>
+              <span class="art-chip" onclick="applyVideoChip('Космический кот в скафандре крутит руль звездолета среди звездной туманности, мягкое покачивание', 90)">🐱 Космо-кот</span>
+              <span class="art-chip" onclick="applyVideoChip('Эпичный дракон расправляет огненные крылья на вершине заснеженной горы, slow-mo 60 fps', 160)">🐉 Дракон Slow-Mo</span>
             </div>
           </div>
 
-          <!-- Настройки динамики и камеры видео -->
-          <div class="art-settings-grid">
+          <!-- Настройки динамики, FPS и длительности -->
+          <div class="art-settings-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
             <div>
-              <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:6px;">Интенсивность движения (Motion Dynamics):</label>
+              <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:6px;">Движение камеры (Motion):</label>
               <select id="videoMotionSelect" class="art-select">
-                <option value="90">Плавное движение камеры (Smooth Cinematic, 90)</option>
-                <option value="127" selected>Стандартная динамика (Dynamic Motion, 127)</option>
-                <option value="180">Быстрый экшен / Драйв (High Action, 180)</option>
-                <option value="220">Максимальная экспрессия (Maximum Motion, 220)</option>
+                <option value="90">Плавное движение камеры (Smooth, 90)</option>
+                <option value="127" selected>Стандартная динамика (Dynamic, 127)</option>
+                <option value="180">Быстрый экшен / Драйв (Action, 180)</option>
+                <option value="220">Максимальная экспрессия (Extreme, 220)</option>
               </select>
             </div>
 
             <div>
-              <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:6px;">FPS и плавность:</label>
+              <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:6px;">FPS и плавность (кадров/сек):</label>
               <select id="videoFpsSelect" class="art-select">
-                <option value="6" selected>6 FPS (Классика диффузии, быстрый рендер)</option>
-                <option value="12">12 FPS (Плавное кино)</option>
-                <option value="24">24 FPS (Кинематографичный стандарт)</option>
+                <option value="60">60 FPS (💎 Ультра-плавное кино, 60 кадров/сек — максимум качества)</option>
+                <option value="30">30 FPS (🎬 Плавное видео, 30 кадров/сек — стандарт YouTube/Reels)</option>
+                <option value="24" selected>24 FPS (🎥 Классический кино-стандарт)</option>
+                <option value="12">12 FPS (🌸 Аниме стиль)</option>
+                <option value="6">6 FPS (⚡ Быстрый набросок)</option>
               </select>
+            </div>
+
+            <div>
+              <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:6px;">Длительность сцены:</label>
+              <select id="videoDurationSelect" class="art-select">
+                <option value="3">3 секунды (Короткий шот)</option>
+                <option value="5">5 секунд (Стандартная сцена)</option>
+                <option value="10" selected>10 секунд (Полный диалог и анимация)</option>
+                <option value="15">15 секунд (Расширенный сюжет)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- ====================================================
+               СЕКЦИЯ: МНОГОГОЛОСАЯ ИИ-ОЗВУЧКА & ДИАЛОГИ (TTS)
+          ==================================================== -->
+          <div class="voice-acting-box" style="background:linear-gradient(135deg, rgba(30, 41, 59, 0.65), rgba(15, 23, 42, 0.85));border:1px solid rgba(168, 85, 247, 0.35);border-radius:12px;padding:16px 20px;margin-top:20px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:22px;">🎙️</span>
+                <div>
+                  <div style="font-weight:700;font-size:14px;color:#f8fafc;">Многоголосая ИИ-озвучка & Диалоги персонажей</div>
+                  <div style="font-size:11.5px;color:#cbd5e1;">Персонажи говорят своими голосами по ролям (мужской бас, бодрый друг, аниме-девушка, диктор)</div>
+                </div>
+              </div>
+              <span style="font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(168,85,247,0.2);color:#d8b4fe;font-weight:700;">Studio Neural Voice</span>
+            </div>
+
+            <!-- Быстрые сценарии диалогов -->
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+              <span style="font-size:11px;color:var(--text-muted);align-self:center;">Сценарии диалогов:</span>
+              <button type="button" class="preset-btn" onclick="applyDialoguePreset('banya')">🧖 Братья в бане</button>
+              <button type="button" class="preset-btn" onclick="applyDialoguePreset('cyberpunk')">🌃 Киберпанк Найт-Сити</button>
+              <button type="button" class="preset-btn" onclick="applyDialoguePreset('anime')">🌸 Аниме диалог</button>
+            </div>
+
+            <textarea id="dialogueInput" class="art-prompt-input" rows="3" placeholder="Напиши реплики персонажей построчно, например:
+Брат 1: Ох, хорошо в баньке, братан! Жар от души пошел!
+Брат 2: Да вообще кайф! День был тяжелый, а сейчас как заново родился!"></textarea>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:12px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <button type="button" class="btn-action-art" id="btnGenVoice" onclick="generateDialogueSpeech()" style="background:linear-gradient(135deg, #7c3aed, #a855f7);color:#fff;font-weight:700;padding:8px 16px;">
+                  <span class="spinner" id="voiceSpinner" style="display:none;width:14px;height:14px;border-width:2px;margin-right:6px;"></span>
+                  <span id="btnVoiceText">🎙️ Озвучить реплики (ИИ)</span>
+                </button>
+                <button type="button" class="btn-action-art" id="btnPlayLiveSpeech" onclick="playLiveBrowserSpeech()" style="background:#1e293b;border-color:#475569;" title="Мгновенное живое воспроизведение прямо в браузере">
+                  <span>▶ Слушать вживую</span>
+                </button>
+              </div>
+
+              <!-- Аудиоплеер для озвучки -->
+              <div id="dialogueAudioContainer" style="display:none;align-items:center;gap:10px;flex:1;max-width:400px;">
+                <audio id="dialogueAudioPlayer" controls style="height:36px;width:100%;"></audio>
+                <button type="button" class="btn-action-art" onclick="downloadDialogueAudio()" title="Скачать MP3">
+                  💾 MP3
+                </button>
+              </div>
+            </div>
+
+            <div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+              <input type="checkbox" id="syncAudioVideoCheck" checked style="accent-color:#a855f7;cursor:pointer;">
+              <label for="syncAudioVideoCheck" style="font-size:12px;color:#cbd5e1;cursor:pointer;">
+                🔗 Автоматически воспроизводить эту озвучку синхронно с видеороликом
+              </label>
             </div>
           </div>
 
           <!-- Кнопка генерации видео -->
-          <div style="margin-top:16px;">
+          <div style="margin-top:18px;">
             <button type="button" id="btnGenerateVideo" class="btn-generate-art" onclick="startGenerateVideo()" style="background:linear-gradient(135deg, #0284c7, #7c3aed);">
               <span class="spinner" id="btnVideoSpinner" style="display:none;width:18px;height:18px;border-width:2px;margin-right:8px;"></span>
               <span id="btnVideoText">🎬 Сгенерировать видео (AI Video)</span>
@@ -5372,7 +5460,7 @@
             </div>
           </div>
         </div>
-
+      </div>
     </div>
   </div>
 
@@ -11976,6 +12064,13 @@ if (typeof initChatSessions === 'function') initChatSessions();
           player.style.display = 'block';
           player.playbackRate = currentVideoSpeed;
           player.play().catch(() => {});
+          // Sync with dialogue audio if available
+          const syncCheck = document.getElementById('syncAudioVideoCheck');
+          const audioPlayer = document.getElementById('dialogueAudioPlayer');
+          if (syncCheck && syncCheck.checked && audioPlayer && audioPlayer.src) {
+            audioPlayer.currentTime = 0;
+            audioPlayer.play().catch(() => {});
+          }
         }
         if (loadingState) loadingState.style.display = 'none';
         if (actionToolbar) actionToolbar.style.display = 'flex';
@@ -11988,6 +12083,26 @@ if (typeof initChatSessions === 'function') initChatSessions();
           timestamp: Date.now()
         });
 
+      } else if (data.status === 'quota_fallback') {
+        if (loadingState) loadingState.style.display = 'none';
+        if (placeholder) {
+          placeholder.style.display = 'flex';
+          placeholder.innerHTML = `
+            <div style="font-size:42px;margin-bottom:10px;">🚀</div>
+            <div style="font-weight:700;font-size:16px;color:#38bdf8;">Твой ComfyUI на видеокарте RTX 4060 готов к рендеру!</div>
+            <div style="font-size:12.5px;color:#cbd5e1;margin-top:6px;max-width:560px;line-height:1.5;">
+              ${escH(data.message)}
+            </div>
+            <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center;">
+              <button type="button" class="btn-comfy-launch" onclick="launchComfyUIWorkstation()">
+                <span>🚀 Открыть ComfyUI (порт 8188)</span>
+              </button>
+              <button type="button" class="btn-action-art" onclick="copyCurrentVideoPrompt()">
+                <span>📋 Скопировать промпт для ComfyUI</span>
+              </button>
+            </div>
+          `;
+        }
       } else {
         throw new Error(data.error || 'Не удалось сгенерировать видео');
       }
@@ -12128,6 +12243,155 @@ if (typeof initChatSessions === 'function') initChatSessions();
 
   function regenerateVideoVariation() {
     startGenerateVideo();
+  }
+
+
+
+  // ====================================================
+  // МНОГОГОЛОСАЯ ИИ-ОЗВУЧКА & FAQ ВИДЕО
+  // ====================================================
+  let currentDialogueAudioUrl = null;
+
+  function toggleVideoFaq() {
+    const box = document.getElementById('videoFaqContent');
+    const arrow = document.getElementById('videoFaqArrow');
+    if (!box) return;
+    if (box.style.display === 'none' || !box.style.display) {
+      box.style.display = 'block';
+      if (arrow) arrow.textContent = '▲';
+    } else {
+      box.style.display = 'none';
+      if (arrow) arrow.textContent = '▼';
+    }
+  }
+
+  function applyDialoguePreset(type) {
+    const inp = document.getElementById('dialogueInput');
+    if (!inp) return;
+    if (type === 'banya') {
+      inp.value = "Брат 1: Ох, хорошо в баньке, братан! Жар от души пошел!\nБрат 2: Да вообще кайф! День был тяжелый, а сейчас как заново родился!\nДевушка: Мальчики, чай с мятой и мёдом готов, выходите пить!";
+    } else if (type === 'cyberpunk') {
+      inp.value = "Брат 1: В Найт-Сити сегодня снова кислотный дождь льёт стеной.\nБрат 2: Главное чтобы кибер-импланты не закоротило, погнали в бар!";
+    } else if (type === 'anime') {
+      inp.value = "Девушка: Сенпай, ты наконец-то пришёл! Я так долго тебя ждала!\nБрат 1: Прости, меня задержали на тренировке клана.";
+    }
+    inp.focus();
+  }
+
+  async function generateDialogueSpeech() {
+    const inp = document.getElementById('dialogueInput');
+    const text = inp ? inp.value.trim() : '';
+    if (!text) {
+      alert('Пожалуйста, напиши реплики персонажей или выбери готовый сценарий («Братья в бане»)!');
+      inp?.focus();
+      return;
+    }
+
+    const btn = document.getElementById('btnGenVoice');
+    const btnText = document.getElementById('btnVoiceText');
+    const spin = document.getElementById('voiceSpinner');
+    const container = document.getElementById('dialogueAudioContainer');
+    const player = document.getElementById('dialogueAudioPlayer');
+
+    if (btn) btn.disabled = true;
+    if (spin) spin.style.display = 'inline-block';
+    if (btnText) btnText.textContent = 'Синтез голосов...';
+
+    try {
+      const resp = await fetch(`${BRIDGE_HOST}/api/generate_speech`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: text,
+          voice: 'bratan'
+        })
+      });
+
+      if (!resp.ok) throw new Error(`HTTP Error ${resp.status}`);
+      const data = await resp.json();
+
+      if (data.status === 'ok' && data.audio_data) {
+        currentDialogueAudioUrl = data.audio_data;
+        if (player) {
+          player.src = currentDialogueAudioUrl;
+          player.play().catch(() => {});
+        }
+        if (container) container.style.display = 'flex';
+        if (typeof showNotificationToast === 'function') {
+          showNotificationToast('🎙️ Многоголосая озвучка успешно сгенерирована!');
+        }
+      } else {
+        throw new Error(data.error || 'Ошибка синтеза речи');
+      }
+
+    } catch(err) {
+      console.warn('Backend speech error, fallback to live browser speech:', err);
+      playLiveBrowserSpeech();
+    } finally {
+      if (btn) btn.disabled = false;
+      if (spin) spin.style.display = 'none';
+      if (btnText) btnText.textContent = '🎙️ Озвучить реплики (ИИ)';
+    }
+  }
+
+  function playLiveBrowserSpeech() {
+    const inp = document.getElementById('dialogueInput');
+    const text = inp ? inp.value.trim() : '';
+    if (!text) {
+      alert('Введи реплики для живой озвучки!');
+      return;
+    }
+    if (!('speechSynthesis' in window)) {
+      alert('Твой браузер не поддерживает Web Speech API');
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const lines = text.split('\n').filter(l => l.trim().length > 0);
+    const voices = window.speechSynthesis.getVoices();
+    const ruVoices = voices.filter(v => v.lang.includes('ru'));
+
+    let currentIdx = 0;
+    function speakNext() {
+      if (currentIdx >= lines.length) return;
+      const line = lines[currentIdx];
+      currentIdx++;
+
+      const parts = line.split(':');
+      const speaker = parts.length > 1 ? parts[0].trim().toLowerCase() : '';
+      const phrase = parts.length > 1 ? parts[1].trim() : line.trim();
+
+      const utter = new SpeechSynthesisUtterance(phrase);
+      utter.lang = 'ru-RU';
+      if (ruVoices.length > 0) utter.voice = ruVoices[0];
+
+      // Dynamic voice characteristics based on speaker
+      if (speaker.includes('девушка') || speaker.includes('тян') || speaker.includes('сестра')) {
+        utter.pitch = 1.45;
+        utter.rate = 1.1;
+      } else if (currentIdx % 2 === 1) {
+        utter.pitch = 0.8;
+        utter.rate = 0.95;
+      } else {
+        utter.pitch = 1.15;
+        utter.rate = 1.05;
+      }
+
+      utter.onend = speakNext;
+      window.speechSynthesis.speak(utter);
+    }
+
+    speakNext();
+  }
+
+  function downloadDialogueAudio() {
+    if (!currentDialogueAudioUrl) return;
+    const a = document.createElement('a');
+    a.href = currentDialogueAudioUrl;
+    a.download = `quizgen_dialogue_${Date.now()}.mp3`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
 </script>

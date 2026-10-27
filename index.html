@@ -8389,7 +8389,7 @@ function addManualFlashcard() {
   }
 
   let hasInternetBridge = false;
-  const BRIDGE_HOST = 'http://localhost:5005';
+  let BRIDGE_HOST = 'http://127.0.0.1:5005';
 
   async function checkBridge() {
     const statusEl = document.getElementById('bridgeStatus');
@@ -8397,21 +8397,43 @@ function addManualFlashcard() {
     if (!statusEl || !textEl) return;
     textEl.textContent = '🌐 Веб-поиск...';
     statusEl.className = 'status-pill';
-    try {
-      const ctrl = new AbortController();
-      const tid = setTimeout(() => ctrl.abort(), 2500);
-      const resp = await fetch(`${BRIDGE_HOST}/api/status`, { signal: ctrl.signal });
-      clearTimeout(tid);
-      if (!resp.ok) throw new Error();
-      const data = await resp.json();
-      if (data.status === 'online') {
-        hasInternetBridge = true;
-        statusEl.className = 'status-pill online';
-        textEl.textContent = '🌐 Интернет: Онлайн';
-        statusEl.title = 'ReAct веб-поиск активен! Qwen в реальном времени ищет факты в сети.';
-        return;
+    
+    // Пробуем 127.0.0.1 (мгновенно без задержек DNS), а при необходимости fallback на localhost
+    const endpoints = ['http://127.0.0.1:5005', 'http://localhost:5005'];
+    let ok = false;
+    let data = null;
+
+    for (const ep of endpoints) {
+      try {
+        const ctrl = new AbortController();
+        const tid = setTimeout(() => ctrl.abort(), 4000);
+        const resp = await fetch(`${ep}/api/status`, { signal: ctrl.signal });
+        clearTimeout(tid);
+        if (resp.ok) {
+          data = await resp.json();
+          if (data && data.status === 'online') {
+            BRIDGE_HOST = ep;
+            ok = true;
+            break;
+          }
+        }
+      } catch(e) {}
+    }
+
+    if (ok && data) {
+      hasInternetBridge = true;
+      statusEl.className = 'status-pill online';
+      textEl.textContent = '🌐 Интернет: Онлайн';
+      statusEl.title = 'ReAct веб-поиск активен! Qwen в реальном времени ищет факты в сети.';
+
+      // Если сервер сообщает, что Ollama онлайн, а в интерфейсе ещё показывает "не запущена" — синхронизируем
+      if (data.ollama_online) {
+        const oText = document.getElementById('statusText');
+        if (oText && oText.textContent && oText.textContent.includes('не запущена')) {
+          checkOllama();
+        }
       }
-    } catch(e) {
+    } else {
       hasInternetBridge = false;
       statusEl.className = 'status-pill offline';
       textEl.textContent = '🌐 Интернет: Офлайн';

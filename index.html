@@ -3869,6 +3869,274 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-3px); }
     }
+    /* === IMAGE GENERATION STUDIO (NEURO-ART) === */
+    .img-header-badges {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .img-engine-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.18);
+      border: 1px solid rgba(99, 102, 241, 0.5);
+      color: #a5b4fc;
+    }
+    .img-uncensored-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #fca5a5;
+    }
+    .img-studio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .img-studio-grid { grid-template-columns: 1fr; }
+    }
+    .img-prompt-textarea {
+      width: 100%;
+      min-height: 95px;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #fff;
+      font-size: 13.5px;
+      line-height: 1.5;
+      resize: vertical;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+    }
+    .img-prompt-textarea:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+    }
+    .btn-magic-prompt {
+      background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(168,85,247,0.25));
+      border: 1px solid #a855f7;
+      color: #d8b4fe;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+    .btn-magic-prompt:hover {
+      background: linear-gradient(135deg, rgba(99,102,241,0.4), rgba(168,85,247,0.4));
+      color: #fff;
+      box-shadow: 0 0 12px rgba(168,85,247,0.5);
+    }
+    .img-quick-presets {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .img-preset-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .img-preset-chip:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: #6366f1;
+      color: #fff;
+    }
+    .img-style-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 600px) {
+      .img-style-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .img-style-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 8px 6px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+      color: var(--text-muted);
+    }
+    .img-style-card:hover {
+      background: rgba(99, 102, 241, 0.15);
+      border-color: rgba(99, 102, 241, 0.5);
+      color: #fff;
+    }
+    .img-style-card.active {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+      border: 1px solid #8b5cf6;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(139, 92, 246, 0.35);
+    }
+    .img-style-icon { font-size: 18px; }
+    .img-style-name { font-size: 11px; font-weight: 600; text-align: center; }
+    .img-settings-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .btn-generate-art {
+      width: 100%;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+      color: #fff;
+      border: none;
+      padding: 13px 20px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+      transition: all 0.25s ease;
+    }
+    .btn-generate-art:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(217, 70, 239, 0.5);
+    }
+    .btn-generate-art:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .img-preview-frame {
+      min-height: 380px;
+      background: rgba(10, 15, 30, 0.8);
+      border: 2px dashed rgba(99, 102, 241, 0.35);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+    .img-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+    }
+    .img-loading-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    .img-pulse-orb {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #38bdf8 0%, #6366f1 70%, transparent 100%);
+      box-shadow: 0 0 25px #38bdf8;
+      animation: pulseOrb 1.5s infinite ease-in-out;
+    }
+    @keyframes pulseOrb {
+      0%, 100% { transform: scale(0.85); opacity: 0.7; }
+      50% { transform: scale(1.15); opacity: 1; filter: hue-rotate(40deg); }
+    }
+    .img-result-img {
+      max-width: 100%;
+      max-height: 460px;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .img-result-img:hover {
+      transform: scale(1.01);
+    }
+    .img-action-toolbar {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-action-art {
+      flex: 1;
+      min-width: 110px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      padding: 8px 12px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .btn-action-art:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #6366f1;
+      color: #fff;
+    }
+    .art-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+    .art-thumb-card {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+    }
+    .art-thumb-card:hover {
+      border-color: #a855f7;
+      transform: scale(1.04);
+      box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35);
+    }
+    .art-thumb-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .art-thumb-prompt-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+      padding: 6px;
+      font-size: 10px;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
   </style>
 </head>
 <body>
@@ -3925,7 +4193,7 @@
     <button class="tab-btn active" onclick="switchTab('create')">✍️ Создать тест</button>
     <button class="tab-btn teacher-tab" style="background:rgba(234,179,8,0.15);border:1px solid rgba(234,179,8,0.45);color:#fde047;font-weight:700;" onclick="switchTab('teacher')">📖 Кабинет учителя (А4 · 2 варианта)</button>
     <button class="tab-btn python-tab" onclick="switchTab('python')">🐍 Python с нуля</button>
-    <button class="tab-btn" onclick="switchTab('flashcards')">🎴 Карточки</button>
+    <button class="tab-btn imagegen-tab" id="tabBtnImageGen" onclick="switchTab('imagegen')">🎨 Нейро-Арт</button>
     <button class="tab-btn" id="tabBtnChat" onclick="switchTab('chat')">💬 ИИ-Ассистент <span id="chatTabBadge" style="display:none;" class="chat-tab-badge"></span></button>
     <button class="tab-btn" onclick="switchTab('mistakes')">📓 Ошибки (<span id="mistakesBadgeCount">0</span>)</button>
     <button class="tab-btn" onclick="switchTab('profile')">👤 Профиль</button>
@@ -4619,191 +4887,164 @@
     </div>
   </div>
 
-  <!-- ВКЛАДКА: УМНЫЕ КАРТОЧКИ ДЛЯ ИНТЕРВАЛЬНОГО ПОВТОРЕНИЯ (V2) -->
-  <div id="tabFlashcards" style="display:none;">
+    <!-- ВКЛАДКА: НЕЙРО-АРТ И ГЕНЕРАТОР КАРТИНОК (FLUX & SDXL) -->
+  <div id="tabImageGen" style="display:none;">
     <div class="glass-card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
         <div>
-          <div class="card-title">🎴 Умные карточки (Flashcards V2)</div>
-          <div class="card-subtitle">Интервальное повторение правил, понятий и кода без бесконечной путаницы. Выучил карточку — закрепил навсегда!</div>
+          <div class="card-title">🎨 Нейро-Арт Студия (Flux & SDXL AI)</div>
+          <div class="card-subtitle">Генерация фотореалистичных изображений, концепт-артов и портретов без цензуры и сторонних программ.</div>
         </div>
-        <div class="fc-header-stats">
-          <div class="fc-stat-chip" style="color:#34d399;">
-            <span>🟢 Выучено:</span> <strong id="fcMasteredCount">0</strong>
-          </div>
-          <div class="fc-stat-chip" style="color:#fbbf24;">
-            <span>🟡 Осталось:</span> <strong id="fcRemainingCount">0</strong>
-          </div>
-          <div class="fc-stat-chip" style="color:#60a5fa;">
-            <span>📊 Прогресс:</span> <strong id="fcProgressPercent">0%</strong>
-          </div>
+        <div class="img-header-badges">
+          <span class="img-engine-badge">⚡ FLUX Ultra Realism</span>
+          <span class="img-uncensored-badge">🔞 Без цензуры</span>
         </div>
       </div>
 
-      <!-- ВЕРХНИЕ РЕЖИМЫ (ТАБЫ) -->
-      <div class="fc-nav-tabs">
-        <button class="fc-tab-btn active" id="fcModeBtnTrain" onclick="setFlashcardMode('train')">
-          <span>🎯</span> <span>Тренировка 3D</span>
-        </button>
-        <button class="fc-tab-btn" id="fcModeBtnList" onclick="setFlashcardMode('list')">
-          <span>📋</span> <span>Вся колода списком (Шпаргалка)</span>
-        </button>
-        <button class="fc-tab-btn" id="fcModeBtnCreate" onclick="setFlashcardMode('create')">
-          <span>➕</span> <span>Создать / ИИ-Генератор</span>
-        </button>
-      </div>
-
-      <!-- ВЫБОР КОЛОДЫ -->
-      <div class="deck-selector" id="deckSelector" style="margin-bottom:14px;">
-        <button class="deck-chip active" id="chipDeckPython" onclick="selectDeck('python')">🐍 Python Core & Pro</button>
-        <button class="deck-chip" id="chipDeckLiterature" onclick="selectDeck('literature')">📚 Русская классика</button>
-        <button class="deck-chip" id="chipDeckPhysics" onclick="selectDeck('physics')">⚛️ Физика & Наука</button>
-        <button class="deck-chip" id="chipDeckHistory" onclick="selectDeck('history')">🌍 Общество & История</button>
-        <button class="deck-chip" id="chipDeckCustom" onclick="selectDeck('custom')">✨ Мои карточки</button>
-      </div>
-
-      <!-- ================= 1. РЕЖИМ ТРЕНИРОВКИ ================= -->
-      <div id="fcTrainSection">
-        <div class="fc-controls-bar">
-          <div style="font-size:13px;color:var(--text-muted);" id="fcDeckInfo">
-            Колода: <strong style="color:#fff;" id="fcActiveDeckTitle">Python Core & Pro</strong>
+      <div class="img-studio-grid">
+        <!-- ЛЕВАЯ КОЛОНКА: НАСТРОЙКИ И ПРОМПТ -->
+        <div class="img-controls-col">
+          <div style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <label style="font-size:13px;font-weight:700;color:#fff;">Твой промпт / описание кадра:</label>
+              <button class="btn-magic-prompt" id="btnEnhancePrompt" onclick="enhanceImagePromptWithAi()" title="Qwen 3.5 переведёт и распишет свет, оптику и детали для шедевра">
+                ⚡ Улучшить через Qwen 3.5
+              </button>
+            </div>
+            <textarea id="imgPromptInput" class="img-prompt-textarea" placeholder="Опиши что нарисовать (на русском или английском)... Например: Неоновый киберпанк самурай под ночным дождём, отражения в лужах, 8k photo"></textarea>
           </div>
-          <div class="fc-subactions">
-            <button class="fc-sub-btn" onclick="shuffleCurrentDeck()" title="Перемешать карточки в случайном порядке">🔀 Перемешать</button>
-            <button class="fc-sub-btn" onclick="resetCurrentDeckProgress()" title="Сбросить статус 'Выучено' для этой колоды">↺ Сбросить прогресс</button>
+
+          <!-- Быстрые идеи (пресеты) -->
+          <div class="img-quick-presets" style="margin-bottom:14px;">
+            <span style="font-size:11px;color:var(--text-muted);align-self:center;">Идеи:</span>
+            <button class="img-preset-chip" onclick="setQuickImgPrompt('Киберпанк спорткар летит по футуристичному городу ночью, неоновые голограммы, мокрый асфальт, 8k')">🏎️ Киберпанк авто</button>
+            <button class="img-preset-chip" onclick="setQuickImgPrompt('Портрет девушки-эльфа с серебряными волосами в лесу светящихся грибов, магия, гиперреализм')">🧝‍♀️ Эльфийка</button>
+            <button class="img-preset-chip" onclick="setQuickImgPrompt('Грозный дракон с огненным дыханием на вершине снежной горы во время шторма, эпично')">🐉 Эпический дракон</button>
+            <button class="img-preset-chip" onclick="setQuickImgPrompt('Милый пушистый кот в скафандре ловит космическую рыбку на фоне Земли и звёзд, 3D')">🐱 Кот в космосе</button>
+            <button class="img-preset-chip" onclick="setQuickImgPrompt('Уютная старинная кофейня в осеннем дождливом Париже, теплый свет ламп, капли на стекле')">☕ Осеннее кафе</button>
+          </div>
+
+          <!-- Выбор стиля -->
+          <div style="margin-bottom:14px;">
+            <label style="display:block;font-size:12px;color:var(--text-muted);margin-bottom:6px;">Художественный стиль:</label>
+            <div class="img-style-grid" id="imgStyleGrid">
+              <button class="img-style-card active" data-style="photoreal" onclick="selectImgStyle(this, 'photoreal')">
+                <span class="img-style-icon">📸</span>
+                <span class="img-style-name">Фотореализм</span>
+              </button>
+              <button class="img-style-card" data-style="cyberpunk" onclick="selectImgStyle(this, 'cyberpunk')">
+                <span class="img-style-icon">⚡</span>
+                <span class="img-style-name">Киберпанк</span>
+              </button>
+              <button class="img-style-card" data-style="anime" onclick="selectImgStyle(this, 'anime')">
+                <span class="img-style-icon">🌸</span>
+                <span class="img-style-name">Аниме / Синкай</span>
+              </button>
+              <button class="img-style-card" data-style="digital" onclick="selectImgStyle(this, 'digital')">
+                <span class="img-style-icon">🎨</span>
+                <span class="img-style-name">Концепт-арт</span>
+              </button>
+              <button class="img-style-card" data-style="darkfantasy" onclick="selectImgStyle(this, 'darkfantasy')">
+                <span class="img-style-icon">🌌</span>
+                <span class="img-style-name">Тёмное фэнтези</span>
+              </button>
+              <button class="img-style-card" data-style="render3d" onclick="selectImgStyle(this, 'render3d')">
+                <span class="img-style-icon">🧸</span>
+                <span class="img-style-name">3D Render (UE5)</span>
+              </button>
+              <button class="img-style-card" data-style="oil" onclick="selectImgStyle(this, 'oil')">
+                <span class="img-style-icon">🖌️</span>
+                <span class="img-style-name">Масло / Холст</span>
+              </button>
+              <button class="img-style-card" data-style="raw" onclick="selectImgStyle(this, 'raw')">
+                <span class="img-style-icon">🚫</span>
+                <span class="img-style-name">Чистый промпт</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Формат (Соотношение сторон) и Модель -->
+          <div class="img-settings-row">
+            <div>
+              <label style="display:block;font-size:12px;color:var(--text-muted);margin-bottom:6px;">Формат кадра:</label>
+              <select id="imgAspectSelect" class="fc-input" style="width:100%;">
+                <option value="1:1" selected>🔲 1:1 Квадрат (1024×1024)</option>
+                <option value="16:9">🖥️ 16:9 Обои / Пейзаж (1280×720)</option>
+                <option value="9:16">📱 9:16 Смартфон / Сториз (720×1280)</option>
+                <option value="4:3">🖼️ 4:3 Классический (1024×768)</option>
+              </select>
+            </div>
+            <div>
+              <label style="display:block;font-size:12px;color:var(--text-muted);margin-bottom:6px;">Движок нейросети:</label>
+              <select id="imgModelSelect" class="fc-input" style="width:100%;">
+                <option value="flux" selected>⚡ Flux (Максимальная детализация & свет)</option>
+                <option value="turbo">🚀 Turbo (Сверхбыстрая генерация ~2 сек)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Кнопка запуска генерации -->
+          <div style="margin-top:16px;">
+            <button class="btn-generate-art" id="btnGenerateArt" onclick="startGenerateArt()">
+              <span id="btnArtSpinner" class="spinner" style="display:none;width:18px;height:18px;margin-right:8px;vertical-align:middle;"></span>
+              <span id="btnArtText">✨ Сгенерировать изображение</span>
+            </button>
           </div>
         </div>
 
-        <!-- ПРОГРЕСС-БАР -->
-        <div class="fc-progress-wrap" style="margin-bottom:16px;">
-          <div class="fc-progress-fill" id="fcProgressFill" style="width:0%;"></div>
-        </div>
-
-        <!-- СЦЕНА 3D КАРТОЧКИ -->
-        <div id="fcCardView">
-          <div class="fc-scene-container">
-            <div class="flashcard-scene" onclick="flipCurrentCard()">
-              <div class="flashcard-card" id="activeFlashcard">
-                <!-- ЛИЦЕВАЯ СТОРОНА -->
-                <div class="flashcard-face flashcard-front">
-                  <div class="card-top-bar">
-                    <span class="card-category-tag" id="fcFrontCategory">🐍 Python Core</span>
-                    <div style="display:flex;gap:6px;align-items:center;">
-                      <span id="fcCardStatusBadge" style="font-size:11px;padding:2px 8px;border-radius:6px;background:rgba(245,158,11,0.15);color:#fbbf24;font-weight:600;">🟡 Учу</span>
-                      <button class="btn-speak" onclick="event.stopPropagation(); speakActiveCardFront(this)">🔊 Озвучить</button>
-                      <span class="card-counter" id="fcCardCounter">1 / 10</span>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <div class="card-question" id="fcFrontText">Загрузка карточки...</div>
-                  </div>
-                  <div class="card-bottom-hint">
-                    <span>💡 Кликни по карточке или нажми <strong>Пробел</strong>, чтобы перевернуть</span>
-                  </div>
-                </div>
-
-                <!-- ОБРАТНАЯ СТОРОНА -->
-                <div class="flashcard-face flashcard-back">
-                  <div class="card-top-bar">
-                    <span class="card-category-tag" style="background:rgba(236,72,153,0.2);color:#f472b6;">💡 Ответ & Суть</span>
-                    <button class="btn-speak" onclick="event.stopPropagation(); speakActiveCardBack(this)">🔊 Озвучить</button>
-                  </div>
-                  <div class="card-body">
-                    <div class="card-answer" id="fcBackText">Суть ответа...</div>
-                    <div class="card-mnemonic" id="fcMnemonicBox" style="display:none;">
-                      <span style="font-weight:700;">🐱 Мнемоника:</span> <span id="fcMnemonicText"></span>
-                    </div>
-                  </div>
-                  <div class="card-bottom-hint">
-                    <span>Кликни, чтобы перевернуть обратно</span>
-                  </div>
-                </div>
+        <!-- ПРАВАЯ КОЛОНКА: РЕЗУЛЬТАТ И ПРЕВЬЮ -->
+        <div class="img-preview-col">
+          <div class="img-preview-frame" id="imgPreviewFrame">
+            <!-- Заглушка пока нет фото -->
+            <div id="imgPlaceholder" class="img-placeholder">
+              <div style="font-size:48px;margin-bottom:12px;">🎨</div>
+              <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:6px;">Холст ожидает твою идею</div>
+              <div style="font-size:12.5px;color:var(--text-muted);max-width:320px;text-align:center;">
+                Введи описание слева и нажми «Сгенерировать». Картина появится здесь через пару секунд.
               </div>
             </div>
-          </div>
 
-          <!-- КНОПКИ УПРАВЛЕНИЯ -->
-          <div class="fc-actions-row">
-            <button class="fc-act-btn" onclick="prevFlashcard()" style="background:#181b24;border:1px solid var(--card-border);color:#cbd5e1;" title="Предыдущая карточка">
-              <span>⬅️</span> <span>Назад</span>
-            </button>
-            <button class="fc-act-btn fc-btn-repeat" onclick="markCardRepeat()" title="Пометить на повторение (Стрелка влево)">
-              <span>❌</span> <span>Ещё учу</span>
-            </button>
-            <button class="fc-act-btn fc-btn-flip" onclick="flipCurrentCard()" title="Перевернуть карточку (Пробел)">
-              <span>🔄</span> <span>Перевернуть (Пробел)</span>
-            </button>
-            <button class="fc-act-btn fc-btn-know" onclick="markCardMastered()" title="Выучил карточку (Стрелка вправо)">
-              <span>✅</span> <span>Выучил! (+15 XP)</span>
-            </button>
-            <button class="fc-act-btn" onclick="nextFlashcard()" style="background:#181b24;border:1px solid var(--card-border);color:#cbd5e1;" title="Следующая карточка">
-              <span>Вперёд</span> <span>➡️</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- ЭКРАН ПОБЕДЫ (КОГДА ВСЕ КАРТОЧКИ ВЫУЧЕНЫ) -->
-        <div id="fcVictoryScreen" style="display:none;">
-          <div class="fc-victory-card">
-            <div style="font-size:48px;margin-bottom:12px;">🏆🎉</div>
-            <div class="fc-victory-title">Отличная работа! Колода полностью освоена!</div>
-            <div class="fc-victory-desc">Ты выучил все карточки в этой категории на 100%. Материал успешно отложен в долговременную память!</div>
-            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-              <button class="btn-primary" onclick="resetCurrentDeckProgress()" style="padding:10px 22px;">↺ Пройти заново</button>
-              <button class="btn-secondary" onclick="setFlashcardMode('list')" style="padding:10px 22px;">📋 Открыть шпаргалку</button>
-              <button class="btn-secondary" onclick="selectDeck('python')" style="padding:10px 22px;">Другая колода ➡️</button>
+            <!-- Лоадер во время отрисовки -->
+            <div id="imgLoadingState" class="img-loading-box" style="display:none;">
+              <div class="img-pulse-orb"></div>
+              <div style="font-size:15px;font-weight:700;color:#38bdf8;margin-top:16px;">Нейросеть рисует шедевр...</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;" id="imgGenerationTimer">Прошло 0 сек</div>
             </div>
+
+            <!-- Картинка результата -->
+            <img id="imgResultImage" class="img-result-img" style="display:none;" alt="Generated Artwork" />
+          </div>
+
+          <!-- Панель действий под результатом -->
+          <div id="imgActionToolbar" class="img-action-toolbar" style="display:none;">
+            <button class="btn-action-art" onclick="downloadCurrentImage()" title="Скачать в максимальном качестве">
+              💾 Скачать фото
+            </button>
+            <button class="btn-action-art" onclick="openFullscreenImage()" title="Развернуть на весь экран">
+              🔍 На весь экран
+            </button>
+            <button class="btn-action-art" onclick="copyCurrentPrompt()" title="Скопировать промпт">
+              📋 Промпт
+            </button>
+            <button class="btn-action-art" onclick="regenerateVariation()" title="Сделать другую вариацию">
+              🔄 Вариация
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- ================= 2. РЕЖИМ СПИСКА (ШПАРГАЛКА) ================= -->
-      <div id="fcListSection" style="display:none;">
-        <div class="fc-list-filters">
-          <input type="text" id="fcListSearch" class="fc-search-input" placeholder="🔍 Поиск по терминам или тексту ответа..." oninput="filterFlashcardsList()">
-          <button class="fc-filter-btn active" id="fcFilterAll" onclick="setFlashcardListFilter('all')">Все (<span id="fcFilterCountAll">0</span>)</button>
-          <button class="fc-filter-btn" id="fcFilterLearning" onclick="setFlashcardListFilter('learning')">🟡 Учу (<span id="fcFilterCountLearning">0</span>)</button>
-          <button class="fc-filter-btn" id="fcFilterMastered" onclick="setFlashcardListFilter('mastered')">🟢 Выучено (<span id="fcFilterCountMastered">0</span>)</button>
+      <!-- НИЖНЯЯ СЕКЦИЯ: ГАЛЕРЕЯ СОЗДАННЫХ ШЕДЕВРОВ -->
+      <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border-color);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div style="font-size:15px;font-weight:700;color:#fff;">
+            🖼️ Твоя галерея (<span id="galleryCount">0</span>)
+          </div>
+          <button class="btn-secondary" style="padding:4px 12px;font-size:11px;" onclick="clearArtGallery()">
+            🗑️ Очистить галерею
+          </button>
         </div>
-        <div class="fc-list-grid" id="fcListGrid">
-          <!-- Генерируется динамически через JS -->
-        </div>
-      </div>
-
-      <!-- ================= 3. РЕЖИМ СОЗДАНИЯ И ИИ-ГЕНЕРАТОР ================= -->
-      <div id="fcCreateSection" style="display:none;">
-        <!-- ИИ Генератор -->
-        <div class="fc-create-box">
-          <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px;">✨ Генерация целой колоды через ИИ</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">Введи любую тему, и локальная нейросеть создаст структурированные карточки с формулами, понятиями и мнемоникой:</div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <input type="text" id="fcTopicInput" class="fc-input" style="flex:1;min-width:240px;" placeholder="Например: 'Теория вероятностей', 'Оптика 9 класс', 'Исключения суффиксов Н и НН'...">
-            <button class="btn-primary" id="fcGenBtn" onclick="generateAiFlashcards()" style="padding:9px 20px;">✨ Сгенерировать</button>
-          </div>
-        </div>
-
-        <!-- Ручное создание карточки -->
-        <div class="fc-create-box">
-          <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px;">✍️ Добавить свою карточку вручную</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">Карточка сохранится в колоду «Мои карточки»:</div>
-          <div class="fc-create-grid">
-            <div>
-              <label style="display:block;font-size:12px;color:var(--text-muted);margin-bottom:4px;">Лицевая сторона (Вопрос или термин):</label>
-              <input type="text" id="fcNewFront" class="fc-input" style="width:100%;" placeholder="Например: 'Что такое инкапсуляция?'">
-            </div>
-            <div>
-              <label style="display:block;font-size:12px;color:var(--text-muted);margin-bottom:4px;">Мнемоника / Подсказка (необязательно):</label>
-              <input type="text" id="fcNewMnemonic" class="fc-input" style="width:100%;" placeholder="Например: 'Капсула с таблеткой скрывает начинку'">
-            </div>
-          </div>
-          <div style="margin-bottom:14px;">
-            <label style="display:block;font-size:12px;color:var(--text-muted);margin-bottom:4px;">Обратная сторона (Полный понятный ответ):</label>
-            <textarea id="fcNewBack" class="fc-input" style="width:100%;min-height:80px;resize:vertical;" placeholder="Объяснение своими словами..."></textarea>
-          </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-            <button class="btn-primary" onclick="addManualFlashcard()" style="padding:9px 22px;">➕ Добавить в мою колоду</button>
-            <button class="btn-secondary" onclick="clearCustomDeck()" style="border-color:#7f1d1d;color:#fca5a5;">🗑️ Очистить всю колоду моих карточек</button>
-          </div>
+        <div class="art-gallery-grid" id="artGalleryGrid">
+          <!-- Заполняется динамически -->
         </div>
       </div>
     </div>
@@ -7093,7 +7334,7 @@ ${userCode}
   function switchTab(tab) {
     window._currentActiveTab = tab;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    ['tabCreate','tabTeacher','tabPython','tabQuiz','tabResult','tabHistory','tabSettings','tabChat','tabProfile','tabFlashcards','tabMistakes'].forEach(id => {
+    ['tabCreate','tabTeacher','tabPython','tabQuiz','tabResult','tabHistory','tabSettings','tabChat','tabProfile','tabImageGen','tabFlashcards','tabMistakes'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = 'none';
     });
@@ -7102,7 +7343,8 @@ ${userCode}
       create:     ['tabCreate', 0],
       teacher:    ['tabTeacher', 1],
       python:     ['tabPython', 2],
-      flashcards: ['tabFlashcards', 3],
+      imagegen:   ['tabImageGen', 3],
+      flashcards: ['tabImageGen', 3],
       chat:       ['tabChat', 4],
       mistakes:   ['tabMistakes', 5],
       profile:    ['tabProfile', 6],
@@ -7119,7 +7361,7 @@ ${userCode}
     if (typeof stopSpeaking === 'function') stopSpeaking();
     if (tab === 'history') renderHistory();
     if (tab === 'profile') renderProfile();
-    if (tab === 'flashcards' && typeof renderFlashcardsUI === 'function') renderFlashcardsUI();
+    if ((tab === 'imagegen' || tab === 'flashcards') && typeof renderImageGalleryUI === 'function') renderImageGalleryUI();
     if (tab === 'mistakes' && typeof renderMistakesUI === 'function') renderMistakesUI();
     if (tab === 'chat') {
       window._chatUnreadCount = 0;
@@ -7130,6 +7372,313 @@ ${userCode}
   }
 
   // ==========================================================
+  //  🎨 НЕЙРО-АРТ СТУДИЯ (FLUX & SDXL IMAGE GENERATOR)
+  // ==========================================================
+  let activeArtStyle = 'photoreal';
+  let currentArtDataUrl = null;
+  let currentArtPrompt = '';
+  let isArtGenerating = false;
+  let artTimerInterval = null;
+
+  const ART_STYLES_MAP = {
+    photoreal: 'hyperrealistic 8k photograph, professional DSLR shot, 85mm f/1.4 lens, natural lighting, highly detailed, photorealistic, sharp focus, masterpiece',
+    cyberpunk: 'cyberpunk style, futuristic neon lights, neon glowing reflections, wet pavement, highly detailed, high quality, 8k resolution, cinematic',
+    anime: 'makoto shinkai aesthetic anime style, highly detailed anime illustration, vibrant colors, beautiful lighting, masterpiece',
+    digital: 'digital concept art, trending on ArtStation, dynamic lighting, dramatic composition, 8k resolution, masterpiece',
+    darkfantasy: 'dark fantasy style, atmospheric, moody, volumetric lighting, hyperdetailed, epic composition, unreal engine 5 render',
+    render3d: 'pixar 3D style render, volumetric lighting, smooth shaders, ray tracing, cute, highly detailed, 8k',
+    oil: 'oil on canvas painting, thick visible brushstrokes, textured paint, classical fine art masterpiece, rich colors',
+    raw: ''
+  };
+
+  function selectImgStyle(btn, styleKey) {
+    document.querySelectorAll('.img-style-card').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeArtStyle = styleKey;
+  }
+
+  function setQuickImgPrompt(text) {
+    const el = document.getElementById('imgPromptInput');
+    if (el) el.value = text;
+  }
+
+  async function enhanceImagePromptWithAi() {
+    const input = document.getElementById('imgPromptInput');
+    const userText = input.value.trim();
+    if (!userText) {
+      alert('Сначала напиши любую мысль или тему для изображения!');
+      return;
+    }
+    const btn = document.getElementById('btnEnhancePrompt');
+    const origHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '✨ Qwen улучшает...';
+
+    try {
+      let enhanced = '';
+      if (hasInternetBridge) {
+        try {
+          const r = await fetch(`${BRIDGE_HOST}/api/enhance_image_prompt`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: userText })
+          });
+          if (r.ok) {
+            const d = await r.json();
+            enhanced = d.enhanced_prompt;
+          }
+        } catch(e) {}
+      }
+
+      if (!enhanced) {
+        const prompt = `Ты — профессиональный промпт-инженер для нейросетей FLUX и Midjourney.
+Задача: преврати краткую идею пользователя в кинематографичный, богатый деталями англоязычный промпт (освещение, ракурс, стиль съёмки, материалы, 8k фото).
+ВЕРНИ ТОЛЬКО ИТОГОВЫЙ ТЕКСТ НА АНГЛИЙСКОМ БЕЗ КАВЫЧЕК И ПОЯСНЕНИЙ.
+
+Идея пользователя: ${userText}`;
+        enhanced = await callUnifiedAi({ prompt, temperature: 0.7, maxTokens: 180 });
+      }
+
+      if (enhanced && enhanced.trim().length > 5) {
+        input.value = enhanced.trim().replace(/^["']|["']$/g, '');
+        showNotificationToast('✨ Промпт обогащён через Qwen 3.5!');
+      }
+    } catch(e) {
+      console.warn('Enhance prompt failed:', e);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = origHtml;
+    }
+  }
+
+  async function startGenerateArt() {
+    const input = document.getElementById('imgPromptInput');
+    const userPrompt = input.value.trim();
+    if (!userPrompt) {
+      alert('Введи описание изображения!');
+      input.focus();
+      return;
+    }
+    if (isArtGenerating) return;
+
+    isArtGenerating = true;
+    const btn = document.getElementById('btnGenerateArt');
+    const btnText = document.getElementById('btnArtText');
+    const btnSpin = document.getElementById('btnArtSpinner');
+    btn.disabled = true;
+    btnSpin.style.display = 'inline-block';
+    btnText.textContent = '🎨 Отрисовка кадра...';
+
+    const placeholder = document.getElementById('imgPlaceholder');
+    const loadingState = document.getElementById('imgLoadingState');
+    const resultImg = document.getElementById('imgResultImage');
+    const actionToolbar = document.getElementById('imgActionToolbar');
+    const timerEl = document.getElementById('imgGenerationTimer');
+
+    if (placeholder) placeholder.style.display = 'none';
+    if (resultImg) resultImg.style.display = 'none';
+    if (actionToolbar) actionToolbar.style.display = 'none';
+    if (loadingState) loadingState.style.display = 'flex';
+
+    let elapsed = 0;
+    if (timerEl) timerEl.textContent = 'Прошло 0 сек';
+    artTimerInterval = setInterval(() => {
+      elapsed++;
+      if (timerEl) timerEl.textContent = `Прошло ${elapsed} сек...`;
+    }, 1000);
+
+    const aspect = document.getElementById('imgAspectSelect')?.value || '1:1';
+    let width = 1024, height = 1024;
+    if (aspect === '16:9') { width = 1280; height = 720; }
+    else if (aspect === '9:16') { width = 720; height = 1280; }
+    else if (aspect === '4:3') { width = 1024; height = 768; }
+
+    const modelChoice = document.getElementById('imgModelSelect')?.value || 'flux';
+    const styleSuffix = ART_STYLES_MAP[activeArtStyle] || '';
+    const fullPrompt = styleSuffix ? `${userPrompt}, ${styleSuffix}` : userPrompt;
+    currentArtPrompt = fullPrompt;
+
+    const seed = Math.floor(Math.random() * 999999999);
+    const encodedPrompt = encodeURIComponent(fullPrompt);
+    const targetUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&model=${modelChoice}&nologo=true&seed=${seed}`;
+
+    try {
+      let localUrl = null;
+      let base64Data = null;
+
+      // 1. Попытка через локальный мост сервера (порт 5005)
+      if (hasInternetBridge) {
+        try {
+          const sResp = await fetch(`${BRIDGE_HOST}/api/generate_image`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: fullPrompt, width, height, model: modelChoice, seed })
+          });
+          if (sResp.ok) {
+            const sData = await sResp.json();
+            if (sData.status === 'ok' && sData.image_data) {
+              localUrl = sData.image_data;
+              base64Data = sData.image_data;
+            }
+          }
+        } catch(be) {
+          console.warn('Bridge image gen failed, fallback to direct fetch:', be);
+        }
+      }
+
+      // 2. Прямой fetch если сервер недоступен или без base64
+      if (!localUrl) {
+        const resp = await fetch(targetUrl);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const blob = await resp.blob();
+        localUrl = URL.createObjectURL(blob);
+
+        const reader = new FileReader();
+        reader.onloadend = function() {
+          saveArtToGallery({
+            id: 'art_' + Date.now(),
+            url: reader.result || localUrl,
+            prompt: userPrompt,
+            fullPrompt: fullPrompt,
+            aspect: aspect,
+            time: Date.now()
+          });
+        };
+        reader.readAsDataURL(blob);
+      } else {
+        saveArtToGallery({
+          id: 'art_' + Date.now(),
+          url: base64Data,
+          prompt: userPrompt,
+          fullPrompt: fullPrompt,
+          aspect: aspect,
+          time: Date.now()
+        });
+      }
+
+      clearInterval(artTimerInterval);
+      if (loadingState) loadingState.style.display = 'none';
+      if (resultImg) {
+        resultImg.src = localUrl;
+        resultImg.style.display = 'block';
+      }
+      if (actionToolbar) actionToolbar.style.display = 'flex';
+      currentArtDataUrl = localUrl;
+
+      if (window._currentActiveTab !== 'imagegen' && window._currentActiveTab !== 'flashcards') {
+        playChatDoneSound();
+        showNotificationToast('🎨 <b>Шедевр готов!</b> <button onclick="switchTab(\'imagegen\')" style="margin-left:8px;background:#8b5cf6;color:#fff;border:none;border-radius:6px;padding:3px 9px;font-size:12px;cursor:pointer;font-weight:700;">Посмотреть фото →</button>');
+      } else {
+        showNotificationToast('🎉 Фото успешно сгенерировано!');
+      }
+    } catch(err) {
+      clearInterval(artTimerInterval);
+      if (loadingState) loadingState.style.display = 'none';
+      if (placeholder) {
+        placeholder.style.display = 'flex';
+        placeholder.innerHTML = `<div style="font-size:36px;margin-bottom:8px;">⚠️</div><div style="color:#fca5a5;font-weight:700;">Ошибка генерации: ${escH(err.message)}</div><div style="font-size:12px;color:var(--text-muted);margin-top:6px;">Проверь подключение к сети и попробуй снова.</div>`;
+      }
+    } finally {
+      isArtGenerating = false;
+      btn.disabled = false;
+      btnSpin.style.display = 'none';
+      btnText.textContent = '✨ Сгенерировать изображение';
+    }
+  }
+
+  function downloadCurrentImage() {
+    if (!currentArtDataUrl) return;
+    const a = document.createElement('a');
+    a.href = currentArtDataUrl;
+    a.download = `QuizApp_Art_${Date.now()}.jpg`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  function openFullscreenImage() {
+    if (!currentArtDataUrl) return;
+    const w = window.open('');
+    if (w) {
+      w.document.write(`<body style="margin:0;background:#05070f;display:flex;align-items:center;justify-content:center;height:100vh;"><img src="${currentArtDataUrl}" style="max-width:98%;max-height:98%;object-fit:contain;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.8);" /></body>`);
+    }
+  }
+
+  function copyCurrentPrompt() {
+    if (!currentArtPrompt) return;
+    navigator.clipboard.writeText(currentArtPrompt).then(() => {
+      showNotificationToast('📋 Промпт скопирован в буфер обмена!');
+    });
+  }
+
+  function regenerateVariation() {
+    startGenerateArt();
+  }
+
+  function getArtGallery() {
+    try {
+      const g = localStorage.getItem('quizgen_art_gallery_v1');
+      return g ? JSON.parse(g) : [];
+    } catch(e) { return []; }
+  }
+
+  function saveArtToGallery(item) {
+    const list = getArtGallery();
+    list.unshift(item);
+    if (list.length > 30) list.pop();
+    try {
+      localStorage.setItem('quizgen_art_gallery_v1', JSON.stringify(list));
+    } catch(e) {
+      try {
+        localStorage.setItem('quizgen_art_gallery_v1', JSON.stringify(list.slice(0, 10)));
+      } catch(e2) {}
+    }
+    renderImageGalleryUI();
+  }
+
+  function clearArtGallery() {
+    if (!confirm('Очистить всю сохранённую галерею фото?')) return;
+    localStorage.removeItem('quizgen_art_gallery_v1');
+    renderImageGalleryUI();
+  }
+
+  function renderImageGalleryUI() {
+    const wrap = document.getElementById('artGalleryGrid');
+    const countEl = document.getElementById('galleryCount');
+    if (!wrap) return;
+    const list = getArtGallery();
+    if (countEl) countEl.textContent = list.length;
+    wrap.innerHTML = '';
+    if (!list.length) {
+      wrap.innerHTML = '<div style="font-size:12px;color:var(--text-muted);grid-column:1/-1;text-align:center;padding:16px;">Пока нет сохранённых работ. Нажми «Сгенерировать изображение» выше!</div>';
+      return;
+    }
+    list.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'art-thumb-card';
+      card.innerHTML = `<img src="${item.url}" alt="art"><div class="art-thumb-prompt-overlay" title="${escH(item.prompt)}">${escH(item.prompt)}</div>`;
+      card.onclick = function() {
+        const resultImg = document.getElementById('imgResultImage');
+        const placeholder = document.getElementById('imgPlaceholder');
+        const actionToolbar = document.getElementById('imgActionToolbar');
+        const input = document.getElementById('imgPromptInput');
+        if (placeholder) placeholder.style.display = 'none';
+        if (resultImg) {
+          resultImg.src = item.url;
+          resultImg.style.display = 'block';
+        }
+        if (actionToolbar) actionToolbar.style.display = 'flex';
+        currentArtDataUrl = item.url;
+        currentArtPrompt = item.fullPrompt || item.prompt;
+        if (input) input.value = item.prompt;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+      wrap.appendChild(card);
+    });
+  }
+
+
+    // ==========================================================
   //  БЕЗОПАСНОСТЬ: САНИТИЗАЦИЯ ССЫЛОК И БЕЗОПАСНОЕ ХРАНИЛИЩЕ
   // ==========================================================
   function sanitizeUrl(url) {

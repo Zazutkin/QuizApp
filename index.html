@@ -4327,6 +4327,46 @@
       box-shadow: 0 4px 12px rgba(239, 68, 68, 0.7);
     }
 
+
+    /* ====================================================
+       СТИЛИ АУДИОПЛЕЕРА И ЭКВАЛАЙЗЕРА
+    ==================================================== */
+    .sound-wave-bars {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      height: 22px;
+      padding: 0 4px;
+    }
+    .sound-bar {
+      width: 4px;
+      height: 5px;
+      background: #a855f7;
+      border-radius: 2px;
+      transition: height 0.2s ease;
+    }
+    .sound-wave-bars.playing .sound-bar {
+      animation: soundWaveAnim 0.7s ease-in-out infinite alternate;
+    }
+    .sound-wave-bars.playing .sound-bar:nth-child(1) { animation-delay: 0.1s; }
+    .sound-wave-bars.playing .sound-bar:nth-child(2) { animation-delay: 0.25s; }
+    .sound-wave-bars.playing .sound-bar:nth-child(3) { animation-delay: 0.4s; }
+    .sound-wave-bars.playing .sound-bar:nth-child(4) { animation-delay: 0.15s; }
+    .sound-wave-bars.playing .sound-bar:nth-child(5) { animation-delay: 0.3s; }
+
+    @keyframes soundWaveAnim {
+      0% { height: 4px; background: #a855f7; }
+      100% { height: 22px; background: #38bdf8; }
+    }
+
+    .pulse-glow {
+      animation: pulseGlowAnim 1.4s ease-in-out infinite alternate;
+    }
+    @keyframes pulseGlowAnim {
+      0% { box-shadow: 0 0 10px rgba(168, 85, 247, 0.4); }
+      100% { box-shadow: 0 0 24px rgba(56, 189, 248, 0.85); transform: scale(1.02); }
+    }
+
   </style>
 </head>
 <body>
@@ -5347,21 +5387,26 @@
           <!-- ====================================================
                СЕКЦИЯ: МНОГОГОЛОСАЯ ИИ-ОЗВУЧКА & ДИАЛОГИ (TTS)
           ==================================================== -->
-          <div class="voice-acting-box" style="background:linear-gradient(135deg, rgba(30, 41, 59, 0.65), rgba(15, 23, 42, 0.85));border:1px solid rgba(168, 85, 247, 0.35);border-radius:12px;padding:16px 20px;margin-top:20px;">
+          <div class="voice-acting-box" style="background:linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));border:1px solid rgba(168, 85, 247, 0.45);border-radius:14px;padding:18px 22px;margin-top:20px;box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-              <div style="display:flex;align-items:center;gap:8px;">
-                <span style="font-size:22px;">🎙️</span>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:26px;">🎙️</span>
                 <div>
-                  <div style="font-weight:700;font-size:14px;color:#f8fafc;">Многоголосая ИИ-озвучка & Диалоги персонажей</div>
-                  <div style="font-size:11.5px;color:#cbd5e1;">Персонажи говорят своими голосами по ролям (мужской бас, бодрый друг, аниме-девушка, диктор)</div>
+                  <div style="font-weight:800;font-size:15px;color:#fff;">Многоголосая ИИ-озвучка & Диалоги персонажей</div>
+                  <div style="font-size:12px;color:#94a3b8;">Персонажи говорят разными голосами по ролям (мужской бас, бодрый друг, аниме-девушка)</div>
                 </div>
               </div>
-              <span style="font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(168,85,247,0.2);color:#d8b4fe;font-weight:700;">Studio Neural Voice</span>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <button type="button" class="preset-btn" onclick="testSpeakerSound()" style="font-size:11px;padding:3px 10px;background:rgba(56,189,248,0.15);border-color:#38bdf8;color:#38bdf8;" title="Проверить громкость звука на твоём компьютере">
+                  🔊 Проверить динамики
+                </button>
+                <span style="font-size:11px;padding:4px 9px;border-radius:6px;background:rgba(168,85,247,0.25);border:1px solid rgba(168,85,247,0.4);color:#d8b4fe;font-weight:700;">Studio Neural Voice</span>
+              </div>
             </div>
 
             <!-- Быстрые сценарии диалогов -->
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
-              <span style="font-size:11px;color:var(--text-muted);align-self:center;">Сценарии диалогов:</span>
+              <span style="font-size:11.5px;color:#94a3b8;align-self:center;font-weight:600;">Готовые сценарии:</span>
               <button type="button" class="preset-btn" onclick="applyDialoguePreset('banya')">🧖 Братья в бане</button>
               <button type="button" class="preset-btn" onclick="applyDialoguePreset('cyberpunk')">🌃 Киберпанк Найт-Сити</button>
               <button type="button" class="preset-btn" onclick="applyDialoguePreset('anime')">🌸 Аниме диалог</button>
@@ -5371,35 +5416,58 @@
 Брат 1: Ох, хорошо в баньке, братан! Жар от души пошел!
 Брат 2: Да вообще кайф! День был тяжелый, а сейчас как заново родился!"></textarea>
 
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:12px;">
-              <div style="display:flex;align-items:center;gap:8px;">
-                <button type="button" class="btn-action-art" id="btnGenVoice" onclick="generateDialogueSpeech()" style="background:linear-gradient(135deg, #7c3aed, #a855f7);color:#fff;font-weight:700;padding:8px 16px;">
-                  <span class="spinner" id="voiceSpinner" style="display:none;width:14px;height:14px;border-width:2px;margin-right:6px;"></span>
-                  <span id="btnVoiceText">🎙️ Озвучить реплики (ИИ)</span>
+            <!-- Живой индикатор говорящего персонажа -->
+            <div id="liveSpeechIndicator" style="display:none;align-items:center;gap:10px;padding:8px 14px;background:rgba(56,189,248,0.15);border:1px solid #38bdf8;border-radius:8px;margin-top:10px;font-size:13px;color:#38bdf8;font-weight:700;">
+            </div>
+
+            <!-- ПАНЕЛЬ УПРАВЛЕНИЯ ЗВУКОМ -->
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:14px;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <!-- Кнопка живого мгновенного воспроизведения в браузере -->
+                <button type="button" id="btnPlayLiveSpeech" class="btn-action-art" onclick="playLiveBrowserSpeech()" style="background:linear-gradient(135deg, #0284c7, #2563eb);color:#fff;font-weight:700;padding:10px 18px;font-size:13px;box-shadow:0 4px 14px rgba(2,132,199,0.35);" title="Мгновенное воспроизведение голосов персонажей прямо через динамики">
+                  <span>🗣️ СЛУШАТЬ ВЖИВУЮ (МНОГОГОЛОСИЕ)</span>
                 </button>
-                <button type="button" class="btn-action-art" id="btnPlayLiveSpeech" onclick="playLiveBrowserSpeech()" style="background:#1e293b;border-color:#475569;" title="Мгновенное живое воспроизведение прямо в браузере">
-                  <span>▶ Слушать вживую</span>
+
+                <!-- Кнопка генерации студийного MP3 файла -->
+                <button type="button" class="btn-action-art" id="btnGenVoice" onclick="generateDialogueSpeech()" style="background:linear-gradient(135deg, #7c3aed, #a855f7);color:#fff;font-weight:700;padding:10px 16px;font-size:13px;">
+                  <span class="spinner" id="voiceSpinner" style="display:none;width:14px;height:14px;border-width:2px;margin-right:6px;"></span>
+                  <span id="btnVoiceText">🎙️ Сохранить в MP3</span>
                 </button>
               </div>
 
-              <!-- Аудиоплеер для озвучки -->
-              <div id="dialogueAudioContainer" style="display:none;align-items:center;gap:10px;flex:1;max-width:400px;">
-                <audio id="dialogueAudioPlayer" controls style="height:36px;width:100%;"></audio>
-                <button type="button" class="btn-action-art" onclick="downloadDialogueAudio()" title="Скачать MP3">
-                  💾 MP3
+              <!-- Карточка активного MP3 плеера с большой кнопкой и эквалайзером -->
+              <div id="dialogueAudioCard" style="display:none;align-items:center;gap:10px;background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.4);border-radius:10px;padding:8px 14px;flex-wrap:wrap;">
+                <button type="button" id="btnPlayDialogueAudio" class="btn-action-art pulse-glow" onclick="togglePlayDialogueAudio()" style="background:linear-gradient(135deg, #10b981, #059669);color:#fff;font-weight:800;font-size:13px;padding:8px 16px;">
+                  ▶ ВОСПРОИЗВЕСТИ ОЗВУЧКУ (СЛУШАТЬ)
                 </button>
+
+                <div class="sound-wave-bars" id="dialogueSoundWave">
+                  <div class="sound-bar"></div>
+                  <div class="sound-bar"></div>
+                  <div class="sound-bar"></div>
+                  <div class="sound-bar"></div>
+                  <div class="sound-bar"></div>
+                </div>
+
+                <span id="dialogueAudioTime" style="font-size:12px;font-family:monospace;color:#38bdf8;font-weight:700;">0:00 / 0:03</span>
+
+                <button type="button" class="btn-action-art" onclick="downloadDialogueAudio()" style="padding:6px 12px;font-size:12px;" title="Скачать готовый MP3 файл">
+                  💾 Скачать MP3
+                </button>
+
+                <audio id="dialogueAudioPlayer" preload="auto" style="display:none;"></audio>
               </div>
             </div>
 
-            <div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+            <div style="margin-top:12px;display:flex;align-items:center;gap:8px;">
               <input type="checkbox" id="syncAudioVideoCheck" checked style="accent-color:#a855f7;cursor:pointer;">
               <label for="syncAudioVideoCheck" style="font-size:12px;color:#cbd5e1;cursor:pointer;">
-                🔗 Автоматически воспроизводить эту озвучку синхронно с видеороликом
+                🔗 Автоматически включать эту озвучку при старте сгенерированного видео
               </label>
             </div>
           </div>
-
-          <!-- Кнопка генерации видео -->
+        </div>
+        <!-- Кнопка генерации видео -->
           <div style="margin-top:18px;">
             <button type="button" id="btnGenerateVideo" class="btn-generate-art" onclick="startGenerateVideo()" style="background:linear-gradient(135deg, #0284c7, #7c3aed);">
               <span class="spinner" id="btnVideoSpinner" style="display:none;width:18px;height:18px;border-width:2px;margin-right:8px;"></span>
@@ -12251,6 +12319,37 @@ if (typeof initChatSessions === 'function') initChatSessions();
   // МНОГОГОЛОСАЯ ИИ-ОЗВУЧКА & FAQ ВИДЕО
   // ====================================================
   let currentDialogueAudioUrl = null;
+  let isDialogueAudioPlaying = false;
+  let cachedSystemVoices = [];
+
+  function loadSystemVoices() {
+    if ('speechSynthesis' in window) {
+      cachedSystemVoices = window.speechSynthesis.getVoices() || [];
+    }
+  }
+  if ('speechSynthesis' in window) {
+    loadSystemVoices();
+    window.speechSynthesis.onvoiceschanged = loadSystemVoices;
+  }
+
+  function testSpeakerSound() {
+    if (!('speechSynthesis' in window)) {
+      alert('Проверка динамиков: синтезатор речи не поддерживается браузером.');
+      return;
+    }
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.resume();
+    const u = new SpeechSynthesisUtterance('Звук работает отлично! Привет, братан!');
+    u.lang = 'ru-RU';
+    u.volume = 1.0;
+    u.rate = 1.0;
+    const ruV = cachedSystemVoices.filter(v => (v.lang || '').toLowerCase().includes('ru'));
+    if (ruV.length > 0) u.voice = ruV[0];
+    window.speechSynthesis.speak(u);
+    if (typeof showNotificationToast === 'function') {
+      showNotificationToast('🔊 Воспроизведён тестовый звук в динамиках');
+    }
+  }
 
   function toggleVideoFaq() {
     const box = document.getElementById('videoFaqContent');
@@ -12269,20 +12368,91 @@ if (typeof initChatSessions === 'function') initChatSessions();
     const inp = document.getElementById('dialogueInput');
     if (!inp) return;
     if (type === 'banya') {
-      inp.value = "Брат 1: Ох, хорошо в баньке, братан! Жар от души пошел!\nБрат 2: Да вообще кайф! День был тяжелый, а сейчас как заново родился!\nДевушка: Мальчики, чай с мятой и мёдом готов, выходите пить!";
+      inp.value = `брат 1: ох хорошо паримся братец!
+брат 2: и не поспоришь!
+девушка: мальчики, чай с мятой готов, выходите пить!`;
     } else if (type === 'cyberpunk') {
-      inp.value = "Брат 1: В Найт-Сити сегодня снова кислотный дождь льёт стеной.\nБрат 2: Главное чтобы кибер-импланты не закоротило, погнали в бар!";
+      inp.value = `брат 1: в Найт-Сити сегодня снова кислотный дождь льёт стеной.
+брат 2: главное чтобы кибер-импланты не закоротило, погнали в бар!`;
     } else if (type === 'anime') {
-      inp.value = "Девушка: Сенпай, ты наконец-то пришёл! Я так долго тебя ждала!\nБрат 1: Прости, меня задержали на тренировке клана.";
+      inp.value = `девушка: сенпай, ты наконец-то пришёл! Я так долго тебя ждала!
+брат 1: прости, меня задержали на тренировке клана.`;
     }
     inp.focus();
+  }
+
+  function initAudioPlayerEvents() {
+    const player = document.getElementById('dialogueAudioPlayer');
+    if (!player || player.__initialized) return;
+    player.__initialized = true;
+
+    player.onended = () => {
+      isDialogueAudioPlaying = false;
+      const btn = document.getElementById('btnPlayDialogueAudio');
+      const wave = document.getElementById('dialogueSoundWave');
+      if (btn) {
+        btn.innerHTML = '▶ СЛУШАТЬ СНАЧАЛА';
+        btn.classList.add('pulse-glow');
+      }
+      if (wave) wave.classList.remove('playing');
+      player.currentTime = 0;
+    };
+
+    player.ontimeupdate = () => {
+      const cur = document.getElementById('dialogueAudioTime');
+      if (cur) {
+        const cM = Math.floor(player.currentTime / 60);
+        const cS = Math.floor(player.currentTime % 60);
+        const dur = isNaN(player.duration) ? 0 : player.duration;
+        const dM = Math.floor(dur / 60);
+        const dS = Math.floor(dur % 60);
+        cur.textContent = `${cM}:${cS < 10 ? '0' : ''}${cS} / ${dM}:${dS < 10 ? '0' : ''}${dS}`;
+      }
+    };
+  }
+
+  function togglePlayDialogueAudio() {
+    initAudioPlayerEvents();
+    const player = document.getElementById('dialogueAudioPlayer');
+    const btn = document.getElementById('btnPlayDialogueAudio');
+    const wave = document.getElementById('dialogueSoundWave');
+    if (!player || !player.src) return;
+
+    if (player.paused || player.ended) {
+      if (player.currentTime >= player.duration || player.ended) {
+        player.currentTime = 0;
+      }
+      player.volume = 1.0;
+      const pr = player.play();
+      if (pr !== undefined) {
+        pr.then(() => {
+          isDialogueAudioPlaying = true;
+          if (btn) {
+            btn.innerHTML = '⏸ ПАУЗА';
+            btn.classList.remove('pulse-glow');
+          }
+          if (wave) wave.classList.add('playing');
+        }).catch(err => {
+          console.warn('Direct MP3 play blocked, starting live speech:', err);
+          playLiveBrowserSpeech();
+        });
+      }
+    } else {
+      player.pause();
+      isDialogueAudioPlaying = false;
+      if (btn) {
+        btn.innerHTML = '▶ ПРОДОЛЖИТЬ (СЛУШАТЬ)';
+        btn.classList.add('pulse-glow');
+      }
+      if (wave) wave.classList.remove('playing');
+    }
   }
 
   async function generateDialogueSpeech() {
     const inp = document.getElementById('dialogueInput');
     const text = inp ? inp.value.trim() : '';
     if (!text) {
-      alert('Пожалуйста, напиши реплики персонажей или выбери готовый сценарий («Братья в бане»)!');
+      alert('Пожалуйста, напиши реплики персонажей или нажми кнопку «🧖 Братья в бане»!');
       inp?.focus();
       return;
     }
@@ -12290,21 +12460,19 @@ if (typeof initChatSessions === 'function') initChatSessions();
     const btn = document.getElementById('btnGenVoice');
     const btnText = document.getElementById('btnVoiceText');
     const spin = document.getElementById('voiceSpinner');
-    const container = document.getElementById('dialogueAudioContainer');
+    const card = document.getElementById('dialogueAudioCard');
     const player = document.getElementById('dialogueAudioPlayer');
+    const playBtn = document.getElementById('btnPlayDialogueAudio');
 
     if (btn) btn.disabled = true;
     if (spin) spin.style.display = 'inline-block';
-    if (btnText) btnText.textContent = 'Синтез голосов...';
+    if (btnText) btnText.textContent = 'Синтез аудио...';
 
     try {
       const resp = await fetch(`${BRIDGE_HOST}/api/generate_speech`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: text,
-          voice: 'bratan'
-        })
+        body: JSON.stringify({ text: text })
       });
 
       if (!resp.ok) throw new Error(`HTTP Error ${resp.status}`);
@@ -12314,23 +12482,34 @@ if (typeof initChatSessions === 'function') initChatSessions();
         currentDialogueAudioUrl = data.audio_data;
         if (player) {
           player.src = currentDialogueAudioUrl;
-          player.play().catch(() => {});
+          player.currentTime = 0;
+          player.volume = 1.0;
         }
-        if (container) container.style.display = 'flex';
+        initAudioPlayerEvents();
+
+        if (card) card.style.display = 'flex';
+        if (playBtn) {
+          playBtn.innerHTML = '🔊 НАЖМИ, ЧТОБЫ СЛУШАТЬ';
+          playBtn.classList.add('pulse-glow');
+        }
+
+        // Trigger playback immediately
+        togglePlayDialogueAudio();
+
         if (typeof showNotificationToast === 'function') {
-          showNotificationToast('🎙️ Многоголосая озвучка успешно сгенерирована!');
+          showNotificationToast('🎙️ Озвучка готова! Нажми зеленую кнопку, чтобы послушать');
         }
       } else {
         throw new Error(data.error || 'Ошибка синтеза речи');
       }
 
     } catch(err) {
-      console.warn('Backend speech error, fallback to live browser speech:', err);
+      console.warn('Backend speech synthesis failed, fallback to live browser speech:', err);
       playLiveBrowserSpeech();
     } finally {
       if (btn) btn.disabled = false;
       if (spin) spin.style.display = 'none';
-      if (btnText) btnText.textContent = '🎙️ Озвучить реплики (ИИ)';
+      if (btnText) btnText.textContent = '🎙️ Сохранить в MP3';
     }
   }
 
@@ -12338,7 +12517,7 @@ if (typeof initChatSessions === 'function') initChatSessions();
     const inp = document.getElementById('dialogueInput');
     const text = inp ? inp.value.trim() : '';
     if (!text) {
-      alert('Введи реплики для живой озвучки!');
+      alert('Введи реплики для живой озвучки (например: «брат 1: ох хорошо паримся!\nбрат 2: и не поспоришь!»)');
       return;
     }
     if (!('speechSynthesis' in window)) {
@@ -12347,37 +12526,61 @@ if (typeof initChatSessions === 'function') initChatSessions();
     }
 
     window.speechSynthesis.cancel();
-    const lines = text.split('\n').filter(l => l.trim().length > 0);
-    const voices = window.speechSynthesis.getVoices();
-    const ruVoices = voices.filter(v => v.lang.includes('ru'));
+    window.speechSynthesis.resume();
+
+    if (cachedSystemVoices.length === 0) {
+      loadSystemVoices();
+    }
+
+    const rawLines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+    const ruVoices = cachedSystemVoices.filter(v => (v.lang || '').toLowerCase().includes('ru'));
+    const banner = document.getElementById('liveSpeechIndicator');
 
     let currentIdx = 0;
     function speakNext() {
-      if (currentIdx >= lines.length) return;
-      const line = lines[currentIdx];
+      if (currentIdx >= rawLines.length) {
+        if (banner) banner.style.display = 'none';
+        return;
+      }
+
+      const line = rawLines[currentIdx];
       currentIdx++;
 
       const parts = line.split(':');
-      const speaker = parts.length > 1 ? parts[0].trim().toLowerCase() : '';
+      const speaker = parts.length > 1 ? parts[0].trim() : `Персонаж ${currentIdx}`;
       const phrase = parts.length > 1 ? parts[1].trim() : line.trim();
+
+      if (banner) {
+        banner.style.display = 'flex';
+        banner.innerHTML = `<span style="font-size:18px;">🗣️</span> <span>Говорит <b>${escH(speaker)}:</b> «${escH(phrase)}»</span>`;
+      }
 
       const utter = new SpeechSynthesisUtterance(phrase);
       utter.lang = 'ru-RU';
-      if (ruVoices.length > 0) utter.voice = ruVoices[0];
+      utter.volume = 1.0;
+      if (ruVoices.length > 0) {
+        utter.voice = ruVoices[0];
+      }
 
-      // Dynamic voice characteristics based on speaker
-      if (speaker.includes('девушка') || speaker.includes('тян') || speaker.includes('сестра')) {
+      const lowerSpeaker = speaker.toLowerCase();
+      if (lowerSpeaker.includes('девушка') || lowerSpeaker.includes('тян') || lowerSpeaker.includes('сестра')) {
         utter.pitch = 1.45;
         utter.rate = 1.1;
-      } else if (currentIdx % 2 === 1) {
-        utter.pitch = 0.8;
+      } else if (currentIdx % 2 === 0) {
+        utter.pitch = 0.75; // Глубокий мужской бас для Брата 1
         utter.rate = 0.95;
       } else {
-        utter.pitch = 1.15;
+        utter.pitch = 1.25; // Бодрый энергичный голос для Брата 2
         utter.rate = 1.05;
       }
 
-      utter.onend = speakNext;
+      utter.onend = () => {
+        setTimeout(speakNext, 250);
+      };
+      utter.onerror = () => {
+        speakNext();
+      };
+
       window.speechSynthesis.speak(utter);
     }
 
@@ -12385,10 +12588,13 @@ if (typeof initChatSessions === 'function') initChatSessions();
   }
 
   function downloadDialogueAudio() {
-    if (!currentDialogueAudioUrl) return;
+    if (!currentDialogueAudioUrl) {
+      alert('Сначала сгенерируй озвучку кнопкой «Сохранить в MP3»!');
+      return;
+    }
     const a = document.createElement('a');
     a.href = currentDialogueAudioUrl;
-    a.download = `quizgen_dialogue_${Date.now()}.mp3`;
+    a.download = `dialogue_banya_${Date.now()}.mp3`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

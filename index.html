@@ -12073,7 +12073,7 @@ if (typeof initChatSessions === 'function') initChatSessions();
     const btnSpin = document.getElementById('btnVideoSpinner');
     if (btn) btn.disabled = true;
     if (btnSpin) btnSpin.style.display = 'inline-block';
-    if (btnText) btnText.textContent = '🎬 Синтез кадров видео...';
+    if (btnText) btnText.textContent = '🎬 Генерация 60 FPS видео...';
 
     const placeholder = document.getElementById('videoPlaceholder');
     const loadingState = document.getElementById('videoLoadingState');
@@ -12091,18 +12091,23 @@ if (typeof initChatSessions === 'function') initChatSessions();
     if (loadingState) loadingState.style.display = 'flex';
 
     let elapsed = 0;
-    if (timerEl) timerEl.textContent = 'Прошло 0 сек';
+    if (timerEl) timerEl.textContent = 'Подготовка сцены: 0 сек';
     if (videoTimerInterval) clearInterval(videoTimerInterval);
     videoTimerInterval = setInterval(() => {
       elapsed++;
-      if (timerEl) timerEl.textContent = `Рендер видео: ${elapsed} сек...`;
-      if (elapsed > 10 && loadingTitle) {
-        loadingTitle.textContent = '🎥 Оптимизация динамики и сборка MP4...';
+      if (timerEl) timerEl.textContent = `Рендер 60 FPS кино-кадров: ${elapsed} сек...`;
+      if (elapsed > 2 && loadingTitle) {
+        loadingTitle.textContent = '🎙️ Синтез многоголосой озвучки и сведение звука...';
+      }
+      if (elapsed > 4 && loadingTitle) {
+        loadingTitle.textContent = '🎥 60 FPS сборка MP4 со звуком...';
       }
     }, 1000);
 
     const motionBucket = parseInt(document.getElementById('videoMotionSelect')?.value || '127');
-    const fps = parseInt(document.getElementById('videoFpsSelect')?.value || '6');
+    const fps = parseInt(document.getElementById('videoFpsSelect')?.value || '60');
+    const duration = parseInt(document.getElementById('videoDurationSelect')?.value || '5');
+    const dialogueText = (document.getElementById('dialogueInput')?.value || '').trim();
     const seed = Math.floor(Math.random() * 999999999);
 
     try {
@@ -12114,6 +12119,9 @@ if (typeof initChatSessions === 'function') initChatSessions();
           image_data: currentArtDataUrl || null,
           motion_bucket: motionBucket,
           fps: fps,
+          duration: duration,
+          dialogue: dialogueText,
+          audio_data: currentDialogueAudioUrl || null,
           seed: seed
         })
       });
@@ -12131,14 +12139,9 @@ if (typeof initChatSessions === 'function') initChatSessions();
           player.src = currentVideoUrl;
           player.style.display = 'block';
           player.playbackRate = currentVideoSpeed;
+          player.muted = false;
+          player.volume = 1.0;
           player.play().catch(() => {});
-          // Sync with dialogue audio if available
-          const syncCheck = document.getElementById('syncAudioVideoCheck');
-          const audioPlayer = document.getElementById('dialogueAudioPlayer');
-          if (syncCheck && syncCheck.checked && audioPlayer && audioPlayer.src) {
-            audioPlayer.currentTime = 0;
-            audioPlayer.play().catch(() => {});
-          }
         }
         if (loadingState) loadingState.style.display = 'none';
         if (actionToolbar) actionToolbar.style.display = 'flex';
@@ -12151,26 +12154,10 @@ if (typeof initChatSessions === 'function') initChatSessions();
           timestamp: Date.now()
         });
 
-      } else if (data.status === 'quota_fallback') {
-        if (loadingState) loadingState.style.display = 'none';
-        if (placeholder) {
-          placeholder.style.display = 'flex';
-          placeholder.innerHTML = `
-            <div style="font-size:42px;margin-bottom:10px;">🚀</div>
-            <div style="font-weight:700;font-size:16px;color:#38bdf8;">Твой ComfyUI на видеокарте RTX 4060 готов к рендеру!</div>
-            <div style="font-size:12.5px;color:#cbd5e1;margin-top:6px;max-width:560px;line-height:1.5;">
-              ${escH(data.message)}
-            </div>
-            <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center;">
-              <button type="button" class="btn-comfy-launch" onclick="launchComfyUIWorkstation()">
-                <span>🚀 Открыть ComfyUI (порт 8188)</span>
-              </button>
-              <button type="button" class="btn-action-art" onclick="copyCurrentVideoPrompt()">
-                <span>📋 Скопировать промпт для ComfyUI</span>
-              </button>
-            </div>
-          `;
+        if (typeof showNotificationToast === 'function') {
+          showNotificationToast('🎬 60 FPS видео готово и воспроизводится со звуком!');
         }
+
       } else {
         throw new Error(data.error || 'Не удалось сгенерировать видео');
       }
@@ -12180,7 +12167,7 @@ if (typeof initChatSessions === 'function') initChatSessions();
       if (loadingState) loadingState.style.display = 'none';
       if (placeholder) {
         placeholder.style.display = 'flex';
-        placeholder.innerHTML = `<div style="font-size:36px;margin-bottom:8px;">⚠️</div><div style="font-weight:700;color:#ef4444;">Ошибка генерации видео: ${escH(err.message)}</div><div style="font-size:12px;color:var(--text-muted);margin-top:6px;">Попробуй еще раз или запусти ComfyUI MiniMax H3 на видеокарте!</div>`;
+        placeholder.innerHTML = `<div style="font-size:36px;margin-bottom:8px;">⚠️</div><div style="font-weight:700;color:#ef4444;">Ошибка генерации видео: ${escH(err.message)}</div><div style="font-size:12px;color:var(--text-muted);margin-top:6px;">Проверь запущен ли сервер qwen_server.py</div>`;
       }
     } finally {
       isVideoGenerating = false;

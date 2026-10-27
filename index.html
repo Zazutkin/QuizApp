@@ -5404,7 +5404,33 @@
               </div>
             </div>
 
-            <!-- Быстрые сценарии диалогов -->
+                          <!-- Выбор модели голоса и прослушивание -->
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;background:rgba(15,23,42,0.6);padding:10px 14px;border-radius:10px;border:1px solid rgba(168,85,247,0.3);">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span style="font-size:16px;">🎙️</span>
+                  <label for="voiceRoleSelect" style="font-size:12.5px;font-weight:700;color:#c4b5fd;">Выбор озвучки:</label>
+                </div>
+                <select id="voiceRoleSelect" class="art-select" style="flex:1;min-width:260px;font-size:12.5px;background:#0f172a;border-color:rgba(168,85,247,0.5);">
+                  <optgroup label="🎭 Автоматический многоголосый дубляж по ролям">
+                    <option value="dialogue_auto" selected>🎭 Многоголосый диалог (Бас + Бодрый + Девушка по ролям)</option>
+                  </optgroup>
+                  <optgroup label="👨 Мужские голоса (Studio Neural)">
+                    <option value="male_bass">🎙️ Дмитрий (Глубокий мужской бас / Кино-диктор)</option>
+                    <option value="male_energetic">⚡ Бодрый парень / Брат 2 (Динамичный мужской)</option>
+                    <option value="brutal_warrior">💪 Брутальный батя / Воин (Тяжелый грудной бас)</option>
+                  </optgroup>
+                  <optgroup label="👩 Женские голоса (Studio Neural)">
+                    <option value="female_sweet">🌸 Светлана (Нежный бархатный женский голос)</option>
+                    <option value="female_anime">🎀 Аниме-тян / Подруга (Милый девичий голос)</option>
+                    <option value="female_formal">💼 Деловая ведущая / Кино-рассказчица</option>
+                  </optgroup>
+                </select>
+                <button type="button" class="preset-btn" id="btnPreviewVoice" onclick="previewCurrentVoice()" style="padding:6px 14px;background:rgba(56,189,248,0.2);border-color:#38bdf8;color:#38bdf8;font-weight:700;font-size:12px;" title="Прослушать короткий образец выбранного голоса">
+                  <span id="previewVoiceIcon">▶</span> <span>Прослушать голос</span>
+                </button>
+              </div>
+
+              <!-- Быстрые сценарии диалогов -->
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
               <span style="font-size:11.5px;color:#94a3b8;align-self:center;font-weight:600;">Готовые сценарии:</span>
               <button type="button" class="preset-btn" onclick="applyDialoguePreset('banya')">🧖 Братья в бане</button>
@@ -12319,6 +12345,42 @@ if (typeof initChatSessions === 'function') initChatSessions();
     window.speechSynthesis.onvoiceschanged = loadSystemVoices;
   }
 
+  
+  let previewAudioPlayer = null;
+  async function previewCurrentVoice() {
+    const vSel = document.getElementById('voiceRoleSelect');
+    const voiceId = vSel ? vSel.value : 'male_bass';
+    const btn = document.getElementById('btnPreviewVoice');
+    const icon = document.getElementById('previewVoiceIcon');
+    if (icon) icon.textContent = '⏳';
+    if (btn) btn.disabled = true;
+
+    try {
+      const resp = await fetch(`${BRIDGE_HOST}/api/voice_preview`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ voice: voiceId })
+      });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      if (data.status === 'ok' && data.audio_data) {
+        if (!previewAudioPlayer) previewAudioPlayer = new Audio();
+        previewAudioPlayer.src = data.audio_data;
+        previewAudioPlayer.volume = 1.0;
+        previewAudioPlayer.play().catch(() => {});
+        if (typeof showNotificationToast === 'function') {
+          showNotificationToast(`🔊 Играет образец: ${vSel.options[vSel.selectedIndex].text}`);
+        }
+      }
+    } catch(e) {
+      console.warn('Voice preview error:', e);
+      testSpeakerSound();
+    } finally {
+      if (icon) icon.textContent = '▶';
+      if (btn) btn.disabled = false;
+    }
+  }
+
   function testSpeakerSound() {
     if (!('speechSynthesis' in window)) {
       alert('Проверка динамиков: синтезатор речи не поддерживается браузером.');
@@ -12459,7 +12521,7 @@ if (typeof initChatSessions === 'function') initChatSessions();
       const resp = await fetch(`${BRIDGE_HOST}/api/generate_speech`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: text })
+        body: JSON.stringify({ text: text, voice: document.getElementById('voiceRoleSelect')?.value || 'dialogue_auto' })
       });
 
       if (!resp.ok) throw new Error(`HTTP Error ${resp.status}`);
@@ -12550,7 +12612,8 @@ if (typeof initChatSessions === 'function') initChatSessions();
       }
 
       const lowerSpeaker = speaker.toLowerCase();
-      if (lowerSpeaker.includes('девушка') || lowerSpeaker.includes('тян') || lowerSpeaker.includes('сестра')) {
+      const selVoiceRole = document.getElementById('voiceRoleSelect')?.value || 'dialogue_auto';
+      if (selVoiceRole === 'female_sweet' || selVoiceRole === 'female_anime' || lowerSpeaker.includes('девушка') || lowerSpeaker.includes('тян') || lowerSpeaker.includes('сестра')) {
         utter.pitch = 1.45;
         utter.rate = 1.1;
       } else if (currentIdx % 2 === 0) {

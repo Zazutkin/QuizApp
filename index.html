@@ -5318,7 +5318,6 @@
                 </button>
               </div>
             </div>
-          </div>
 
           <!-- Раскрывающийся гид: «Что всё это значит?» -->
           <div style="margin-bottom:16px;background:rgba(15,23,42,0.5);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 16px;">
@@ -5334,6 +5333,25 @@
               <p style="margin-bottom:8px;"><b>3. Что такое Turbo 8-step?</b> Обычно видео создается за 50 шагов (15-20 минут). Turbo-адаптер ускоряет рендер в 6 раз — всего 8 шагов!</p>
               <p><b>4. Что такое 60 FPS?</b> FPS (Frames Per Second) — число кадров в секунду. 24 FPS — кино, 60 FPS — супер-плавная плавная картинка без рывков.</p>
             </div>
+
+            <!-- Картинка результата -->
+            <img id="imgResultImage" class="img-result-img" style="display:none;" alt="Generated Artwork" />
+          </div>
+
+          <!-- Панель действий под результатом -->
+          <div id="imgActionToolbar" class="img-action-toolbar" style="display:none;">
+            <button class="btn-action-art" onclick="downloadCurrentImage()" title="Скачать в максимальном качестве">
+              💾 Скачать фото
+            </button>
+            <button class="btn-action-art" onclick="openFullscreenImage()" title="Развернуть на весь экран">
+              🔍 На весь экран
+            </button>
+            <button class="btn-action-art" onclick="copyCurrentPrompt()" title="Скопировать промпт">
+              📋 Промпт
+            </button>
+            <button class="btn-action-art" onclick="regenerateVariation()" title="Сделать другую вариацию">
+              🔄 Вариация
+            </button>
           </div>
 
           <!-- Поле промпта для видео -->
@@ -6454,7 +6472,7 @@ function initAiProviderSettings() {
   // ==========================================================
   //  🛡️ СИСТЕМНЫЙ ПРОМПТ ПО УМОЛЧАНИЮ ДЛЯ КАСТОМНЫХ МОДЕЛЕЙ (v1.2+)
    // ЕДИНАЯ УНИВЕРСАЛЬНАЯ ФУНКЦИЯ ДЛЯ ВЫЗОВА ЛЮБОЙ НЕЙРОСЕТИ (Ollama / Cloud API)
-  async function callUnifiedAi({ prompt, systemPrompt, format, temperature = 0.2, maxTokens = 2000 }) {
+  async function callUnifiedAi({ prompt, systemPrompt, format, temperature = 0.2, maxTokens = 4096 }) {
     const provider = safeStorageGet('quiz_ai_provider', 'ollama');
 
     if (provider === 'api') {
@@ -6521,7 +6539,8 @@ function initAiProviderSettings() {
         stream: false,
         options: {
           temperature: temperature,
-          num_predict: maxTokens
+          num_predict: maxTokens,
+          num_ctx: 8192
         }
       };
 
@@ -7417,7 +7436,7 @@ ${userCode}
           prompt,
           think: false,
           stream: false,
-          options: { temperature: 0.25, num_predict: 350 }
+          options: { temperature: 0.25, num_predict: 2048, num_ctx: 8192 }
         })
       });
 
@@ -7834,6 +7853,7 @@ ${userCode}
   //  ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
   // ==========================================================
   function switchTab(tab) {
+    window._currentActiveTab = tab;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     ['tabCreate','tabTeacher','tabPython','tabQuiz','tabResult','tabHistory','tabSettings','tabChat','tabProfile','tabImageGen','tabFlashcards','tabMistakes'].forEach(id => {
       const el = document.getElementById(id);
@@ -7871,12 +7891,321 @@ ${userCode}
     }
     if (tab === 'mistakes' && typeof renderMistakesUI === 'function') renderMistakesUI();
     if (tab === 'chat') {
+      window._chatUnreadCount = 0;
+      updateChatTabIndicator();
       if (typeof renderChatSessionsUI === 'function') renderChatSessionsUI();
       if (typeof renderActiveChatMessages === 'function') renderActiveChatMessages();
     }
   }
 
   // ==========================================================
+  //  🎨 НЕЙРО-АРТ СТУДИЯ (FLUX & SDXL IMAGE GENERATOR)
+  // ==========================================================
+  let activeArtStyle = 'photoreal';
+  let currentArtDataUrl = null;
+  let currentArtPrompt = '';
+  let isArtGenerating = false;
+  let artTimerInterval = null;
+
+  const ART_STYLES_MAP = {
+    photoreal: 'hyperrealistic 8k photograph, professional DSLR shot, 85mm f/1.4 lens, natural lighting, highly detailed, photorealistic, sharp focus, masterpiece',
+    cyberpunk: 'cyberpunk style, futuristic neon lights, neon glowing reflections, wet pavement, highly detailed, high quality, 8k resolution, cinematic',
+    anime: 'makoto shinkai aesthetic anime style, highly detailed anime illustration, vibrant colors, beautiful lighting, masterpiece',
+    digital: 'digital concept art, trending on ArtStation, dynamic lighting, dramatic composition, 8k resolution, masterpiece',
+    darkfantasy: 'dark fantasy style, atmospheric, moody, volumetric lighting, hyperdetailed, epic composition, unreal engine 5 render',
+    render3d: 'pixar 3D style render, volumetric lighting, smooth shaders, ray tracing, cute, highly detailed, 8k',
+    oil: 'oil on canvas painting, thick visible brushstrokes, textured paint, classical fine art masterpiece, rich colors',
+    raw: ''
+  };
+
+  function selectImgStyle(btn, styleKey) {
+    document.querySelectorAll('.img-style-card').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeArtStyle = styleKey;
+  }
+
+  function setQuickImgPrompt(text) {
+    const el = document.getElementById('imgPromptInput');
+    if (el) el.value = text;
+  }
+
+  async function enhanceImagePromptWithAi() {
+    const input = document.getElementById('imgPromptInput');
+    const userText = input.value.trim();
+    if (!userText) {
+      alert('Сначала напиши любую мысль или тему для изображения!');
+      return;
+    }
+    const btn = document.getElementById('btnEnhancePrompt');
+    const origHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '✨ Qwen улучшает...';
+
+    try {
+      let enhanced = '';
+      if (hasInternetBridge) {
+        try {
+          const r = await fetch(`${BRIDGE_HOST}/api/enhance_image_prompt`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: userText })
+          });
+          if (r.ok) {
+            const d = await r.json();
+            enhanced = d.enhanced_prompt;
+          }
+        } catch(e) {}
+      }
+
+      if (!enhanced) {
+        const prompt = `Ты — профессиональный промпт-инженер для нейросетей FLUX и Midjourney.
+Задача: преврати краткую идею пользователя в кинематографичный, богатый деталями англоязычный промпт (освещение, ракурс, стиль съёмки, материалы, 8k фото).
+ВЕРНИ ТОЛЬКО ИТОГОВЫЙ ТЕКСТ НА АНГЛИЙСКОМ БЕЗ КАВЫЧЕК И ПОЯСНЕНИЙ.
+
+Идея пользователя: ${userText}`;
+        enhanced = await callUnifiedAi({ prompt, temperature: 0.7, maxTokens: 180 });
+      }
+
+      if (enhanced && enhanced.trim().length > 5) {
+        input.value = enhanced.trim().replace(/^["']|["']$/g, '');
+        showNotificationToast('✨ Промпт обогащён через Qwen 3.5!');
+      }
+    } catch(e) {
+      console.warn('Enhance prompt failed:', e);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = origHtml;
+    }
+  }
+
+  async function startGenerateArt() {
+    const input = document.getElementById('imgPromptInput');
+    const userPrompt = input.value.trim();
+    if (!userPrompt) {
+      alert('Введи описание изображения!');
+      input.focus();
+      return;
+    }
+    if (isArtGenerating) return;
+
+    isArtGenerating = true;
+    const btn = document.getElementById('btnGenerateArt');
+    const btnText = document.getElementById('btnArtText');
+    const btnSpin = document.getElementById('btnArtSpinner');
+    btn.disabled = true;
+    btnSpin.style.display = 'inline-block';
+    btnText.textContent = '🎨 Отрисовка кадра...';
+
+    const placeholder = document.getElementById('imgPlaceholder');
+    const loadingState = document.getElementById('imgLoadingState');
+    const resultImg = document.getElementById('imgResultImage');
+    const actionToolbar = document.getElementById('imgActionToolbar');
+    const timerEl = document.getElementById('imgGenerationTimer');
+
+    if (placeholder) placeholder.style.display = 'none';
+    if (resultImg) resultImg.style.display = 'none';
+    if (actionToolbar) actionToolbar.style.display = 'none';
+    if (loadingState) loadingState.style.display = 'flex';
+
+    let elapsed = 0;
+    if (timerEl) timerEl.textContent = 'Прошло 0 сек';
+    artTimerInterval = setInterval(() => {
+      elapsed++;
+      if (timerEl) timerEl.textContent = `Прошло ${elapsed} сек...`;
+    }, 1000);
+
+    const aspect = document.getElementById('imgAspectSelect')?.value || '1:1';
+    let width = 1024, height = 1024;
+    if (aspect === '16:9') { width = 1280; height = 720; }
+    else if (aspect === '9:16') { width = 720; height = 1280; }
+    else if (aspect === '4:3') { width = 1024; height = 768; }
+
+    const modelChoice = document.getElementById('imgModelSelect')?.value || 'flux';
+    const styleSuffix = ART_STYLES_MAP[activeArtStyle] || '';
+    const fullPrompt = styleSuffix ? `${userPrompt}, ${styleSuffix}` : userPrompt;
+    currentArtPrompt = fullPrompt;
+
+    const seed = Math.floor(Math.random() * 999999999);
+    const encodedPrompt = encodeURIComponent(fullPrompt);
+    const targetUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&model=${modelChoice}&nologo=true&seed=${seed}`;
+
+    try {
+      let localUrl = null;
+      let base64Data = null;
+
+      // 1. Попытка через локальный мост сервера (порт 5005)
+      if (hasInternetBridge) {
+        try {
+          const sResp = await fetch(`${BRIDGE_HOST}/api/generate_image`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: fullPrompt, width, height, model: modelChoice, seed })
+          });
+          if (sResp.ok) {
+            const sData = await sResp.json();
+            if (sData.status === 'ok' && sData.image_data) {
+              localUrl = sData.image_data;
+              base64Data = sData.image_data;
+            }
+          }
+        } catch(be) {
+          console.warn('Bridge image gen failed, fallback to direct fetch:', be);
+        }
+      }
+
+      // 2. Прямой fetch если сервер недоступен или без base64
+      if (!localUrl) {
+        const resp = await fetch(targetUrl);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const blob = await resp.blob();
+        localUrl = URL.createObjectURL(blob);
+
+        const reader = new FileReader();
+        reader.onloadend = function() {
+          saveArtToGallery({
+            id: 'art_' + Date.now(),
+            url: reader.result || localUrl,
+            prompt: userPrompt,
+            fullPrompt: fullPrompt,
+            aspect: aspect,
+            time: Date.now()
+          });
+        };
+        reader.readAsDataURL(blob);
+      } else {
+        saveArtToGallery({
+          id: 'art_' + Date.now(),
+          url: base64Data,
+          prompt: userPrompt,
+          fullPrompt: fullPrompt,
+          aspect: aspect,
+          time: Date.now()
+        });
+      }
+
+      clearInterval(artTimerInterval);
+      if (loadingState) loadingState.style.display = 'none';
+      if (resultImg) {
+        resultImg.src = localUrl;
+        resultImg.style.display = 'block';
+      }
+      if (actionToolbar) actionToolbar.style.display = 'flex';
+      currentArtDataUrl = localUrl;
+
+      if (window._currentActiveTab !== 'imagegen' && window._currentActiveTab !== 'flashcards') {
+        playChatDoneSound();
+        showNotificationToast('🎨 <b>Шедевр готов!</b> <button onclick="switchTab(\'imagegen\')" style="margin-left:8px;background:#8b5cf6;color:#fff;border:none;border-radius:6px;padding:3px 9px;font-size:12px;cursor:pointer;font-weight:700;">Посмотреть фото →</button>');
+      } else {
+        showNotificationToast('🎉 Фото успешно сгенерировано!');
+      }
+    } catch(err) {
+      clearInterval(artTimerInterval);
+      if (loadingState) loadingState.style.display = 'none';
+      if (placeholder) {
+        placeholder.style.display = 'flex';
+        placeholder.innerHTML = `<div style="font-size:36px;margin-bottom:8px;">⚠️</div><div style="color:#fca5a5;font-weight:700;">Ошибка генерации: ${escH(err.message)}</div><div style="font-size:12px;color:var(--text-muted);margin-top:6px;">Проверь подключение к сети и попробуй снова.</div>`;
+      }
+    } finally {
+      isArtGenerating = false;
+      btn.disabled = false;
+      btnSpin.style.display = 'none';
+      btnText.textContent = '✨ Сгенерировать изображение';
+    }
+  }
+
+  function downloadCurrentImage() {
+    if (!currentArtDataUrl) return;
+    const a = document.createElement('a');
+    a.href = currentArtDataUrl;
+    a.download = `QuizApp_Art_${Date.now()}.jpg`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  function openFullscreenImage() {
+    if (!currentArtDataUrl) return;
+    const w = window.open('');
+    if (w) {
+      w.document.write(`<body style="margin:0;background:#05070f;display:flex;align-items:center;justify-content:center;height:100vh;"><img src="${currentArtDataUrl}" style="max-width:98%;max-height:98%;object-fit:contain;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.8);" /></body>`);
+    }
+  }
+
+  function copyCurrentPrompt() {
+    if (!currentArtPrompt) return;
+    navigator.clipboard.writeText(currentArtPrompt).then(() => {
+      showNotificationToast('📋 Промпт скопирован в буфер обмена!');
+    });
+  }
+
+  function regenerateVariation() {
+    startGenerateArt();
+  }
+
+  function getArtGallery() {
+    try {
+      const g = localStorage.getItem('quizgen_art_gallery_v1');
+      return g ? JSON.parse(g) : [];
+    } catch(e) { return []; }
+  }
+
+  function saveArtToGallery(item) {
+    const list = getArtGallery();
+    list.unshift(item);
+    if (list.length > 30) list.pop();
+    try {
+      localStorage.setItem('quizgen_art_gallery_v1', JSON.stringify(list));
+    } catch(e) {
+      try {
+        localStorage.setItem('quizgen_art_gallery_v1', JSON.stringify(list.slice(0, 10)));
+      } catch(e2) {}
+    }
+    renderImageGalleryUI();
+  }
+
+  function clearArtGallery() {
+    if (!confirm('Очистить всю сохранённую галерею фото?')) return;
+    localStorage.removeItem('quizgen_art_gallery_v1');
+    renderImageGalleryUI();
+  }
+
+  function renderImageGalleryUI() {
+    const wrap = document.getElementById('artGalleryGrid');
+    const countEl = document.getElementById('galleryCount');
+    if (!wrap) return;
+    const list = getArtGallery();
+    if (countEl) countEl.textContent = list.length;
+    wrap.innerHTML = '';
+    if (!list.length) {
+      wrap.innerHTML = '<div style="font-size:12px;color:var(--text-muted);grid-column:1/-1;text-align:center;padding:16px;">Пока нет сохранённых работ. Нажми «Сгенерировать изображение» выше!</div>';
+      return;
+    }
+    list.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'art-thumb-card';
+      card.innerHTML = `<img src="${item.url}" alt="art"><div class="art-thumb-prompt-overlay" title="${escH(item.prompt)}">${escH(item.prompt)}</div>`;
+      card.onclick = function() {
+        const resultImg = document.getElementById('imgResultImage');
+        const placeholder = document.getElementById('imgPlaceholder');
+        const actionToolbar = document.getElementById('imgActionToolbar');
+        const input = document.getElementById('imgPromptInput');
+        if (placeholder) placeholder.style.display = 'none';
+        if (resultImg) {
+          resultImg.src = item.url;
+          resultImg.style.display = 'block';
+        }
+        if (actionToolbar) actionToolbar.style.display = 'flex';
+        currentArtDataUrl = item.url;
+        currentArtPrompt = item.fullPrompt || item.prompt;
+        if (input) input.value = item.prompt;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+      wrap.appendChild(card);
+    });
+  }
+
+
+    // ==========================================================
   //  БЕЗОПАСНОСТЬ: САНИТИЗАЦИЯ ССЫЛОК И БЕЗОПАСНОЕ ХРАНИЛИЩЕ
   // ==========================================================
   function sanitizeUrl(url) {
@@ -8774,7 +9103,7 @@ function addManualFlashcard() {
         cards = data.cards || [];
       } else {
         const prompt = `Составь ровно 6 карточек для запоминания по теме: "${topic}". Верни строго валидный JSON: {"cards":[{"front":"Краткий вопрос или понятие","back":"Чёткий ответ или определение","mnemonic":"Короткая ассоциация или мнемоника"}]}`;
-        const rawFcText = await callUnifiedAi({ prompt, format: 'json', maxTokens: 1500 });
+        const rawFcText = await callUnifiedAi({ prompt, format: 'json', maxTokens: 4096 });
         const parsed = (typeof parseOllamaJson === 'function') ? parseOllamaJson(rawFcText) : JSON.parse(rawFcText || '{}');
         cards = parsed.cards || [];
       }
@@ -9136,7 +9465,7 @@ function addManualFlashcard() {
   }
 
   let hasInternetBridge = false;
-  const BRIDGE_HOST = 'http://localhost:5005';
+  let BRIDGE_HOST = 'http://127.0.0.1:5005';
 
   async function checkBridge() {
     const statusEl = document.getElementById('bridgeStatus');
@@ -9144,21 +9473,43 @@ function addManualFlashcard() {
     if (!statusEl || !textEl) return;
     textEl.textContent = '🌐 Веб-поиск...';
     statusEl.className = 'status-pill';
-    try {
-      const ctrl = new AbortController();
-      const tid = setTimeout(() => ctrl.abort(), 2500);
-      const resp = await fetch(`${BRIDGE_HOST}/api/status`, { signal: ctrl.signal });
-      clearTimeout(tid);
-      if (!resp.ok) throw new Error();
-      const data = await resp.json();
-      if (data.status === 'online') {
-        hasInternetBridge = true;
-        statusEl.className = 'status-pill online';
-        textEl.textContent = '🌐 Интернет: Онлайн';
-        statusEl.title = 'ReAct веб-поиск активен! Qwen в реальном времени ищет факты в сети.';
-        return;
+    
+    // Пробуем 127.0.0.1 (мгновенно без задержек DNS), а при необходимости fallback на localhost
+    const endpoints = ['http://127.0.0.1:5005', 'http://localhost:5005'];
+    let ok = false;
+    let data = null;
+
+    for (const ep of endpoints) {
+      try {
+        const ctrl = new AbortController();
+        const tid = setTimeout(() => ctrl.abort(), 4000);
+        const resp = await fetch(`${ep}/api/status`, { signal: ctrl.signal });
+        clearTimeout(tid);
+        if (resp.ok) {
+          data = await resp.json();
+          if (data && data.status === 'online') {
+            BRIDGE_HOST = ep;
+            ok = true;
+            break;
+          }
+        }
+      } catch(e) {}
+    }
+
+    if (ok && data) {
+      hasInternetBridge = true;
+      statusEl.className = 'status-pill online';
+      textEl.textContent = '🌐 Интернет: Онлайн';
+      statusEl.title = 'ReAct веб-поиск активен! Qwen в реальном времени ищет факты в сети.';
+
+      // Если сервер сообщает, что Ollama онлайн, а в интерфейсе ещё показывает "не запущена" — синхронизируем
+      if (data.ollama_online) {
+        const oText = document.getElementById('statusText');
+        if (oText && oText.textContent && oText.textContent.includes('не запущена')) {
+          checkOllama();
+        }
       }
-    } catch(e) {
+    } else {
       hasInternetBridge = false;
       statusEl.className = 'status-pill offline';
       textEl.textContent = '🌐 Интернет: Офлайн';
@@ -9718,7 +10069,7 @@ ${partInstruction}
           prompt: p1,
           format: 'json',
           temperature: isShortInput ? 0.2 : 0.3,
-          maxTokens: Math.max(2000, count1 * 300)
+          maxTokens: Math.max(4096, count1 * 500)
         });
         const d1 = parseOllamaJson(res1Text);
         if (d1.questions && d1.questions.length) draftQuestions.push(...d1.questions);
@@ -9738,8 +10089,8 @@ ${partInstruction}
             stream: false,
             options: {
               temperature: isShortInput ? 0.2 : 0.3,
-              num_predict: Math.max(2000, count2 * 300),
-              num_ctx: 4096
+              num_predict: Math.max(4096, count2 * 500),
+              num_ctx: 8192
             }
           })
         });
@@ -9763,8 +10114,8 @@ ${partInstruction}
             stream: false,
             options: {
               temperature: isShortInput ? 0.2 : 0.3,
-              num_predict: Math.max(2500, totalCount * 300),
-              num_ctx: 4096
+              num_predict: Math.max(4096, totalCount * 500),
+              num_ctx: 8192
             }
           })
         });
@@ -9844,8 +10195,8 @@ ${JSON.stringify(draftQuiz, null, 2)}
             stream: false,
             options: {
               temperature: 0.1,
-              num_predict: Math.max(2500, draftQuiz.questions.length * 300),
-              num_ctx: 4096
+              num_predict: Math.max(4096, draftQuiz.questions.length * 500),
+              num_ctx: 8192
             }
           })
         });
@@ -10541,6 +10892,12 @@ function clearCurrentChat() {
     session.messages.forEach(m => {
       addChatMsg(m.role, m.content, null, m.isHtml, false);
     });
+    // Если ИИ генерирует ответ в фоне для этой сессии — восстанавливаем плашку ожидания
+    if (window._chatGenerating && activeSessionId === window._chatGeneratingTargetSessionId) {
+      addChatMsg('ai', '<div style="display:flex;align-items:center;gap:8px;"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span><span style="font-size:11.5px;color:#38bdf8;">⏳ ИИ ищет данные в сети и формулирует ответ... (генерация в фоне)</span></div>', 'active_background_typing', false, false);
+      const sendBtn = document.getElementById('chatSendBtn');
+      if (sendBtn) sendBtn.disabled = true;
+    }
     wrap.scrollTop = wrap.scrollHeight;
   }
 
@@ -10625,23 +10982,70 @@ function clearCurrentChat() {
     return '<div class="chat-ai-text">' + text + '</div>';
   }
 
+  // --- ИИ-ЧАТ В ФОНЕ (Генерация продолжается при смене вкладок) ---
+  window._chatGenerating = false;
+  window._chatGeneratingTargetSessionId = null;
+  window._chatUnreadCount = 0;
+  window._currentActiveTab = 'create';
+
+  function updateChatTabIndicator() {
+    const badge = document.getElementById('chatTabBadge');
+    if (!badge) return;
+    if (window._chatGenerating) {
+      badge.style.display = 'inline-flex';
+      badge.className = 'chat-tab-badge thinking';
+      badge.innerHTML = '⏳ Думает...';
+    } else if (window._chatUnreadCount > 0 && window._currentActiveTab !== 'chat') {
+      badge.style.display = 'inline-flex';
+      badge.className = 'chat-tab-badge unread';
+      badge.innerHTML = `● ${window._chatUnreadCount} нов.`;
+    } else {
+      badge.style.display = 'none';
+      badge.innerHTML = '';
+    }
+  }
+
+  function playChatDoneSound() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+      gain.gain.setValueAtTime(0.09, ctx.currentTime);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.36);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.38);
+    } catch(e) {}
+  }
+
   async function sendChatMessage() {
     const input = document.getElementById('chatInput');
     const text  = input.value.trim();
     if (!text) return;
+    if (window._chatGenerating) return;
+
     input.value = '';
     
-    // Запоминаем ID сессии, в которой отправлен запрос (защита от race condition)
     const targetSessionId = activeSessionId;
     addChatMsg('user', escH(text));
+
+    window._chatGenerating = true;
+    window._chatGeneratingTargetSessionId = targetSessionId;
+    updateChatTabIndicator();
 
     const host  = document.getElementById('ollamaHost').value || config.host;
     const model = document.getElementById('modelSelect').value || config.model;
     const sendBtn = document.getElementById('chatSendBtn');
-    sendBtn.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
 
     const typingId = 'typing_' + Date.now();
-    const typingDiv = addChatMsg('ai', '<div style="display:flex;align-items:center;gap:8px;"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span><span style="font-size:11.5px;color:#38bdf8;">🌐 Поиск в интернете в реальном времени & проверка фактов...</span></div>', typingId, false, false);
+    addChatMsg('ai', '<div style="display:flex;align-items:center;gap:8px;"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span><span style="font-size:11.5px;color:#38bdf8;">🌐 Поиск в интернете в реальном времени & проверка фактов...</span></div>', typingId, false, false);
 
     const session = getActiveSession();
     const historyPayload = (session && session.messages ? session.messages : [])
@@ -10651,6 +11055,35 @@ function clearCurrentChat() {
         role: m.role === 'user' ? 'user' : 'assistant',
         content: m.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
       }));
+
+    function cleanupTypingAndIndicator() {
+      window._chatGenerating = false;
+      window._chatGeneratingTargetSessionId = null;
+      updateChatTabIndicator();
+      document.querySelectorAll('[id^="typing_"], #active_background_typing').forEach(el => el.remove());
+      const curSendBtn = document.getElementById('chatSendBtn');
+      if (curSendBtn) curSendBtn.disabled = false;
+    }
+
+    function onAiReplyReady(html) {
+      cleanupTypingAndIndicator();
+      window._currentChatTargetSessionId = targetSessionId;
+      addChatMsg('ai', html, null, true, true);
+      window._currentChatTargetSessionId = null;
+      globalStats.chats++;
+      userProfile.dailyQuests.chat = true;
+      addXp(20);
+      saveStats();
+      saveProfile();
+      updateFooterStats();
+
+      if (window._currentActiveTab !== 'chat') {
+        window._chatUnreadCount = (window._chatUnreadCount || 0) + 1;
+        updateChatTabIndicator();
+        playChatDoneSound();
+        showNotificationToast('💬 <b>ИИ-Наставник ответил!</b> <button onclick="switchTab(\'chat\')" style="margin-left:8px;background:#6366f1;color:#fff;border:none;border-radius:6px;padding:3px 9px;font-size:12px;cursor:pointer;font-weight:700;">Открыть чат →</button>');
+      }
+    }
 
     // 1. ЕСЛИ ПОДКЛЮЧЕН RE-ACT ВЕБ-МОСТ -> ЖИВОЙ ВЫХОД В ИНТЕРНЕТ
     if (hasInternetBridge) {
@@ -10690,17 +11123,7 @@ function clearCurrentChat() {
           html += `</div></div>`;
         }
 
-        typingDiv.remove();
-        window._currentChatTargetSessionId = targetSessionId;
-        addChatMsg('ai', html, null, true, true);
-        window._currentChatTargetSessionId = null;
-        globalStats.chats++;
-        userProfile.dailyQuests.chat = true;
-        addXp(20);
-        saveStats();
-        saveProfile();
-        updateFooterStats();
-        sendBtn.disabled = false;
+        onAiReplyReady(html);
         return;
       } catch(bridgeErr) {
         console.warn('Bridge request failed, falling back to Ollama:', bridgeErr);
@@ -10709,9 +11132,9 @@ function clearCurrentChat() {
 
     // 2. ВЫЗОВ ВЫБРАННОЙ НЕЙРОСЕТИ (Ollama / Cloud API) С МИНИ-RAG
     const detectedFacts = findKnowledgeContext(text);
-    let prompt = `Ты — лаконичный и точный учебный ассистент.
-ПРАВИЛО КРАТКОСТИ: Отвечай максимально ёмко, прямо и коротко (не более 2-4 предложений). Никакой лишней воды, длинных вступлений и лекций — сразу переходи к сути.
-Отвечай на чистом грамотном русском языке. Сегодня 2026 год.`;
+    let prompt = `Ты — эрудированный, живой, внимательный и общительный учебный ассистент с доступом к актуальным данным.
+СТИЛЬ ОБЩЕНИЯ: Отвечай развёрнуто, общительно, структурно и интересно. Разделяй мысли на удобные абзацы, используй списки с маркерами (•), выделяй ключевые термины и названия жирным шрифтом (**термин**). Давай подробные, понятные и глубокие ответы, полностью раскрывая тему вопроса.
+Отвечай на чистом грамотном русском языке. Сегодня октябрь 2026 года.`;
 
     if (detectedFacts) {
       prompt += `\n\nПРОВЕРЕННАЯ ИСТОРИЧЕСКАЯ СПРАВКА ПО ВОПРОСУ (ОБЯЗАТЕЛЬНО ОПИРАЙСЯ НА ЭТИ ТОЧНЫЕ ФАКТЫ!):\n${detectedFacts}\n`;
@@ -10727,7 +11150,7 @@ function clearCurrentChat() {
 Вопрос студента: ${text}`;
 
     try {
-      let rawResp = await callUnifiedAi({ prompt, temperature: 0.2, maxTokens: 350 });
+      let rawResp = await callUnifiedAi({ prompt, temperature: 0.2, maxTokens: 2048 });
 
       let sources = [];
       const srcMatch = rawResp.match(/\[SOURCES\]([\s\S]*?)\[\/SOURCES\]/);
@@ -10757,19 +11180,12 @@ function clearCurrentChat() {
         html += `</div></div>`;
       }
 
-      typingDiv.remove();
-      addChatMsg('ai', html, null, true, true);
-      globalStats.chats++;
-      userProfile.dailyQuests.chat = true;
-      addXp(15);
-      saveStats();
-      saveProfile();
-      updateFooterStats();
+      onAiReplyReady(html);
     } catch(err) {
-      typingDiv.remove();
-      addChatMsg('ai', `Ошибка: ${escH(err.message)}. Убедись, что Ollama запущена на компьютере.`, null, false, true);
-    } finally {
-      sendBtn.disabled = false;
+      cleanupTypingAndIndicator();
+      window._currentChatTargetSessionId = targetSessionId;
+      addChatMsg('ai', `⚠️ Ошибка: ${escH(err.message)}. Убедись, что Ollama запущена на компьютере.`, null, false, true);
+      window._currentChatTargetSessionId = null;
     }
   }
 
@@ -11302,8 +11718,8 @@ if (typeof initChatSessions === 'function') initChatSessions();
             stream: false,
             options: {
               temperature: 0.15,
-              num_predict: Math.max(2500, count * 2 * 280),
-              num_ctx: 4096
+              num_predict: Math.max(4096, count * 2 * 450),
+              num_ctx: 8192
             }
           })
         });

@@ -1231,7 +1231,306 @@
       color: #475569;
     }
 
-        /* Вкладки переключения уровней урока */
+            /* БАННЕР ПРОГРЕССА КУРСА И ПРОФИЛЬ ДРУЗЕЙ */
+    .py-course-top-banner {
+      background: linear-gradient(135deg, #0b0f19, #151d30);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    }
+    .py-course-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .py-course-badge {
+      font-size: 13px;
+      font-weight: 800;
+      color: #818cf8;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .py-course-user-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px;
+      background: #1e1b4b;
+      border: 1px solid #6366f1;
+      border-radius: 20px;
+      color: #e0e7ff;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .py-course-user-pill:hover {
+      background: #312e81;
+      box-shadow: 0 0 14px rgba(99, 102, 241, 0.4);
+      transform: translateY(-1px);
+    }
+    .py-pill-lvl {
+      font-size: 10.5px;
+      background: #4f46e5;
+      padding: 2px 7px;
+      border-radius: 10px;
+      color: #ffffff;
+    }
+    .py-course-desc-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-friends-shortcut {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: #162032;
+      border: 1px solid #2563eb;
+      border-radius: 6px;
+      color: #93c5fd;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-friends-shortcut:hover {
+      background: #1d4ed8;
+      color: #ffffff;
+    }
+    .py-course-track {
+      width: 100%;
+      height: 7px;
+      background: #0f172a;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .py-course-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #38bdf8, #6366f1, #a855f7);
+      border-radius: 6px;
+      transition: width 0.4s ease;
+    }
+
+    /* Бейджи в сайдбаре уроков */
+    .lesson-status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 6px;
+    }
+    .lesson-status-pill.master {
+      background: #854d0e;
+      color: #fef08a;
+      border: 1px solid #eab308;
+    }
+    .lesson-status-pill.progress {
+      background: #065f46;
+      color: #a7f3d0;
+      border: 1px solid #10b981;
+    }
+    .lesson-status-pill.empty {
+      background: rgba(255, 255, 255, 0.06);
+      color: #64748b;
+    }
+
+    /* МОДАЛЬНОЕ ОКНО ДРУЗЕЙ И ПРОФИЛЕЙ */
+    .friends-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(5px);
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fadeIn 0.2s ease-in;
+    }
+    .friends-modal-card {
+      background: #0f1422;
+      border: 1px solid #312e81;
+      border-radius: 14px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 22px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+      color: #e2e8f0;
+    }
+    .friends-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .friends-modal-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #c7d2fe;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .friends-list-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .friend-profile-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background: #141b2d;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      transition: all 0.2s;
+    }
+    .friend-profile-card.active-profile {
+      border-color: #6366f1;
+      background: #1e1b4b;
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.2);
+    }
+    .friend-info-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .friend-avatar-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #252b42;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      border: 2px solid #4338ca;
+    }
+    .friend-text-meta h4 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .friend-text-meta p {
+      margin: 3px 0 0 0;
+      font-size: 11.5px;
+      color: #94a3b8;
+    }
+    .friend-actions-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-switch-profile {
+      padding: 5px 12px;
+      background: #4f46e5;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-switch-profile:hover {
+      background: #4338ca;
+    }
+    .btn-profile-detail {
+      padding: 5px 10px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #94a3b8;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .btn-profile-detail:hover {
+      background: #334155;
+      color: #f8fafc;
+    }
+    .add-friend-box {
+      background: #090d16;
+      border: 1px dashed #312e81;
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .add-friend-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #818cf8;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .add-friend-inputs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .add-friend-input {
+      flex: 1;
+      min-width: 140px;
+      padding: 8px 12px;
+      background: #141b2d;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      color: #f1f5f9;
+      font-size: 12.5px;
+      outline: none;
+    }
+    .add-friend-avatar-select {
+      padding: 8px;
+      background: #141b2d;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      color: #f1f5f9;
+      font-size: 14px;
+      outline: none;
+    }
+    .btn-add-friend-submit {
+      padding: 8px 16px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-add-friend-submit:hover {
+      opacity: 0.92;
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Вкладки переключения уровней урока */
     .lesson-level-tabs {
       display: flex;
       gap: 6px;
@@ -4974,6 +5273,27 @@
         Никаких заумных терминов! Всё объясняется на жизненных примерах (игры, пицца, котики). Изучай теорию, запускай примеры и пиши код прямо здесь, а ИИ проверит и объяснит ошибки.
       </div>
 
+            <!-- БАННЕР ПРОГРЕССА КУРСА PYTHON И ПЕРЕКЛЮЧАТЕЛЬ ПРОФИЛЕЙ ДРУЗЕЙ -->
+      <div class="py-course-top-banner">
+        <div class="py-course-title-row">
+          <span class="py-course-badge">🐍 ПОЛНЫЙ КУРС PYTHON (28 УРОКОВ)</span>
+          <span class="py-course-user-pill" onclick="openFriendsModal()" title="Нажми, чтобы открыть статистику друзей или переключить профиль">
+            <span id="activeProfileAvatarDisplay">👑</span>
+            <span id="activeProfileNameDisplay">Дамир</span>
+            <span class="py-pill-lvl" id="activeProfileLvlDisplay">LVL 1</span>
+          </span>
+        </div>
+        <div class="py-course-desc-row">
+          <span id="pyCourseStatLabel">Пройдено 0 из 28 уроков (0%) · Решено задач: 0 из 84</span>
+          <button type="button" class="btn-friends-shortcut" onclick="openFriendsModal()">
+            👥 Друзья и Прогресс (<span id="friendsCountBadge">1</span>)
+          </button>
+        </div>
+        <div class="py-course-track">
+          <div class="py-course-fill" id="pyCourseFill" style="width: 0%;"></div>
+        </div>
+      </div>
+
       <div class="python-dashboard">
         <!-- СПИСОК УРОКОВ (ROADMAP) -->
         <div class="lessons-sidebar" id="lessonsSidebar">
@@ -7359,6 +7679,7 @@ function initAiProviderSettings() {
     setupTextareaCounters();
     renderPythonSidebar();
     loadPythonLesson(0);
+    updateCourseProgressUI();
     setupPythonTabKey();
     setTimeout(() => onSliderChange(5), 50);
   });
@@ -7462,21 +7783,271 @@ function initAiProviderSettings() {
   }
 
   // ==========================================================
-  //  МОДУЛЬ: PYTHON С НУЛЯ
+  //  МОДУЛЬ: PYTHON С НУЛЯ, СИСТЕМА ЛОКАЛЬНЫХ ПРОФИЛЕЙ И ДРУЗЕЙ
   // ==========================================================
+
+  // --- ЛОКАЛЬНАЯ СИСТЕМА ПРОФИЛЕЙ И ДРУЗЕЙ (100% OFFLINE, LOCALSTORAGE) ---
+  const PROFILES_STORAGE_KEY = 'quizgen_all_profiles_v1';
+  const ACTIVE_PROFILE_KEY = 'quizgen_active_profile_id';
+
+  function getAllLocalProfiles() {
+    try {
+      const raw = localStorage.getItem(PROFILES_STORAGE_KEY);
+      if (raw) {
+        const list = JSON.parse(raw);
+        if (Array.isArray(list) && list.length > 0) return list;
+      }
+    } catch(e) {}
+
+    // Дефолтный стартовый профиль для пользователя
+    const defaultProfile = {
+      id: 'prof_damir',
+      name: 'Дамир',
+      avatar: '👑',
+      role: 'Основатель',
+      xp: 150,
+      level: 1,
+      pythonProgress: {},
+      savedCodes: {},
+      createdAt: Date.now(),
+      lastActive: Date.now()
+    };
+    const initialList = [defaultProfile];
+    saveAllLocalProfiles(initialList);
+    return initialList;
+  }
+
+  function saveAllLocalProfiles(list) {
+    try {
+      localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(list));
+    } catch(e) {}
+  }
+
+  function getActiveProfile() {
+    const list = getAllLocalProfiles();
+    const activeId = localStorage.getItem(ACTIVE_PROFILE_KEY) || 'prof_damir';
+    let prof = list.find(p => p.id === activeId);
+    if (!prof) {
+      prof = list[0];
+      localStorage.setItem(ACTIVE_PROFILE_KEY, prof.id);
+    }
+    return prof;
+  }
+
+  function saveCurrentActiveProfile(prof) {
+    const list = getAllLocalProfiles();
+    const idx = list.findIndex(p => p.id === prof.id);
+    prof.lastActive = Date.now();
+    if (idx !== -1) {
+      list[idx] = prof;
+    } else {
+      list.push(prof);
+    }
+    saveAllLocalProfiles(list);
+    updateCourseProgressUI();
+  }
+
+  function switchActiveProfile(profId) {
+    // Сохраняем код текущего урока перед переключением
+    saveCurrentLessonEditorCode();
+
+    localStorage.setItem(ACTIVE_PROFILE_KEY, profId);
+    const prof = getActiveProfile();
+
+    // Синхронизируем глобальный userProfile
+    userProfile.name = prof.name;
+    userProfile.avatar = prof.avatar;
+    userProfile.xp = prof.xp || 0;
+    userProfile.level = prof.level || 1;
+    saveProfile();
+
+    // Загружаем код для текущего урока из нового профиля
+    loadLessonCodeForActiveProfile(currentLessonIndex);
+
+    updateCourseProgressUI();
+    renderPythonSidebar();
+    closeFriendsModal();
+
+    showNotificationToast(`👤 Профиль переключен: ${prof.name} ${prof.avatar}`);
+  }
+
+  function createFriendProfile(name, avatar) {
+    const trimmed = (name || '').trim();
+    if (!trimmed) {
+      alert('Пожалуйста, введи имя друга или сокурсника!');
+      return;
+    }
+
+    const list = getAllLocalProfiles();
+    const newId = 'prof_' + Date.now();
+    const newProf = {
+      id: newId,
+      name: trimmed,
+      avatar: avatar || '⚡',
+      role: 'Друг',
+      xp: 0,
+      level: 1,
+      pythonProgress: {},
+      savedCodes: {},
+      createdAt: Date.now(),
+      lastActive: Date.now()
+    };
+
+    list.push(newProf);
+    saveAllLocalProfiles(list);
+    renderFriendsListUI();
+    updateCourseProgressUI();
+    showNotificationToast(`🎉 Создан локальный профиль для: ${trimmed}!`);
+  }
+
+  function deleteFriendProfile(profId) {
+    const list = getAllLocalProfiles();
+    if (list.length <= 1) {
+      alert('Нельзя удалить единственный профиль!');
+      return;
+    }
+    const prof = list.find(p => p.id === profId);
+    if (!confirm(`Удалить профиль «${prof ? prof.name : profId}» и его локальный прогресс?`)) return;
+
+    const filtered = list.filter(p => p.id !== profId);
+    saveAllLocalProfiles(filtered);
+
+    if (localStorage.getItem(ACTIVE_PROFILE_KEY) === profId) {
+      switchActiveProfile(filtered[0].id);
+    } else {
+      renderFriendsListUI();
+      updateCourseProgressUI();
+    }
+  }
+
+  // --- СОХРАНЕНИЕ КОДА УРОКА ДЛЯ АКТИВНОГО ПРОФИЛЯ ---
+  function saveCurrentLessonEditorCode() {
+    const ed = document.getElementById('pyUserCode');
+    if (!ed) return;
+    const prof = getActiveProfile();
+    if (!prof.savedCodes) prof.savedCodes = {};
+    prof.savedCodes[currentLessonIndex] = ed.value;
+    saveCurrentActiveProfile(prof);
+  }
+
+  function loadLessonCodeForActiveProfile(lessonIdx) {
+    const ed = document.getElementById('pyUserCode');
+    if (!ed) return;
+    const prof = getActiveProfile();
+    const les = pythonLessons[lessonIdx];
+
+    if (prof.savedCodes && typeof prof.savedCodes[lessonIdx] === 'string' && prof.savedCodes[lessonIdx].trim()) {
+      ed.value = prof.savedCodes[lessonIdx];
+    } else {
+      ed.value = les.starterCode || les.defaultUserCode;
+    }
+  }
+
+  // --- ПРОГРЕСС УРОКОВ И ЗАДАНИЙ ---
+  function markLevelDone(lessonIdx, levelNum) {
+    const prof = getActiveProfile();
+    if (!prof.pythonProgress) prof.pythonProgress = {};
+    if (!prof.pythonProgress[lessonIdx]) {
+      prof.pythonProgress[lessonIdx] = { l1: false, l2: false, l3: false, completedAt: Date.now() };
+    }
+    prof.pythonProgress[lessonIdx][`l${levelNum}`] = true;
+    prof.pythonProgress[lessonIdx].completedAt = Date.now();
+    prof.xp = (prof.xp || 0) + 40;
+    prof.level = Math.floor(prof.xp / 150) + 1;
+
+    saveCurrentActiveProfile(prof);
+    updateCourseProgressUI();
+    renderPythonSidebar();
+  }
+
+  function getLessonLevelStatus(lessonIdx, prof = null) {
+    const p = prof || getActiveProfile();
+    if (!p.pythonProgress || !p.pythonProgress[lessonIdx]) {
+      return { l1: false, l2: false, l3: false, count: 0 };
+    }
+    const prog = p.pythonProgress[lessonIdx];
+    const c = (prog.l1 ? 1 : 0) + (prog.l2 ? 1 : 0) + (prog.l3 ? 1 : 0);
+    return { l1: !!prog.l1, l2: !!prog.l2, l3: !!prog.l3, count: c };
+  }
+
+  function getCourseStats(prof = null) {
+    const p = prof || getActiveProfile();
+    const totalLessons = pythonLessons.length;
+    let completedLessons = 0;
+    let masteredLessons = 0;
+    let totalTasksDone = 0;
+
+    for (let i = 0; i < totalLessons; i++) {
+      const st = getLessonLevelStatus(i, p);
+      if (st.count > 0) completedLessons++;
+      if (st.count === 3) masteredLessons++;
+      totalTasksDone += st.count;
+    }
+
+    const pct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+    return {
+      totalLessons,
+      completedLessons,
+      masteredLessons,
+      totalTasksDone,
+      maxTasks: totalLessons * 3,
+      pct
+    };
+  }
+
+  function updateCourseProgressUI() {
+    const prof = getActiveProfile();
+    const stats = getCourseStats(prof);
+
+    // Обновляем верхний баннер
+    const avatarEl = document.getElementById('activeProfileAvatarDisplay');
+    const nameEl = document.getElementById('activeProfileNameDisplay');
+    const lvlEl = document.getElementById('activeProfileLvlDisplay');
+    const statLabel = document.getElementById('pyCourseStatLabel');
+    const fillEl = document.getElementById('pyCourseFill');
+    const badgeEl = document.getElementById('friendsCountBadge');
+
+    if (avatarEl) avatarEl.textContent = prof.avatar;
+    if (nameEl) nameEl.textContent = prof.name;
+    if (lvlEl) lvlEl.textContent = `LVL ${prof.level || 1}`;
+    if (statLabel) {
+      statLabel.textContent = `Пройдено ${stats.completedLessons} из ${stats.totalLessons} уроков (${stats.pct}%) · Решено задач: ${stats.totalTasksDone} из ${stats.maxTasks}${stats.masteredLessons ? ` · ⭐ Мастер: ${stats.masteredLessons}` : ''}`;
+    }
+    if (fillEl) fillEl.style.width = `${Math.max(2, stats.pct)}%`;
+
+    const all = getAllLocalProfiles();
+    if (badgeEl) badgeEl.textContent = all.length;
+  }
+
   function renderPythonSidebar() {
     const sidebar = document.getElementById('lessonsSidebar');
     if (!sidebar) return;
     sidebar.innerHTML = '';
 
+    const prof = getActiveProfile();
+
     pythonLessons.forEach((les, idx) => {
+      const st = getLessonLevelStatus(idx, prof);
       const btn = document.createElement('button');
       btn.className = `lesson-nav-btn ${idx === currentLessonIndex ? 'active' : ''}`;
       btn.onclick = () => loadPythonLesson(idx);
+
+      let pillHtml = '';
+      if (st.count === 3) {
+        pillHtml = '<span class="lesson-status-pill master">⭐ 3/3 Мастер</span>';
+      } else if (st.count > 0) {
+        pillHtml = `<span class="lesson-status-pill progress">🟢 ${st.count}/3</span>`;
+      } else {
+        pillHtml = '<span class="lesson-status-pill empty">⚪ 0/3</span>';
+      }
+
       btn.innerHTML = `
-        <div>
-          <div style="font-size:12.5px;font-weight:700;">${les.title}</div>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Урок ${idx + 1}</div>
+        <div style="flex:1;min-width:0;text-align:left;">
+          <div style="font-size:12.5px;font-weight:700;display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+            <span>${les.title}</span>
+            ${pillHtml}
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Урок ${idx + 1} из 28</div>
         </div>
         <span class="lesson-num-pill">#${idx + 1}</span>
       `;
@@ -7484,7 +8055,68 @@ function initAiProviderSettings() {
     });
   }
 
-  
+  // --- МОДАЛЬНОЕ ОКНО ДРУЗЕЙ ---
+  function openFriendsModal() {
+    renderFriendsListUI();
+    const modal = document.getElementById('friendsModalOverlay');
+    if (modal) modal.style.display = 'flex';
+  }
+
+  function closeFriendsModal() {
+    const modal = document.getElementById('friendsModalOverlay');
+    if (modal) modal.style.display = 'none';
+  }
+
+  function closeFriendsModalOnOverlay(e) {
+    if (e.target && e.target.id === 'friendsModalOverlay') {
+      closeFriendsModal();
+    }
+  }
+
+  function renderFriendsListUI() {
+    const wrap = document.getElementById('friendsListWrap');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+
+    const list = getAllLocalProfiles();
+    const activeProf = getActiveProfile();
+
+    list.forEach(p => {
+      const stats = getCourseStats(p);
+      const isActive = p.id === activeProf.id;
+
+      const card = document.createElement('div');
+      card.className = `friend-profile-card ${isActive ? 'active-profile' : ''}`;
+      card.innerHTML = `
+        <div class="friend-info-left">
+          <div class="friend-avatar-circle">${p.avatar}</div>
+          <div class="friend-text-meta">
+            <h4>
+              ${escH(p.name)}
+              ${isActive ? '<span style="font-size:10px;background:#4f46e5;color:#fff;padding:2px 6px;border-radius:10px;">Активен</span>' : ''}
+            </h4>
+            <p>LVL ${p.level || 1} · ${p.xp || 0} XP · <b>${stats.completedLessons}/${stats.totalLessons} уроков</b> (${stats.pct}%) · ${stats.totalTasksDone} задач</p>
+          </div>
+        </div>
+        <div class="friend-actions-right">
+          ${!isActive ? `<button type="button" class="btn-switch-profile" onclick="switchActiveProfile('${p.id}')">👉 Переключиться</button>` : '<span style="font-size:11.5px;color:#a5b4fc;font-weight:700;">Текущий</span>'}
+          ${list.length > 1 ? `<button type="button" class="py-err-close-btn" style="color:#ef4444;" title="Удалить профиль" onclick="deleteFriendProfile('${p.id}')">🗑️</button>` : ''}
+        </div>
+      `;
+      wrap.appendChild(card);
+    });
+  }
+
+  function submitCreateFriendProfile() {
+    const nameInp = document.getElementById('newFriendNameInput');
+    const avSel = document.getElementById('newFriendAvatarSelect');
+    if (!nameInp) return;
+    const name = nameInp.value.trim();
+    const avatar = avSel ? avSel.value : '⚡';
+    createFriendProfile(name, avatar);
+    nameInp.value = '';
+  }
+
   // ==========================================================
   //  УПРАВЛЕНИЕ ШРИФТАМИ ИНТЕРФЕЙСА (ПОЛНАЯ КИРИЛЛИЦА)
   // ==========================================================
@@ -7497,29 +8129,26 @@ function initAiProviderSettings() {
     } else if (fontName === 'JetBrains Mono') {
       fontRule = "'JetBrains Mono', monospace";
     }
-    
+    document.documentElement.style.setProperty('--app-font-family', fontRule);
     document.body.style.fontFamily = fontRule;
-    try {
-      localStorage.setItem('quizapp_font', fontName);
-    } catch (e) {}
-
-    // Подсветка активной кнопки в настройках
-    document.querySelectorAll('.font-select-btn').forEach(b => b.classList.remove('active'));
-    const safeId = 'btnFont' + (fontName.replace(/\s+/g, ''));
-    const curBtn = document.getElementById(safeId);
-    if (curBtn) curBtn.classList.add('active');
+    try { localStorage.setItem('quizgen_selected_font', fontName); } catch(e) {}
   }
 
   function loadSavedFont() {
     try {
-      const saved = localStorage.getItem('quizapp_font') || 'Inter';
-      changeAppFont(saved);
-    } catch (e) {
-      changeAppFont('Inter');
-    }
+      const saved = localStorage.getItem('quizgen_selected_font');
+      if (saved) {
+        changeAppFont(saved);
+        const fontSel = document.getElementById('appFontSelect');
+        if (fontSel) fontSel.value = saved;
+      }
+    } catch(e) {}
   }
 
   function loadPythonLesson(idx) {
+    // Сохраняем код текущего урока перед переходом на новый
+    saveCurrentLessonEditorCode();
+
     currentLessonIndex = idx;
     const les = pythonLessons[idx];
 
@@ -7527,12 +8156,12 @@ function initAiProviderSettings() {
     document.getElementById('lessonTitle').textContent = les.title;
     document.getElementById('lessonTheory').innerHTML = les.theory;
     document.getElementById('lessonCode').textContent = les.code;
-    document.getElementById('lessonTask').innerHTML = les.task;\n    selectLessonLevel(1);
+    document.getElementById('lessonTask').innerHTML = les.task;
+    selectLessonLevel(1);
     
-    // Вставляем чистый стартовый шаблон (НЕ готовый ответ!)
-    document.getElementById('pyUserCode').value = les.starterCode || les.defaultUserCode;
+    // Загружаем сохранённый код активного профиля (или чистый шаблон)
+    loadLessonCodeForActiveProfile(idx);
 
-    // Подготавливаем эталонное решение (но держим его закрытым)
     const solBox = document.getElementById('lessonSolutionBox');
     if (solBox) solBox.style.display = 'none';
     const solCodeEl = document.getElementById('lessonSolutionCode');
@@ -7540,30 +8169,28 @@ function initAiProviderSettings() {
     const toggleBtn = document.getElementById('btnToggleSolutionText');
     if (toggleBtn) toggleBtn.textContent = '💡 Показать эталонное решение';
 
-    // Сбрасываем консоль вывода
     clearLessonConsoleOutput();
 
-    // Скрываем прошлый вердикт ИИ
     const vBox = document.getElementById('pyVerdictBox');
     if (vBox) {
       vBox.style.display = 'none';
       vBox.className = 'py-verdict-box';
     }
 
-    // Очищаем независимый терминал внизу при смене урока,
-    // чтобы там не оставался код предыдущего урока
     clearPyTerminal();
-
     renderPythonSidebar();
+    updateCourseProgressUI();
   }
 
-  // Запуск решения урока прямо в браузере (Skulpt)
   function runLessonCode() {
     const code = document.getElementById('pyUserCode').value.trim();
     const outEl = document.getElementById('lessonConsoleOutput');
     const timeEl = document.getElementById('lessonConsoleTime');
     const dotEl = document.getElementById('lessonConsoleDot');
     const btnRun = document.getElementById('btnRunLessonCode');
+
+    // Сохраняем код в локальный профиль
+    saveCurrentLessonEditorCode();
 
     if (!code) {
       if (outEl) {
@@ -7578,7 +8205,7 @@ function initAiProviderSettings() {
     if (timeEl) timeEl.textContent = '⏳ Выполняется...';
     if (outEl) {
       outEl.className = 'lesson-console-output';
-      outEl.textContent = '';
+      outEl.textContent = '▸ Выполнение в интерпретаторе Python...';
     }
 
     const startTime = performance.now();
@@ -7601,7 +8228,7 @@ function initAiProviderSettings() {
 
     if (typeof window.Sk !== 'undefined') {
       try {
-        window.Sk.execLimit = 3500; // Предохранитель от бесконечных циклов (3.5 сек)
+        window.Sk.execLimit = 3500;
         window.Sk.yieldLimit = 100;
         window.Sk.configure({
           output: outf,
@@ -7650,7 +8277,7 @@ function initAiProviderSettings() {
 
           if (outEl) {
             outEl.className = 'lesson-console-output has-error';
-            outEl.textContent = (outputBuffer ? outputBuffer + '\n' : '') + translated + '\n\n💡 Совет: Проверь синтаксис или нажми "🤖 Проверить через ИИ-наставника", чтобы получить дружелюбную подсказку!';
+            outEl.textContent = (outputBuffer ? outputBuffer + '\n' : '') + translated + '\n\n💡 Совет: Проверь синтаксис или нажми "🤖 Проверить через ИИ-наставника", чтобы получить дружелюбную подсказку без спойлеров!';
           }
         }).finally(() => {
           if (btnRun) btnRun.disabled = false;
@@ -7671,23 +8298,22 @@ function initAiProviderSettings() {
     }
   }
 
-  // Сбросить код решения к чистому шаблону
   function resetLessonCode() {
     const les = pythonLessons[currentLessonIndex];
     if (confirm('Сбросить редактор к исходному чистому шаблону задания?')) {
       document.getElementById('pyUserCode').value = les.starterCode || les.defaultUserCode;
+      saveCurrentLessonEditorCode();
       clearLessonConsoleOutput();
     }
   }
 
-  // Очистить редактор
   function clearLessonCode() {
     if (confirm('Очистить всё поле редактора?')) {
       document.getElementById('pyUserCode').value = '';
+      saveCurrentLessonEditorCode();
     }
   }
 
-  // Переключить показ эталонного решения
   function toggleLessonSolution() {
     const box = document.getElementById('lessonSolutionBox');
     const toggleBtn = document.getElementById('btnToggleSolutionText');
@@ -7706,11 +8332,11 @@ function initAiProviderSettings() {
     }
   }
 
-  // Вставить эталонное решение в редактор
   function applyLessonSolution() {
     const les = pythonLessons[currentLessonIndex];
     if (confirm('Вставить авторское эталонное решение в твой редактор кода?')) {
       document.getElementById('pyUserCode').value = les.solutionCode || les.defaultUserCode;
+      saveCurrentLessonEditorCode();
       document.getElementById('lessonSolutionBox').style.display = 'none';
       const toggleBtn = document.getElementById('btnToggleSolutionText');
       if (toggleBtn) toggleBtn.textContent = '💡 Показать эталонное решение';
@@ -7718,7 +8344,6 @@ function initAiProviderSettings() {
     }
   }
 
-  // Копирование вывода консоли
   function copyLessonConsoleOutput() {
     const outEl = document.getElementById('lessonConsoleOutput');
     if (outEl && outEl.textContent && !outEl.textContent.startsWith('▸')) {
@@ -7728,14 +8353,13 @@ function initAiProviderSettings() {
     }
   }
 
-  // Очистка консоли
   function clearLessonConsoleOutput() {
     const outEl = document.getElementById('lessonConsoleOutput');
     const timeEl = document.getElementById('lessonConsoleTime');
     const dotEl = document.getElementById('lessonConsoleDot');
     if (outEl) {
       outEl.className = 'lesson-console-output is-empty';
-      outEl.textContent = '▸ Нажми "▶ Запустить решение" (или Ctrl+Enter), чтобы моментально увидеть результат выполнения...';
+      outEl.textContent = '▸ Нажми "▶ Запустить решение" (или Ctrl+Enter), чтобы увидеть результат выполнения...';
     }
     if (timeEl) timeEl.textContent = '';
     if (dotEl) dotEl.className = 'console-dot-indicator';
@@ -7758,16 +8382,22 @@ function initAiProviderSettings() {
         const end = this.selectionEnd;
         this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
         this.selectionStart = this.selectionEnd = start + 4;
+        saveCurrentLessonEditorCode();
       }
       if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         runLessonCode();
       }
     });
+    // Автосохранение кода при наборе текста
+    pyEditor.addEventListener('input', function() {
+      if (window._pySaveTimer) clearTimeout(window._pySaveTimer);
+      window._pySaveTimer = setTimeout(saveCurrentLessonEditorCode, 400);
+    });
   }
 
   // ==========================================================
-  //  СИСТЕМА УРОВНЕЙ И СОКРАТОВСКОЙ ПРОВЕРКИ ЗАДАНИЙ УРОКА
+  //  СИСТЕМА УРОВНЕЙ И СОКРАТОВСКОЙ ПРОВЕРКИ С ЗАЩИТОЙ ОТ СПОЙЛЕРОВ
   // ==========================================================
   let currentActiveLessonLevel = 1;
 
@@ -7779,7 +8409,6 @@ function initAiProviderSettings() {
     const activeBtn = document.getElementById(lvl === 'all' ? 'lvlTabBtnAll' : `lvlTabBtn${lvl}`);
     if (activeBtn) activeBtn.classList.add('active');
 
-    // Обновляем текст кнопки проверки
     const btnCheck = document.getElementById('btnCheckPyCode');
     if (btnCheck) {
       const label = lvl === 'all' ? 'все уровни' : `Уровень ${lvl}`;
@@ -7787,7 +8416,6 @@ function initAiProviderSettings() {
       if (spanEl) spanEl.textContent = `🤖 Проверить ${label} через ИИ`;
     }
 
-    // Подсвечиваем соответствующий блок задания
     const taskItems = document.querySelectorAll('.task-level-item');
     taskItems.forEach((item, idx) => {
       if (lvl === 'all' || lvl === (idx + 1)) {
@@ -7854,6 +8482,8 @@ function initAiProviderSettings() {
     const userCode = document.getElementById('pyUserCode').value.trim();
     if (!userCode) { alert('Сначала напиши свой код решения!'); return; }
 
+    saveCurrentLessonEditorCode();
+
     const les = pythonLessons[currentLessonIndex];
     const host  = document.getElementById('ollamaHost').value || config.host;
     const model = document.getElementById('modelSelect').value || config.model;
@@ -7867,32 +8497,18 @@ function initAiProviderSettings() {
     vBox.style.display = 'block';
     vBox.className = 'py-verdict-box advice';
 
+    // Определяем, какие задания написаны в коде
+    const hasStars = /\*\s*\*\s*\d+|print\s*\(\s*["']\*/.test(userCode);
+    const hasSep = /sep\s*=/i.test(userCode);
     const targetLevel = detectActiveCodeLevel(userCode);
     const levelInfo = extractLessonLevelInfo(les.task, targetLevel);
 
-    vBox.innerHTML = `🤖 ИИ-наставник проверяет <b>${levelInfo.title}</b>...`;
+    vBox.innerHTML = `🤖 ИИ-наставник изучает твой код и готовит подробный разбор...`;
 
-    let prompt = '';
-    if (targetLevel === 'all') {
-      prompt = `Ты — самый добрый, поддерживающий ментор по Python для новичка (первый день в программировании).
+    const prompt = `Ты — первоклассный, поддерживающий и чуткий ментор по Python для новичка.
 ТЕМА УРОКА: "${les.title}"
-ПОЛНОЕ ЗАДАНИЕ УРОКА:
-${levelInfo.desc}
-
-КОД УЧЕНИКА:
-[КОД PYTHON]
-${userCode}
-[/КОД PYTHON]
-
-ИНСТРУКЦИЯ:
-1. Оцени общее решение заданий. Не раскрывай решения будущих уроков.
-2. Ответ краткий (3-4 предложения).`;
-    } else {
-      prompt = `Ты — самый добрый, поддерживающий ментор по Python для человека, который учится С АБСОЛЮТНОГО НУЛЯ.
-
-ТЕМА УРОКА: "${les.title}"
-УЧЕНИК СЕЙЧАС ДЕЛАЕТ ТОЛЬКО: "${levelInfo.title}"
-ЗАДАНИЕ ТОЛЬКО ДЛЯ ЭТОГО УРОВНЯ:
+ТЕКУЩЕЕ ЗАДАНИЕ УЧЕНИКА: "${levelInfo.title}"
+ТЕКСТ ЭТОГО ЗАДАНИЯ:
 "${levelInfo.desc}"
 
 КОД УЧЕНИКА:
@@ -7900,19 +8516,23 @@ ${userCode}
 ${userCode}
 [/КОД PYTHON]
 
-СТРОЖАЙШИЕ ПРАВИЛА И ЗАПРЕТЫ:
-1. Ученик решает СТРОГО "${levelInfo.title}"!
-2. КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО писать код, подсказки или готовые ответы для других уровней (Уровень 2, Уровень 3)! Ученик должен решить их сам!
-3. НИ В КОЕМ СЛУЧАЕ не пиши "Вот исправленный код для всех трёх уровней" или списки # Уровень 2, # Уровень 3!
-4. Если код решает "${levelInfo.title}" ПРАВИЛЬНО:
-   - Начни: "🎉 ОТЛИЧНО! Задание ${levelInfo.title} выполнено верно!"
-   - Похвали и предложи перейти к следующему уровню.
-5. Если в коде есть ошибка или недочёт:
-   - Начни мягко: "Хорошая попытка! Давай разберём одну деталь на пальцах:"
-   - Объясни ошибку на жизненном примере.
-   - Дай НАВОДЯЩУЮ ПОДСКАЗКУ, чтобы ученик сам догадался.
-   - Если приводишь готовый исправленный код ТОЛЬКО для ${levelInfo.title}, ОБЯЗАТЕЛЬНО оберни его в теги <spoiler>...</spoiler>, чтобы на фронтенде он был скрыт под кнопку.`;
-    }
+СТРОГИЕ ПРАВИЛА И СТРУКТУРА ОТВЕТА:
+1. 🧐 ОБЪЯСНИ "ПОЧЕМУ ИМЕННО ТАК РАБОТАЕТ":
+   Подробно и доходчиво объясни механику Python под капотом для тех строк, которые ученик уже написал:
+   - Если ученик вывел строки отдельно, объясни почему: каждый вызов print() по умолчанию завершается невидимым end='\n' (перенос строки).
+   - Если ученик использовал sep, объясни почему: sep заменяет стандартный пробел между аргументами на указанную строку-разделитель.
+   - Похвали за правильное понимание синтаксиса.
+
+2. 🚫 СТРОЖАЙШИЙ ЗАПРЕТ НА СПОЙЛЕРЫ ДЛЯ СЛЕДУЮЩИХ УРОВНЕЙ!
+   ${!hasStars ? `Ученик ещё НЕ решал Уровень 3 (Со звёздочкой ⭐)!
+   КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО писать готовый код для Уровня 3 (никаких print('*' * 30))!
+   Не пиши фразы "А для уровня со звёздочкой добавим..." с готовым решением!
+   Дай ТОЛЬКО наводящую подсказку на размышление (например: "На Уровне 3 тебе предстоит сделать рамку. В Python можно умножать строку на число: '*' * 30. Попробуй сам!").` : ''}
+
+3. ЕСЛИ В ТЕКУЩЕМ УРОВНЕ ЕСТЬ ОШИБКА:
+   - Объясни ошибку на простом жизненном примере.
+   - Дай наводящую подсказку.
+   - Готовое исправление ОБЯЗАТЕЛЬНО оберни в тег <spoiler>...</spoiler>, чтобы на фронтенде оно было скрыто под кнопку.`;
 
     try {
       const resp = await fetch(`${host}/api/generate`, {
@@ -7923,7 +8543,7 @@ ${userCode}
           prompt,
           think: false,
           stream: false,
-          options: { temperature: 0.25, num_predict: 400 }
+          options: { temperature: 0.25, num_predict: 450 }
         })
       });
 
@@ -7931,14 +8551,12 @@ ${userCode}
       const data = await resp.json();
       let reply = data.response || '';
 
-      // Защитный фильтр: удаляем любые случайные упоминания других уровней
-      if (targetLevel === 1) {
-        reply = reply.replace(/(?:#?\s*Уровень\s*[23]|#?\s*TODO\s*[23]|Боевая задача|Со звёздочкой)[\s\S]*$/i, '').trim();
-      } else if (targetLevel === 2) {
-        reply = reply.replace(/(?:#?\s*Уровень\s*3|#?\s*TODO\s*3|Со звёздочкой)[\s\S]*$/i, '').trim();
+      // АНТИ-СПОЙЛЕРНЫЙ ЩИТ: Если Уровень 3 ещё не написан учеником, прячем любой просочившийся код Уровня 3 под спойлер!
+      if (!hasStars) {
+        reply = reply.replace(/(`{3}python[\s\S]*?\*[\s\S]*?`{3})/gi, '<spoiler>\n$1\n</spoiler>');
       }
 
-      const isSuccess = reply.includes('🎉') || reply.toLowerCase().includes('отлично') || reply.toLowerCase().includes('правильно');
+      const isSuccess = reply.includes('🎉') || reply.toLowerCase().includes('отлично') || reply.toLowerCase().includes('правильно') || reply.toLowerCase().includes('справился');
 
       vBox.className = `py-verdict-box ${isSuccess ? 'success' : 'advice'}`;
 
@@ -7949,36 +8567,38 @@ ${userCode}
         const afterPart = parts[2] || '';
 
         vBox.innerHTML = `
-          <div style="margin-bottom:6px;">${escH(visiblePart.trim()).replace(/\n/g, '<br>')}</div>
+          <div style="margin-bottom:8px;line-height:1.6;">${escH(visiblePart.trim()).replace(/\n/g, '<br>')}</div>
           <div class="py-verdict-spoiler-wrap">
             <button type="button" class="btn-spoiler-toggle" onclick="toggleVerdictSpoiler(this)">
-              👁️ Показать готовое решение к ${levelInfo.title} (если совсем застрял)
+              👁️ Показать решение-подсказку к следующему уровню (если застрял)
             </button>
             <div class="py-verdict-spoiler-content" style="display:none;">
               <pre class="py-spoiler-code-block">${escH(spoilerPart.trim())}</pre>
             </div>
           </div>
-          ${afterPart ? `<div style="margin-top:6px;">${escH(afterPart.trim()).replace(/\n/g, '<br>')}</div>` : ''}
+          ${afterPart ? `<div style="margin-top:8px;line-height:1.6;">${escH(afterPart.trim()).replace(/\n/g, '<br>')}</div>` : ''}
         `;
       } else {
         vBox.innerHTML = escH(reply).replace(/\n/g, '<br>');
       }
 
+      // Если решение успешно, засчитываем пройденный уровень в статистику профиля
       if (isSuccess) {
+        markLevelDone(currentLessonIndex, targetLevel === 'all' ? 1 : targetLevel);
+        if (hasSep) markLevelDone(currentLessonIndex, 2);
+        if (hasStars) markLevelDone(currentLessonIndex, 3);
+
         addXp(40);
-        userProfile.skills.python = Math.min(100, userProfile.skills.python + 15);
+        userProfile.skills.python = Math.min(100, (userProfile.skills.python || 0) + 15);
         userProfile.dailyQuests.python = true;
-        if (!userProfile.achievements.pyNovice) {
-          userProfile.achievements.pyNovice = true;
-        }
         saveProfile();
 
-        if (targetLevel === 1) {
+        if (targetLevel === 1 && !hasSep) {
           setTimeout(() => {
             selectLessonLevel(2);
             showNotificationToast('✨ Уровень 1 завершен! Открыт Уровень 2 (Боевая задача)');
           }, 1500);
-        } else if (targetLevel === 2) {
+        } else if (hasSep && !hasStars) {
           setTimeout(() => {
             selectLessonLevel(3);
             showNotificationToast('🌟 Уровень 2 завершен! Открыт Уровень 3 (Со звёздочкой ⭐)');
@@ -7999,10 +8619,10 @@ ${userCode}
     if (!content) return;
     if (content.style.display === 'none' || !content.style.display) {
       content.style.display = 'block';
-      btn.textContent = '🙈 Скрыть готовое решение';
+      btn.textContent = '🙈 Скрыть решение-подсказку';
     } else {
       content.style.display = 'none';
-      btn.textContent = '👁️ Показать готовое решение (если совсем застрял)';
+      btn.textContent = '👁️ Показать решение-подсказку к следующему уровню (если застрял)';
     }
   }
 
@@ -12647,7 +13267,53 @@ if (typeof initChatSessions === 'function') initChatSessions();
     if (!currentArtDataUrl) return;
     const w = window.open('');
     if (w) {
-      w.document.write(`<body style="margin:0;background:#05070f;display:flex;align-items:center;justify-content:center;height:100vh;"><img src="${currentArtDataUrl}" style="max-width:98%;max-height:98%;object-fit:contain;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.8);" /></body>`);
+      w.document.write(`<body style="margin:0;background:#05070f;display:flex;align-items:center;justify-content:center;height:100vh;"><img src="${currentArtDataUrl}" style="max-width:98%;max-height:98%;object-fit:contain;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.8);" />  <!-- МОДАЛЬНОЕ ОКНО: ПРОГРЕСС УЧЕНИКОВ И ЛОКАЛЬНЫЕ ПРОФИЛИ ДРУЗЕЙ -->
+  <div class="friends-modal-overlay" id="friendsModalOverlay" onclick="closeFriendsModalOnOverlay(event)">
+    <div class="friends-modal-card">
+      <div class="friends-modal-header">
+        <div class="friends-modal-title">
+          <span>🏆</span>
+          <span>Прогресс учеников и локальные профили друзей</span>
+        </div>
+        <button type="button" class="py-err-close-btn" onclick="closeFriendsModal()" style="font-size:18px;">✕</button>
+      </div>
+
+      <div style="font-size:12px;color:#94a3b8;margin-bottom:14px;line-height:1.5;">
+        💾 Все профили и написанный код сохраняются строго <b>локально на твоем компьютере</b> (в localStorage). Ты можешь добавить профили друзей, смотреть кто сколько прошел, и переключаться между ними в один клик!
+      </div>
+
+      <!-- Список всех профилей -->
+      <div class="friends-list-wrap" id="friendsListWrap">
+        <!-- Генерируется через JS -->
+      </div>
+
+      <!-- Форма создания нового профиля друга -->
+      <div class="add-friend-box">
+        <div class="add-friend-title">
+          <span>➕</span>
+          <span>Добавить профиль друга / сокурсника:</span>
+        </div>
+        <div class="add-friend-inputs">
+          <input type="text" class="add-friend-input" id="newFriendNameInput" placeholder="Имя друга (например: Артём, Максим, Алина)..." maxlength="24">
+          <select class="add-friend-avatar-select" id="newFriendAvatarSelect">
+            <option value="👑">👑 Корона</option>
+            <option value="⚡">⚡ Молния</option>
+            <option value="🚀">🚀 Ракета</option>
+            <option value="🐱">🐱 Котик</option>
+            <option value="🦊">🦊 Лиса</option>
+            <option value="🐼">🐼 Панда</option>
+            <option value="🎓">🎓 Студент</option>
+            <option value="🔥">🔥 Огонь</option>
+            <option value="🌸">🌸 Цветок</option>
+          </select>
+          <button type="button" class="btn-add-friend-submit" onclick="submitCreateFriendProfile()">
+            Создать профиль
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>`);
     }
   }
 

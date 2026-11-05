@@ -8726,7 +8726,7 @@ ${userCode}
         confused: "Python начал читать строку, открыл скобку или кавычку, но строка закончилась раньше, чем встретилась закрывающая пара.",
         forbidden: [
           "<b>Каждому открывающему символу нужна пара:</b> Открыв кавычку или скобку, ты обязан закрыть её тем же символом.",
-          "Одинарную кавычку нельзя закрывать двойной: 'текст" вызовет ошибку."
+          "Одинарную кавычку нельзя закрывать двойной: 'текст\" вызовет ошибку."
         ],
         hints: [
           "• Пересчитай количество открывающих и закрывающих скобок и кавычек в строке."
@@ -13263,57 +13263,11 @@ if (typeof initChatSessions === 'function') initChatSessions();
     document.body.removeChild(a);
   }
 
-  function openFullscreenImage() {
+    function openFullscreenImage() {
     if (!currentArtDataUrl) return;
     const w = window.open('');
     if (w) {
-      w.document.write(`<body style="margin:0;background:#05070f;display:flex;align-items:center;justify-content:center;height:100vh;"><img src="${currentArtDataUrl}" style="max-width:98%;max-height:98%;object-fit:contain;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.8);" />  <!-- МОДАЛЬНОЕ ОКНО: ПРОГРЕСС УЧЕНИКОВ И ЛОКАЛЬНЫЕ ПРОФИЛИ ДРУЗЕЙ -->
-  <div class="friends-modal-overlay" id="friendsModalOverlay" onclick="closeFriendsModalOnOverlay(event)">
-    <div class="friends-modal-card">
-      <div class="friends-modal-header">
-        <div class="friends-modal-title">
-          <span>🏆</span>
-          <span>Прогресс учеников и локальные профили друзей</span>
-        </div>
-        <button type="button" class="py-err-close-btn" onclick="closeFriendsModal()" style="font-size:18px;">✕</button>
-      </div>
-
-      <div style="font-size:12px;color:#94a3b8;margin-bottom:14px;line-height:1.5;">
-        💾 Все профили и написанный код сохраняются строго <b>локально на твоем компьютере</b> (в localStorage). Ты можешь добавить профили друзей, смотреть кто сколько прошел, и переключаться между ними в один клик!
-      </div>
-
-      <!-- Список всех профилей -->
-      <div class="friends-list-wrap" id="friendsListWrap">
-        <!-- Генерируется через JS -->
-      </div>
-
-      <!-- Форма создания нового профиля друга -->
-      <div class="add-friend-box">
-        <div class="add-friend-title">
-          <span>➕</span>
-          <span>Добавить профиль друга / сокурсника:</span>
-        </div>
-        <div class="add-friend-inputs">
-          <input type="text" class="add-friend-input" id="newFriendNameInput" placeholder="Имя друга (например: Артём, Максим, Алина)..." maxlength="24">
-          <select class="add-friend-avatar-select" id="newFriendAvatarSelect">
-            <option value="👑">👑 Корона</option>
-            <option value="⚡">⚡ Молния</option>
-            <option value="🚀">🚀 Ракета</option>
-            <option value="🐱">🐱 Котик</option>
-            <option value="🦊">🦊 Лиса</option>
-            <option value="🐼">🐼 Панда</option>
-            <option value="🎓">🎓 Студент</option>
-            <option value="🔥">🔥 Огонь</option>
-            <option value="🌸">🌸 Цветок</option>
-          </select>
-          <button type="button" class="btn-add-friend-submit" onclick="submitCreateFriendProfile()">
-            Создать профиль
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</body>`);
+      w.document.write(`<body style="margin:0;background:#05070f;display:flex;align-items:center;justify-content:center;height:100vh;"><img src="${currentArtDataUrl}" style="max-width:98%;max-height:98%;object-fit:contain;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.8);" /></body>`);
     }
   }
 
@@ -14186,6 +14140,54 @@ if (typeof initChatSessions === 'function') initChatSessions();
     <span class="speech-pulse-dot"></span>
     <span>⏹️ Остановить озвучку</span>
     <kbd>Esc</kbd>
+  </div>
+
+
+  <!-- МОДАЛЬНОЕ ОКНО: ПРОГРЕСС УЧЕНИКОВ И ЛОКАЛЬНЫЕ ПРОФИЛИ ДРУЗЕЙ -->
+  <div class="friends-modal-overlay" id="friendsModalOverlay" onclick="closeFriendsModalOnOverlay(event)">
+    <div class="friends-modal-card">
+      <div class="friends-modal-header">
+        <div class="friends-modal-title">
+          <span>🏆</span>
+          <span>Прогресс учеников и локальные профили друзей</span>
+        </div>
+        <button type="button" class="py-err-close-btn" onclick="closeFriendsModal()" style="font-size:18px;">✕</button>
+      </div>
+
+      <div style="font-size:12px;color:#94a3b8;margin-bottom:14px;line-height:1.5;">
+        💾 Все профили и написанный код сохраняются строго <b>локально на твоем компьютере</b> (в localStorage). Ты можешь добавить профили друзей, смотреть кто сколько прошел, и переключаться между ними в один клик!
+      </div>
+
+      <!-- Список всех профилей -->
+      <div class="friends-list-wrap" id="friendsListWrap">
+        <!-- Генерируется через JS -->
+      </div>
+
+      <!-- Форма создания нового профиля друга -->
+      <div class="add-friend-box">
+        <div class="add-friend-title">
+          <span>➕</span>
+          <span>Добавить профиль друга / сокурсника:</span>
+        </div>
+        <div class="add-friend-inputs">
+          <input type="text" class="add-friend-input" id="newFriendNameInput" placeholder="Имя друга (например: Артём, Максим, Алина)..." maxlength="24">
+          <select class="add-friend-avatar-select" id="newFriendAvatarSelect">
+            <option value="👑">👑 Корона</option>
+            <option value="⚡">⚡ Молния</option>
+            <option value="🚀">🚀 Ракета</option>
+            <option value="🐱">🐱 Котик</option>
+            <option value="🦊">🦊 Лиса</option>
+            <option value="🐼">🐼 Панда</option>
+            <option value="🎓">🎓 Студент</option>
+            <option value="🔥">🔥 Огонь</option>
+            <option value="🌸">🌸 Цветок</option>
+          </select>
+          <button type="button" class="btn-add-friend-submit" onclick="submitCreateFriendProfile()">
+            Создать профиль
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
 </body>

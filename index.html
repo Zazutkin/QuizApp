@@ -8296,14 +8296,39 @@ function initAiProviderSettings() {
     if (!prof.pythonProgress[lessonIdx]) {
       prof.pythonProgress[lessonIdx] = { l1: false, l2: false, l3: false, completedAt: Date.now() };
     }
+    const alreadyDone = !!prof.pythonProgress[lessonIdx][`l${levelNum}`];
     prof.pythonProgress[lessonIdx][`l${levelNum}`] = true;
     prof.pythonProgress[lessonIdx].completedAt = Date.now();
-    prof.xp = (prof.xp || 0) + 40;
-    prof.level = Math.floor(prof.xp / 150) + 1;
+
+    // Начисляем XP строго 1 раз при первом прохождении уровня!
+    if (!alreadyDone) {
+      prof.xp = (prof.xp || 0) + 40;
+      prof.level = Math.floor(prof.xp / 150) + 1;
+      userProfile.xp = prof.xp;
+      userProfile.level = prof.level;
+      saveProfile();
+    }
 
     saveCurrentActiveProfile(prof);
     updateCourseProgressUI();
     renderPythonSidebar();
+  }
+
+  function resetDamirHonestProgress() {
+    const prof = getActiveProfile();
+    prof.xp = 230;
+    prof.level = 2;
+    prof.pythonProgress = {
+      "0": { l1: true, l2: true, l3: false, completedAt: Date.now() }
+    };
+    userProfile.xp = 230;
+    userProfile.level = 2;
+    saveProfile();
+    saveCurrentActiveProfile(prof);
+    updateCourseProgressUI();
+    renderPythonSidebar();
+    if (typeof renderFriendsListUI === 'function') renderFriendsListUI();
+    alert('🧹 Статистика успешно откалибрована до честного уровня:\n• 230 XP (LVL 2)\n• Урок 1: решены Разминка и Боевая задача (2 задачи)\n• Нечестно начисленные очки сброшены!');
   }
 
   function getLessonLevelStatus(lessonIdx, prof = null) {
@@ -12660,12 +12685,18 @@ function clearCurrentChat() {
   }
 
   function addXp(amount) {
-    userProfile.xp += amount;
+    userProfile.xp = (userProfile.xp || 0) + amount;
     const newLvl = Math.floor(userProfile.xp / 150) + 1;
-    if (newLvl > userProfile.level) {
-      userProfile.level = newLvl;
-    }
+    userProfile.level = newLvl;
     saveProfile();
+
+    const prof = getActiveProfile();
+    if (prof) {
+      prof.xp = userProfile.xp;
+      prof.level = userProfile.level;
+      saveCurrentActiveProfile(prof);
+    }
+    updateCourseProgressUI();
   }
 
   function getRankTitle(lvl) {
@@ -14617,7 +14648,39 @@ if (typeof initChatSessions === 'function') initChatSessions();
   </div>
 
 
-  <script src="code_test_engine.js"></script>
+  <script src="code_test_engine.js">
+  // Автоматическая калибровка честного прогресса Дамира (230 XP, 2 задачи)
+  (function calibrateHonestOnce() {
+    try {
+      if (localStorage.getItem('quizgen_honest_calibrated_v3') !== 'true') {
+        const raw = localStorage.getItem('quizgen_all_profiles_v1');
+        if (raw) {
+          const list = JSON.parse(raw);
+          const damir = list.find(p => p.id === 'prof_damir' || p.name === 'Дамир');
+          if (damir) {
+            damir.xp = 230;
+            damir.level = 2;
+            damir.pythonProgress = {
+              "0": { l1: true, l2: true, l3: false, completedAt: Date.now() }
+            };
+            localStorage.setItem('quizgen_all_profiles_v1', JSON.stringify(list));
+          }
+        }
+        localStorage.setItem('quizgen_user_profile_v2', JSON.stringify({
+          name: 'Дамир',
+          avatar: '👑',
+          level: 2,
+          xp: 230,
+          streak: 1,
+          badges: []
+        }));
+        localStorage.setItem('quizgen_honest_calibrated_v3', 'true');
+        console.log('[Calibration] Честная статистика Дамира откалибрована: 230 XP, LVL 2.');
+      }
+    } catch(e) {}
+  })();
+
+</script>
 
 </body>
 </html>

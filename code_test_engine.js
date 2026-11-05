@@ -1,6 +1,6 @@
 // =======================================================================
 //  💻 МОДУЛЬ ПРАКТИЧЕСКОГО КОД-ТЕСТИРОВАНИЯ ПО ПРОЙДЕННЫМ ТЕМАМ PYTHON
-//  Только реальный код, автотесты, выбор сложности и защита замочком 🔒
+//  Чистые шаблоны (без спойлеров!), генератор разных заданий и ИИ-генератор
 // =======================================================================
 
 (function() {
@@ -9,311 +9,246 @@
   // Состояние активного теста
   let activeTopicIndex = 0;       // Индекс темы (0..27)
   let activeDifficulty = 1;       // 1: Разминка, 2: Боевая, 3: Хардкор
+  let currentVariantIndex = 0;    // Номер вариации внутри темы
   let currentChallenge = null;    // Текущий объект задания
   let testOutputBuffer = '';      // Буфер вывода Skulpt
 
   // ---------------------------------------------------------------------
-  //  БАНК ШАБЛОННЫХ ЗАДАНИЙ ДЛЯ ВСЕХ ТЕМ (ПО 3 СЛОЖНОСТИ НА ТЕМУ)
+  //  БАНК ШАБЛОННЫХ ЗАДАНИЙ: МУЛЬТИ-ВАРИАНТЫ (БЕЗ СПОЙЛЕРОВ В РЕДАКТОРЕ!)
   // ---------------------------------------------------------------------
-  const CODE_TEST_BANK = {
+  const CODE_TEST_VARIANTS = {
     // Урок 1: print(), sep, end
     0: {
-      1: {
-        title: "Разминка: Визитка с параметром end",
-        desc: "Выведи строку «Привет, меня зовут », а затем следующим вызовом print() выведи своё имя на ТОЙ ЖЕ строке, используя параметр end=''.",
-        starterCode: "# Задание: выведи приветствие и имя в одну строчку двумя print()\nprint(\"Привет, меня зовут \", end=\"\")\n# Допиши второй print здесь:\nprint(\"Дамир\")\n",
-        expectedKeywords: ['print', 'end='],
-        testVerify: (output) => {
-          const clean = output.trim();
-          return clean.includes("Привет, меня зовут") && clean.split('\n').length === 1;
+      1: [
+        {
+          title: "Разминка (Вариант А): Визитка с параметром end",
+          desc: "Выведи строку «Привет, меня зовут » первым вызовом print(), а вторым print() выведи своё имя на ТОЙ ЖЕ строке, используя параметр end=''.",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 1 · Разминка)\n# ==========================================================\n\n# TODO: Напиши первую команду print() с текстом \"Привет, меня зовут \" и параметром end=\"\"\n# TODO: Напиши вторую команду print() со своим именем\n\n",
+          expectedKeywords: ['print', 'end='],
+          testVerify: (output) => {
+            const clean = output.trim();
+            return clean.includes("Привет, меня зовут") && clean.split('\n').length === 1;
+          },
+          hint: "В первом вызове укажи print(\"Привет, меня зовут \", end=\"\").",
+          xp: 30
         },
-        hint: "Используй end='' в первом print, чтобы убрать автоматический перенос строки \\n.",
-        xp: 30
-      },
-      2: {
-        title: "Боевая задача: Чек с разделителем sep",
-        desc: "Напечатай строку чека за 1 вызов print(). Аргументы: «Товар: Ноутбук», «Кол-во: 1», «Цена: 75000 руб». Между аргументами должен стоять разделитель sep=' | '.",
-        starterCode: "# Задание: напечатай чек одним print с sep=' | '\nprint(\"Товар: Ноутбук\", \"Кол-во: 1\", \"Цена: 75000 руб\", sep=\" | \")\n",
-        expectedKeywords: ['sep=', 'print'],
-        testVerify: (output) => {
-          return output.includes("Товар: Ноутбук | Кол-во: 1 | Цена: 75000 руб") || output.includes(" | ");
+        {
+          title: "Разминка (Вариант B): Обратный отсчёт запуска",
+          desc: "Напиши три отдельные команды print(): первая печатает '3...', вторая '2...', третья '1... Пуск!'. Все фразы должны выводиться на ОДНОЙ строке через пробел с помощью end=' '.",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 1 · Разминка B)\n# ==========================================================\n\n# TODO: Выведи три числа в одну строку через пробел, используя end=\" \"\n\n",
+          expectedKeywords: ['print', 'end='],
+          testVerify: (output) => output.includes("3") && output.includes("2") && output.includes("1") && output.trim().split('\n').length === 1,
+          hint: "Каждому print() передай end=' ', кроме последнего (или всем трем).",
+          xp: 30
         },
-        hint: "Перечисли все три аргумента через запятую внутри print(..., sep=' | ').",
-        xp: 60
-      },
-      3: {
-        title: "Хардкор со звёздочкой: Рамка фиксированной ширины",
-        desc: "Нарисуй баннер: сверху и снизу линия из 25 звёздочек '*', а по центру строка «*   PYTHON CODE TEST   *». Используй умножение строки '*' * 25.",
-        starterCode: "# Задание: нарисуй баннер из звёздочек шириной 25 символов\nprint('*' * 25)\nprint('*   PYTHON CODE TEST   *')\nprint('*' * 25)\n",
-        expectedKeywords: ['*', 'print'],
-        testVerify: (output) => {
-          const lines = output.trim().split('\n');
-          return lines.length >= 3 && lines[0].includes('****************') && lines[lines.length-1].includes('****************');
+        {
+          title: "Разминка (Вариант C): Системный статус",
+          desc: "Выведи статус системы двумя командами print(): сначала «Сервер: », затем «ОНЛАЙН» на той же строке с помощью end=''.",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 1 · Разминка C)\n# ==========================================================\n\n# TODO: Напечатай 'Сервер: ' с end='' и вторым print() слово 'ОНЛАЙН'\n\n",
+          expectedKeywords: ['print', 'end='],
+          testVerify: (output) => output.includes("Сервер:") && output.includes("ОНЛАЙН") && output.trim().split('\n').length === 1,
+          hint: "print(\"Сервер: \", end=\"\") объединит строчки.",
+          xp: 30
+        }
+      ],
+      2: [
+        {
+          title: "Боевая задача (Вариант А): Чек с разделителем sep",
+          desc: "Напечатай строку чека за 1 вызов print(). Аргументы: «Товар: Ноутбук», «Кол-во: 1», «Цена: 75000 руб». Между аргументами должен стоять разделитель sep=' | '.",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 1 · Боевая задача А)\n# ==========================================================\n\n# TODO: Напиши одну команду print() с тремя аргументами и sep=\" | \"\n\n",
+          expectedKeywords: ['sep=', 'print'],
+          testVerify: (output) => output.includes("Товар: Ноутбук | Кол-во: 1 | Цена: 75000 руб") || output.includes(" | "),
+          hint: "print(\"Товар: Ноутбук\", \"Кол-во: 1\", \"Цена: 75000 руб\", sep=\" | \")",
+          xp: 60
         },
-        hint: "В Python строку можно умножать на число: print('*' * 25).",
-        xp: 120
-      }
+        {
+          title: "Боевая задача (Вариант B): Путь к файлу через sep",
+          desc: "Выведи путь к файлу одной командой print(). Передай компоненты пути: 'C:', 'Users', 'Damir', 'Python', 'app.py' с разделителем sep='/'.",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 1 · Боевая задача B)\n# ==========================================================\n\n# TODO: Выведи компоненты пути через sep=\"/\"\n\n",
+          expectedKeywords: ['sep=', 'print'],
+          testVerify: (output) => output.includes("C:/Users/Damir/Python/app.py") || (output.includes("C:") && output.includes("/")),
+          hint: "Укажи аргументы через запятую и в конце sep='/'.",
+          xp: 60
+        },
+        {
+          title: "Боевая задача (Вариант C): Табло футбольного матча",
+          desc: "Напечатай счет матча одной командой print(): «Реал Мадрид», 3, 1, «Барселона». Разделитель между всеми элементами должен быть sep=' : '.",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 1 · Боевая задача C)\n# ==========================================================\n\n# TODO: Выведи счет одной командой print с sep=\" : \"\n\n",
+          expectedKeywords: ['sep=', 'print'],
+          testVerify: (output) => output.includes("Реал Мадрид : 3 : 1 : Барселона") || output.includes(" : "),
+          hint: "print(\"Реал Мадрид\", 3, 1, \"Барселона\", sep=\" : \")",
+          xp: 60
+        }
+      ],
+      3: [
+        {
+          title: "Хардкор со звёздочкой (Вариант А): Рамка баннера",
+          desc: "Нарисуй баннер: сверху и снизу линия из 25 звёздочек '*', а по центру строка «*   PYTHON CODE TEST   *». Используй умножение строки '*' * 25.",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 1 · Хардкор А)\n# ==========================================================\n\n# TODO: Нарисуй верхнюю границу из '*' * 25\n# TODO: Напечатай строку по центру: '*   PYTHON CODE TEST   *'\n# TODO: Нарисуй нижнюю границу из '*' * 25\n\n",
+          expectedKeywords: ['*', 'print'],
+          testVerify: (output) => {
+            const lines = output.trim().split('\n');
+            return lines.length >= 3 && lines[0].includes('****************') && lines[lines.length-1].includes('****************');
+          },
+          hint: "print('*' * 25) напечатает 25 звездочек подряд.",
+          xp: 120
+        },
+        {
+          title: "Хардкор со звёздочкой (Вариант B): Лесенка из символов",
+          desc: "Выведи лесенку из 4 строк символом '#': на первой строке 1 символ, на второй 2, на третьей 3, на четвертой 4 символа. Используй умножение строки '#' * n.",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 1 · Хардкор B)\n# ==========================================================\n\n# TODO: Напечатай 4 строки лесенки, умножая '#' на 1, 2, 3 и 4:\n\n",
+          expectedKeywords: ['#', 'print'],
+          testVerify: (output) => {
+            const lines = output.trim().split('\n');
+            return lines.length >= 4 && lines[0].trim() === '#' && lines[3].trim() === '####';
+          },
+          hint: "print('#' * 1), затем print('#' * 2) и так далее.",
+          xp: 120
+        }
+      ]
     },
 
-    // Урок 2: Переменные и типы данных (int, float, str, bool)
+    // Урок 2: Переменные и типы данных
     1: {
-      1: {
-        title: "Разминка: Конвертер валюты",
-        desc: "Создай переменную usd = 100 и rub_rate = 92.5. Создай переменную total_rub, умножив usd на rub_rate, и выведи результат.",
-        starterCode: "# Создай переменные и рассчитай сумму в рублях:\nusd = 100\nrub_rate = 92.5\ntotal_rub = usd * rub_rate\nprint(total_rub)\n",
-        expectedKeywords: ['usd', 'rub_rate', 'total_rub', 'print'],
-        testVerify: (output) => output.includes("9250"),
-        hint: "Умножение выполняется знаком *: total_rub = usd * rub_rate.",
-        xp: 30
-      },
-      2: {
-        title: "Боевая задача: Спецификаторы и типы",
-        desc: "Создай переменные: name = 'Алекс', age = 20, is_student = True. Выведи f-строку: «Студент Алекс (20 лет): статус = True».",
-        starterCode: "name = 'Алекс'\nage = 20\nis_student = True\n# Выведи f-строку с переменными:\nprint(f\"Студент {name} ({age} лет): статус = {is_student}\")\n",
-        expectedKeywords: ['f"', 'name', 'age', 'is_student'],
-        testVerify: (output) => output.includes("Студент Алекс") && output.includes("20") && output.includes("True"),
-        hint: "Используй f-строку: f\"Студент {name} ({age} лет): статус = {is_student}\".",
-        xp: 60
-      },
-      3: {
-        title: "Хардкор со звёздочкой: Калькулятор ИМТ (BMI)",
-        desc: "Создай переменные weight = 70 (кг) и height = 1.75 (метры). Рассчитай индекс массы тела: bmi = weight / (height ** 2). Округли до 2 знаков функцией round(bmi, 2) и напечатай.",
-        starterCode: "weight = 70\nheight = 1.75\n# Рассчитай bmi и округли через round():\nbmi = round(weight / (height ** 2), 2)\nprint(f\"ИМТ: {bmi}\")\n",
-        expectedKeywords: ['round', '**', 'print'],
-        testVerify: (output) => output.includes("22.86"),
-        hint: "Возведение в степень в Python пишется как ** (две звёздочки): height ** 2.",
-        xp: 120
-      }
+      1: [
+        {
+          title: "Разминка (Вариант А): Конвертер валюты",
+          desc: "Создай переменную usd = 100 и курс rub_rate = 92.5. Вычисли общую сумму total_rub (произведение usd и rub_rate) и напечатай её.",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 2 · Разминка А)\n# ==========================================================\n\n# TODO: Создай usd и rub_rate, перемножь их и выведи результат:\n\n",
+          expectedKeywords: ['usd', 'rub_rate', 'print'],
+          testVerify: (output) => output.includes("9250"),
+          hint: "usd = 100\nrub_rate = 92.5\ntotal_rub = usd * rub_rate\nprint(total_rub)",
+          xp: 30
+        },
+        {
+          title: "Разминка (Вариант B): Расчет площади прямоугольника",
+          desc: "Создай переменные a = 15 (ширина) и b = 8 (длина). Вычисли площадь area = a * b и периметр perimeter = 2 * (a + b). Напечатай оба значения через пробел.",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 2 · Разминка B)\n# ==========================================================\n\n# TODO: Объяви a и b, рассчитай площадь и периметр, напечатай их:\n\n",
+          expectedKeywords: ['a', 'b', 'print'],
+          testVerify: (output) => output.includes("120") && output.includes("46"),
+          hint: "area = a * b, perimeter = 2 * (a + b).",
+          xp: 30
+        }
+      ],
+      2: [
+        {
+          title: "Боевая задача: Форматированная f-строка профиля",
+          desc: "Создай переменные name = 'Дамир', age = 22, score = 98.5. Выведи f-строку строго в формате: «Студент: Дамир | Возраст: 22 | Балл: 98.5».",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 2 · Боевая задача)\n# ==========================================================\n\n# TODO: Создай переменные name, age, score и напечатай f-строку:\n\n",
+          expectedKeywords: ['f"', 'print', 'name', 'age'],
+          testVerify: (output) => output.includes("Студент: Дамир") && output.includes("Возраст: 22") && output.includes("98.5"),
+          hint: "print(f\"Студент: {name} | Возраст: {age} | Балл: {score}\")",
+          xp: 60
+        }
+      ],
+      3: [
+        {
+          title: "Хардкор: Калькулятор ИМТ (BMI)",
+          desc: "Создай переменные weight = 70 (кг) и height = 1.75 (м). Рассчитай индекс массы тела: bmi = weight / (height ** 2). Округли до двух знаков через round(bmi, 2) и напечатай.",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 2 · Хардкор)\n# ==========================================================\n\n# TODO: Рассчитай ИМТ и выведи округлённое значение:\n\n",
+          expectedKeywords: ['**', 'round', 'print'],
+          testVerify: (output) => output.includes("22.86"),
+          hint: "bmi = round(weight / (height ** 2), 2)",
+          xp: 120
+        }
+      ]
     },
 
-    // Урок 3: input(), преобразование типов и арифметика
+    // Урок 3: Преобразование типов и арифметика
     2: {
-      1: {
-        title: "Разминка: Преобразование типов",
-        desc: "Дана строка s = '42'. Преобразуй её в целое число int, прибавь 8 и выведи результат (должно получиться 50).",
-        starterCode: "s = '42'\n# Преобразуй s в int и прибавь 8:\nnum = int(s) + 8\nprint(num)\n",
-        expectedKeywords: ['int(', 'print'],
-        testVerify: (output) => output.includes("50"),
-        hint: "Функция int('42') превращает текст в число.",
-        xp: 30
-      },
-      2: {
-        title: "Боевая задача: Деление нацело и остаток",
-        desc: "Дано число минут: total_minutes = 155. Рассчитай часы (целочисленное деление // 60) и оставшиеся минуты (остаток % 60). Выведи: «2 ч 35 мин».",
-        starterCode: "total_minutes = 155\nhours = total_minutes // 60\nmins = total_minutes % 60\nprint(f\"{hours} ч {mins} мин\")\n",
-        expectedKeywords: ['//', '%', 'print'],
-        testVerify: (output) => output.includes("2 ч 35 мин") || (output.includes("2") && output.includes("35")),
-        hint: "// возвращает целые часы, а % возвращает остаток минут.",
-        xp: 60
-      },
-      3: {
-        title: "Хардкор: Сплит счета с чаевыми",
-        desc: "Счёт в ресторане bill = 4500 руб, чаевые tip_percent = 15 (процентов), количество гостей guests = 3. Рассчитай, сколько должен заплатить каждый гость (с учетом чаевых), округлив до целого числа int().",
-        starterCode: "bill = 4500\ntip_percent = 15\nguests = 3\ntotal = bill * (1 + tip_percent / 100)\nper_person = int(total / guests)\nprint(f\"С каждого: {per_person} руб\")\n",
-        expectedKeywords: ['int', 'print'],
-        testVerify: (output) => output.includes("1725"),
-        hint: "Общий счёт: bill * 1.15. На каждого: total / guests.",
-        xp: 120
-      }
+      1: [
+        {
+          title: "Разминка: Сложение строк как чисел",
+          desc: "Даны две строки num1 = '25' и num2 = '17'. Преобразуй обе строки в int(), сложи их и выведи сумму (должно получиться 42).",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 3 · Разминка)\n# ==========================================================\nnum1 = '25'\nnum2 = '17'\n\n# TODO: Преобразуй строки в int(), сложи и напечатай результат:\n\n",
+          expectedKeywords: ['int(', 'print'],
+          testVerify: (output) => output.includes("42"),
+          hint: "total = int(num1) + int(num2)",
+          xp: 30
+        }
+      ],
+      2: [
+        {
+          title: "Боевая задача: Часы и минуты",
+          desc: "Дано общее число минут: total_minutes = 185. Найди целые часы (через // 60) и оставшиеся минуты (через % 60). Выведи: «3 ч 5 мин».",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 3 · Боевая задача)\n# ==========================================================\ntotal_minutes = 185\n\n# TODO: Найди целые часы // и остаток минут %\n\n",
+          expectedKeywords: ['//', '%', 'print'],
+          testVerify: (output) => output.includes("3 ч 5 мин") || (output.includes("3") && output.includes("5")),
+          hint: "hours = total_minutes // 60\nmins = total_minutes % 60",
+          xp: 60
+        }
+      ],
+      3: [
+        {
+          title: "Хардкор: Сплит счета с чаевыми",
+          desc: "Счёт в ресторане bill = 5000 руб, чаевые tip_percent = 10, количество гостей guests = 4. Рассчитай и выведи сумму на одного гостя, округлив до целого числа int().",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 3 · Хардкор)\n# ==========================================================\nbill = 5000\ntip_percent = 10\nguests = 4\n\n# TODO: Рассчитай общий счет с чаевыми и долю каждого гостя:\n\n",
+          expectedKeywords: ['int', 'print'],
+          testVerify: (output) => output.includes("1375"),
+          hint: "total = bill * 1.1\nper_person = int(total / guests)",
+          xp: 120
+        }
+      ]
     },
 
     // Урок 4: Условия if/elif/else
     3: {
-      1: {
-        title: "Разминка: Проверка чётности",
-        desc: "Дано число n = 14. С помощью if / else проверь, чётное оно или нечётное (n % 2 == 0). Если чётное, выведи «Чётное», иначе «Нечётное».",
-        starterCode: "n = 14\nif n % 2 == 0:\n    print(\"Чётное\")\nelse:\n    print(\"Нечётное\")\n",
-        expectedKeywords: ['if', 'else', '%', 'print'],
-        testVerify: (output) => output.toLowerCase().includes("чётное") || output.toLowerCase().includes("четное"),
-        hint: "Оператор n % 2 возвращает 0 для чётных чисел.",
-        xp: 30
-      },
-      2: {
-        title: "Боевая задача: Система скидок магазина",
-        desc: "Дана сумма покупки amount = 4200. Если сумма >= 5000 — скидка 20%. Если от 3000 до 4999 — скидка 10%. Иначе скидка 0%. Рассчитай итоговую цену со скидкой и выведи её.",
-        starterCode: "amount = 4200\nif amount >= 5000:\n    discount = 0.20\nelif amount >= 3000:\n    discount = 0.10\nelse:\n    discount = 0.0\nfinal_price = amount * (1 - discount)\nprint(f\"Итого к оплате: {int(final_price)} руб\")\n",
-        expectedKeywords: ['if', 'elif', 'else', 'print'],
-        testVerify: (output) => output.includes("3780"),
-        hint: "При сумме 4200 сработает elif amount >= 3000 со скидкой 10% (4200 - 420 = 3780).",
-        xp: 60
-      },
-      3: {
-        title: "Хардкор: Валидатор надёжности пароля",
-        desc: "Дан пароль password = 'SecurePass99'. Напиши проверку: если длина len(password) >= 8 И в пароле есть цифра (любая цифра in password) — выведи «Надёжный пароль», иначе «Слабый пароль».",
-        starterCode: "password = 'SecurePass99'\nhas_digit = any(char.isdigit() for char in password)\nif len(password) >= 8 and has_digit:\n    print(\"Надёжный пароль\")\nelse:\n    print(\"Слабый пароль\")\n",
-        expectedKeywords: ['if', 'len', 'print'],
-        testVerify: (output) => output.includes("Надёжный пароль"),
-        hint: "Для проверки цифры можно использовать char.isdigit() или цикл/any().",
-        xp: 120
-      }
-    },
-
-    // Урок 5: Списки (list)
-    4: {
-      1: {
-        title: "Разминка: Методы списков append и len",
-        desc: "Создай список fruits = ['яблоко', 'банан']. Добавь в него 'апельсин' с помощью append(), затем выведи количество элементов в списке через len().",
-        starterCode: "fruits = ['яблоко', 'банан']\nfruits.append('апельсин')\nprint(len(fruits))\n",
-        expectedKeywords: ['append', 'len', 'print'],
-        testVerify: (output) => output.includes("3"),
-        hint: "fruits.append('апельсин') добавит элемент в конец списка, а len(fruits) вернет 3.",
-        xp: 30
-      },
-      2: {
-        title: "Боевая задача: Срезы списка и реверс",
-        desc: "Дан список numbers = [10, 20, 30, 40, 50, 60, 70]. С помощью среза [::2] возьми каждый второй элемент, а затем разверни полученный срез задом наперёд с помощью [::-1]. Выведи результат.",
-        starterCode: "numbers = [10, 20, 30, 40, 50, 60, 70]\nevery_second = numbers[::2]       # [10, 30, 50, 70]\nreversed_slice = every_second[::-1] # [70, 50, 30, 10]\nprint(reversed_slice)\n",
-        expectedKeywords: ['[::2]', '[::-1]', 'print'],
-        testVerify: (output) => output.includes("70") && output.includes("50") && output.includes("30") && output.includes("10"),
-        hint: "Срез numbers[::2] берёт элементы с шагом 2. Срез [::-1] разворачивает список.",
-        xp: 60
-      },
-      3: {
-        title: "Хардкор: Фильтрация и поиск топ-3 оценок",
-        desc: "Дан список баллов scores = [45, 92, 88, 63, 99, 78, 91, 54]. Отсортируй список по убыванию и выведи топ-3 лучших результата в виде списка (должно быть [99, 92, 91]).",
-        starterCode: "scores = [45, 92, 88, 63, 99, 78, 91, 54]\ntop_3 = sorted(scores, reverse=True)[:3]\nprint(top_3)\n",
-        expectedKeywords: ['sorted', 'print'],
-        testVerify: (output) => output.includes("99") && output.includes("92") && output.includes("91"),
-        hint: "Используй sorted(scores, reverse=True)[:3].",
-        xp: 120
-      }
-    },
-
-    // Урок 6: Циклы for и while
-    5: {
-      1: {
-        title: "Разминка: Сумма чисел от 1 до N",
-        desc: "С помощью цикла for и range(1, 11) найди сумму всех чисел от 1 до 10 включительно и напечатай результат (должно быть 55).",
-        starterCode: "total = 0\nfor i in range(1, 11):\n    total += i\nprint(total)\n",
-        expectedKeywords: ['for', 'in range', 'print'],
-        testVerify: (output) => output.includes("55"),
-        hint: "range(1, 11) перебирает числа от 1 до 10.",
-        xp: 30
-      },
-      2: {
-        title: "Боевая задача: Подсчет гласных букв",
-        desc: "Дана строка text = 'программирование'. С помощью цикла for посчитай, сколько в ней гласных букв из набора 'аеёиоуыэюя', и выведи число.",
-        starterCode: "text = 'программирование'\nvowels = 'аеёиоуыэюя'\ncount = 0\nfor char in text:\n    if char in vowels:\n        count += 1\nprint(f\"Гласных: {count}\")\n",
-        expectedKeywords: ['for', 'in', 'if', 'print'],
-        testVerify: (output) => output.includes("7"),
-        hint: "В слове 'программирование' ровно 7 гласных букв.",
-        xp: 60
-      },
-      3: {
-        title: "Хардкор: Факториал через цикл while",
-        desc: "Вычисли факториал числа n = 6 с помощью цикла while (6! = 1 * 2 * 3 * 4 * 5 * 6 = 720). Выведи результат.",
-        starterCode: "n = 6\nfact = 1\ncurr = 1\nwhile curr <= n:\n    fact *= curr\n    curr += 1\nprint(f\"6! = {fact}\")\n",
-        expectedKeywords: ['while', 'print'],
-        testVerify: (output) => output.includes("720"),
-        hint: "На каждом шаге while умножай fact на curr и увеличивай curr на 1.",
-        xp: 120
-      }
-    },
-
-    // Урок 7: Функции (def)
-    6: {
-      1: {
-        title: "Разминка: Функция приветствия с return",
-        desc: "Напиши функцию greet(name), которая принимает имя и возвращает строку «Привет, {name}!». Вызови её для 'Дамир' и напечатай результат.",
-        starterCode: "def greet(name):\n    return f\"Привет, {name}!\"\n\nmsg = greet('Дамир')\nprint(msg)\n",
-        expectedKeywords: ['def', 'return', 'print'],
-        testVerify: (output) => output.includes("Привет, Дамир!"),
-        hint: "Функция должна использовать оператор return для возврата строки.",
-        xp: 30
-      },
-      2: {
-        title: "Боевая задача: Функция проверки простого числа",
-        desc: "Напиши функцию is_prime(num), которая возвращает True, если число простое (делится только на 1 и на само себя), и False в противном случае. Проверь для чисел 17 и 20.",
-        starterCode: "def is_prime(num):\n    if num < 2: return False\n    for i in range(2, int(num ** 0.5) + 1):\n        if num % i == 0:\n            return False\n    return True\n\nprint(is_prime(17))\nprint(is_prime(20))\n",
-        expectedKeywords: ['def', 'return', 'is_prime'],
-        testVerify: (output) => output.includes("True") && output.includes("False"),
-        hint: "Если num делится на какое-то i без остатка, верни False.",
-        xp: 60
-      },
-      3: {
-        title: "Хардкор: Вариативные аргументы *args и **kwargs",
-        desc: "Напиши функцию stats(*numbers), которая возвращает кортеж из суммы, минимального и максимального числа: (sum, min, max). Проверь на числах 5, 12, 3, 9.",
-        starterCode: "def stats(*numbers):\n    return sum(numbers), min(numbers), max(numbers)\n\nres = stats(5, 12, 3, 9)\nprint(res)\n",
-        expectedKeywords: ['def', '*numbers', 'return'],
-        testVerify: (output) => output.includes("29") && output.includes("3") && output.includes("12"),
-        hint: "*numbers упаковывает все переданные числа в кортеж.",
-        xp: 120
-      }
-    },
-
-    // Урок 9: Словари (dict)
-    8: {
-      1: {
-        title: "Разминка: Словарь пользователя",
-        desc: "Создай словарь user = {'name': 'Дамир', 'city': 'Октябрьский', 'xp': 250}. Добавь новый ключ 'level' со значением 2 и выведи весь словарь.",
-        starterCode: "user = {'name': 'Дамир', 'city': 'Октябрьский', 'xp': 250}\nuser['level'] = 2\nprint(user)\n",
-        expectedKeywords: ['{', '}', 'user', 'print'],
-        testVerify: (output) => output.includes("level") && output.includes("2"),
-        hint: "Добавление ключа: user['level'] = 2.",
-        xp: 30
-      },
-      2: {
-        title: "Боевая задача: Частотный счетчик слов",
-        desc: "Дан список слов words = ['apple', 'banana', 'apple', 'orange', 'banana', 'apple']. Составь словарь частоты повторений каждого слова и напечатай его.",
-        starterCode: "words = ['apple', 'banana', 'apple', 'orange', 'banana', 'apple']\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\nprint(counts)\n",
-        expectedKeywords: ['counts', 'for', 'print'],
-        testVerify: (output) => output.includes("'apple': 3") || output.includes('"apple": 3') || (output.includes("apple") && output.includes("3")),
-        hint: "Используй counts[w] = counts.get(w, 0) + 1.",
-        xp: 60
-      },
-      3: {
-        title: "Хардкор: Группировка товаров по категории",
-        desc: "Дан список кортежей товаров items = [('Еда', 'Хлеб'), ('Техника', 'Мышь'), ('Еда', 'Сыр')]. Сгруппируй их в словарь, где ключ — категория, а значение — список товаров.",
-        starterCode: "items = [('Еда', 'Хлеб'), ('Техника', 'Мышь'), ('Еда', 'Сыр')]\ncategories = {}\nfor cat, item in items:\n    if cat not in categories:\n        categories[cat] = []\n    categories[cat].append(item)\nprint(categories)\n",
-        expectedKeywords: ['categories', 'append', 'print'],
-        testVerify: (output) => output.includes("Хлеб") && output.includes("Сыр") && output.includes("Мышь"),
-        hint: "Для каждой категории инициализируй список, если её ещё нет в словаре.",
-        xp: 120
-      }
+      1: [
+        {
+          title: "Разминка: Проверка чётности",
+          desc: "Дано число n = 18. Напиши проверку if/else: если число чётное (n % 2 == 0), напечатай «Чётное», иначе «Нечётное».",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 4 · Разминка)\n# ==========================================================\nn = 18\n\n# TODO: Напиши конструкцию if / else:\n\n",
+          expectedKeywords: ['if', 'else', '%', 'print'],
+          testVerify: (output) => output.toLowerCase().includes("чётное") || output.toLowerCase().includes("четное"),
+          hint: "if n % 2 == 0:\n    print('Чётное')",
+          xp: 30
+        }
+      ],
+      2: [
+        {
+          title: "Боевая задача: Категории возраста",
+          desc: "Дана переменная age = 16. Если age < 14 — напечатай «Ребёнок», если age от 14 до 17 — напечатай «Подросток», иначе «Взрослый».",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 4 · Боевая задача)\n# ==========================================================\nage = 16\n\n# TODO: Напиши цепочку if / elif / else:\n\n",
+          expectedKeywords: ['if', 'elif', 'else', 'print'],
+          testVerify: (output) => output.includes("Подросток"),
+          hint: "if age < 14:\n    print('Ребёнок')\nelif age <= 17:\n    print('Подросток')",
+          xp: 60
+        }
+      ],
+      3: [
+        {
+          title: "Хардкор: Проверка логина и пароля",
+          desc: "Даны login = 'admin' и password = '777'. Напиши проверку: если оба верны — напечатай «Доступ разрешён», иначе если только логин верен — «Неверный пароль», иначе «Пользователь не найден».",
+          starterCode: "# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Тема 4 · Хардкор)\n# ==========================================================\nlogin = 'admin'\npassword = '777'\n\n# TODO: Напиши условия с and / elif / else:\n\n",
+          expectedKeywords: ['if', 'elif', 'else', 'print'],
+          testVerify: (output) => output.includes("Доступ разрешён"),
+          hint: "if login == 'admin' and password == '777': ...",
+          xp: 120
+        }
+      ]
     }
   };
 
-  // Дефолтный генератор шаблона, если для темы нет ручного конфига
-  function getFallbackChallenge(lessonIdx, difficulty) {
-    const les = (typeof pythonLessons !== 'undefined' && pythonLessons[lessonIdx]) ? pythonLessons[lessonIdx] : { title: `Урок ${lessonIdx + 1}` };
-    const diffNames = { 1: "Разминка", 2: "Боевая задача", 3: "Хардкор со звёздочкой" };
-    const xpValues = { 1: 30, 2: 60, 3: 120 };
-
-    return {
-      title: `${diffNames[difficulty]}: Практика по теме «${les.title.split('—')[0].trim()}»`,
-      desc: `Напиши законченную программу на Python по теме «${les.title}». Программа должна корректно исполняться без синтаксических ошибок и выводить подтверждающий результат.`,
-      starterCode: `# ==========================================================\n# ✍️ ПРАКТИЧЕСКИЙ КОД-ТЕСТ: ${les.title}\n# Сложность: ${diffNames[difficulty]}\n# ==========================================================\n\n# Напиши свой рабочий код ниже:\nprint("Решение темы ${lessonIdx + 1} успешно запущено!")\n`,
-      expectedKeywords: ['print'],
-      testVerify: (output) => output && output.trim().length > 0 && !output.includes('Error'),
-      hint: "Вспомни ключевые команды из теории этого урока и примени их на практике.",
-      xp: xpValues[difficulty] || 50
-    };
-  }
-
   // ---------------------------------------------------------------------
-  //  ИНИЦИАЛИЗАЦИЯ И РЕНДЕРИНГ ВКЛАДКИ
+  //  ИНИЦИАЛИЗАЦИЯ ВКЛАДКИ
   // ---------------------------------------------------------------------
   window.initCodeTestTab = function() {
     renderTopicCards();
     loadActiveChallenge();
   };
 
-  // Проверка: разблокирована ли тема
   function isTopicUnlocked(idx) {
     if (typeof getLessonLevelStatus !== 'function') return idx === 0;
     const st = getLessonLevelStatus(idx);
     return st && st.count > 0;
   }
 
-  // Рендеринг карточек тем с замочками
   function renderTopicCards() {
     const listEl = document.getElementById('codeTestTopicsList');
     if (!listEl) return;
     listEl.innerHTML = '';
 
     const lessons = (typeof pythonLessons !== 'undefined') ? pythonLessons : [];
-    
-    // Подсчитываем сколько всего разблокировано
     let unlockedCount = 0;
     lessons.forEach((_, idx) => {
       if (isTopicUnlocked(idx)) unlockedCount++;
@@ -322,7 +257,6 @@
     const counterBadge = document.getElementById('codeTestUnlockedCounter');
     if (counterBadge) counterBadge.textContent = `${unlockedCount}/${lessons.length} тем открыто`;
 
-    // Если ни одна тема не пройдена
     const lockBanner = document.getElementById('codeTestZeroUnlockedBanner');
     if (lockBanner) {
       lockBanner.style.display = (unlockedCount === 0) ? 'block' : 'none';
@@ -361,7 +295,6 @@
     });
   }
 
-  // Предупреждение при клике на закрытую тему
   function showLockedTopicAlert(idx, title) {
     const modal = document.getElementById('codeTestLockModal');
     const msg = document.getElementById('codeTestLockModalMsg');
@@ -391,7 +324,6 @@
     if (modal) modal.style.display = 'none';
   };
 
-  // Выбор разблокированной темы
   window.selectCodeTestTopic = function(idx) {
     if (!isTopicUnlocked(idx)) {
       const les = pythonLessons[idx];
@@ -399,11 +331,11 @@
       return;
     }
     activeTopicIndex = idx;
+    currentVariantIndex = 0;
     renderTopicCards();
     loadActiveChallenge();
   };
 
-  // Выбор случайной темы из открытых
   window.selectRandomUnlockedTopic = function() {
     const lessons = (typeof pythonLessons !== 'undefined') ? pythonLessons : [];
     const unlockedIndices = [];
@@ -420,25 +352,48 @@
     selectCodeTestTopic(randomIdx);
   };
 
-  // Смена сложности
   window.setCodeTestDifficulty = function(diff) {
     activeDifficulty = diff;
+    currentVariantIndex = 0;
     document.querySelectorAll('.btn-diff-pill').forEach(b => {
       b.classList.toggle('active', parseInt(b.dataset.diff) === diff);
     });
     loadActiveChallenge();
   };
 
-  // Загрузка задания
-  function loadActiveChallenge() {
-    const bankForTopic = CODE_TEST_BANK[activeTopicIndex];
-    if (bankForTopic && bankForTopic[activeDifficulty]) {
-      currentChallenge = bankForTopic[activeDifficulty];
-    } else {
-      currentChallenge = getFallbackChallenge(activeTopicIndex, activeDifficulty);
+  // ---------------------------------------------------------------------
+  //  ЗАГРУЗКА И ПЕРЕКЛЮЧЕНИЕ ЗАДАНИЙ (ВСЕГДА РАЗНЫЕ ЗАДАНИЯ!)
+  // ---------------------------------------------------------------------
+  window.generateNextChallengeForCurrentTopic = function() {
+    // 1. Проверяем, есть ли готовые вариации в банке
+    const variantsForTopic = CODE_TEST_VARIANTS[activeTopicIndex];
+    if (variantsForTopic && variantsForTopic[activeDifficulty] && variantsForTopic[activeDifficulty].length > 1) {
+      const arr = variantsForTopic[activeDifficulty];
+      currentVariantIndex = (currentVariantIndex + 1) % arr.length;
+      loadActiveChallenge();
+      if (typeof showNotificationToast === 'function') {
+        showNotificationToast('✨ Загружена новая вариация задачи!');
+      }
+      return;
     }
 
-    // Отображаем в UI
+    // 2. Если вариантов мало или пользователь хочет ещё — генерируем через ИИ!
+    generateAiChallengeForTopic();
+  };
+
+  function loadActiveChallenge() {
+    const variantsForTopic = CODE_TEST_VARIANTS[activeTopicIndex];
+    if (variantsForTopic && variantsForTopic[activeDifficulty]) {
+      const arr = variantsForTopic[activeDifficulty];
+      currentChallenge = arr[currentVariantIndex % arr.length];
+    } else {
+      currentChallenge = getFallbackChallenge(activeTopicIndex, activeDifficulty, currentVariantIndex);
+    }
+
+    displayChallengeInUI(currentChallenge);
+  }
+
+  function displayChallengeInUI(ch) {
     const titleEl = document.getElementById('codeTestTitle');
     const descEl = document.getElementById('codeTestDesc');
     const editorEl = document.getElementById('codeTestEditor');
@@ -448,24 +403,127 @@
     const statusBox = document.getElementById('codeTestStatusBox');
     const termOutput = document.getElementById('codeTestConsoleOutput');
 
-    if (titleEl) titleEl.textContent = currentChallenge.title;
-    if (descEl) descEl.innerHTML = currentChallenge.desc;
-    if (editorEl) editorEl.value = currentChallenge.starterCode;
-    if (xpBadge) xpBadge.textContent = `+${currentChallenge.xp} XP`;
-    if (hintText) hintText.textContent = currentChallenge.hint || 'Внимательно прочитай условие и проверь синтаксис.';
+    if (titleEl) titleEl.textContent = ch.title;
+    if (descEl) descEl.innerHTML = ch.desc;
+    if (editorEl) editorEl.value = ch.starterCode; // ЧИСТЫЙ ШАБЛОН БЕЗ СПОЙЛЕРОВ!
+    if (xpBadge) xpBadge.textContent = `+${ch.xp || 30} XP`;
+    if (hintText) hintText.textContent = ch.hint || 'Внимательно прочитай условие и напиши код.';
     if (hintBox) hintBox.style.display = 'none';
     if (statusBox) statusBox.style.display = 'none';
     if (termOutput) {
       termOutput.className = 'py-term-output-console is-empty';
-      termOutput.textContent = '▸ Терминал чист. Нажми «▶️ Запустить код» для проверки.';
+      termOutput.textContent = '▸ Терминал чист. Напиши свой код выше и нажми «▶️ Запустить код».';
     }
   }
+
+  function getFallbackChallenge(lessonIdx, difficulty, vIdx) {
+    const les = (typeof pythonLessons !== 'undefined' && pythonLessons[lessonIdx]) ? pythonLessons[lessonIdx] : { title: `Урок ${lessonIdx + 1}` };
+    const diffNames = { 1: "Разминка", 2: "Боевая задача", 3: "Хардкор со звёздочкой ⭐" };
+    const xpValues = { 1: 30, 2: 60, 3: 120 };
+
+    return {
+      title: `${diffNames[difficulty]}: Практика по теме «${les.title.split('—')[0].trim()}» (Вариант ${vIdx + 1})`,
+      desc: `Напиши законченную программу на Python по теме «${les.title}». Напиши рабочий код с нуля, реализуя логику урока. Вывод программы должен содержать подтверждение решения.`,
+      starterCode: `# ==========================================================\n# ✍️ ТВОЙ КОД ЗДЕСЬ (Урок ${lessonIdx + 1}: ${les.title.split('—')[0].trim()})\n# Сложность: ${diffNames[difficulty]}\n# ==========================================================\n\n# TODO: Напиши своё решение задачи по теме ниже:\n\n`,
+      expectedKeywords: ['print'],
+      testVerify: (output) => output && output.trim().length > 0 && !output.includes('Error'),
+      hint: "Вспомни пройденную теорию и напиши вызовы функций своими руками.",
+      xp: xpValues[difficulty] || 50
+    };
+  }
+
+  // ---------------------------------------------------------------------
+  //  ИИ-ГЕНЕРАТОР НОВЫХ ЗАДАНИЙ НА ТУ ЖЕ ТЕМУ (ЧЕРЕЗ QWEN 3.5 БЕЗ СПОЙЛЕРОВ!)
+  // ---------------------------------------------------------------------
+  window.generateAiChallengeForTopic = async function() {
+    const les = (typeof pythonLessons !== 'undefined' && pythonLessons[activeTopicIndex]) ? pythonLessons[activeTopicIndex] : { title: `Тема ${activeTopicIndex + 1}` };
+    const diffNames = { 1: "Разминка (Junior - базовый синтаксис)", 2: "Боевая задача (Middle - прикладная логика)", 3: "Хардкор со звёздочкой (Senior - сложный алгоритм)" };
+
+    const statusBox = document.getElementById('codeTestStatusBox');
+    if (statusBox) {
+      statusBox.style.display = 'block';
+      statusBox.className = 'code-test-status-card advice';
+      statusBox.innerHTML = `🤖 ИИ Qwen 3.5 генерирует совершенно новую практическую задачу по теме «${les.title.split('—')[0].trim()}»...`;
+    }
+
+    const host = (document.getElementById('ollamaHost') && document.getElementById('ollamaHost').value) || 'http://127.0.0.1:11434';
+    const model = (document.getElementById('modelSelect') && document.getElementById('modelSelect').value) || 'qwen3.5:9b';
+
+    const prompt = `Ты — опытный методист по Python. Придумай ОДНУ совершенно НОВУЮ, оригинальную практическую задачу для ученика.
+ТЕМА: "${les.title}"
+УРОВЕНЬ СЛОЖНОСТИ: ${diffNames[activeDifficulty]}
+
+СТРОГИЕ ПРАВИЛА:
+1. В поле "starterCode" КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО давать готовое решение! Только шаблон с комментариями "# TODO: напиши свой код здесь".
+2. Задача должна быть понятной, жизненной и интересной.
+3. Ответь СТРОГО в формате валидного JSON (без markdown-обёртки и лишних слов):
+{
+  "title": "Краткое название задачи",
+  "desc": "Чёткое понятное условие: что дано, что должна напечатать программа.",
+  "starterCode": "# ==========================================\\n# ✍️ ТВОЙ КОД ЗДЕСЬ\\n# ==========================================\\n\\n# TODO: Напиши решение по условию выше:\\n\\n",
+  "expectedKeywords": ["print"],
+  "expectedText": "слово или фраза, которая обязана быть в выводе",
+  "hint": "наводящая подсказка без готового кода"
+}`;
+
+    try {
+      const resp = await fetch(`${host}/api/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: model,
+          prompt: prompt,
+          format: 'json',
+          think: false, // Отключаем deep thinking для моментального ответа!
+          stream: false,
+          options: { temperature: 0.7, num_predict: 450 }
+        })
+      });
+
+      if (!resp.ok) throw new Error(`Ollama статус: ${resp.status}`);
+      const data = await resp.json();
+      let raw = (data.response || '').trim();
+
+      // Очищаем от возможных markdown-тегов
+      raw = raw.replace(/^```json/i, '').replace(/^```/, '').replace(/```$/, '').trim();
+      const generated = JSON.parse(raw);
+
+      currentChallenge = {
+        title: `✨ ИИ: ${generated.title || 'Новая задача'}`,
+        desc: generated.desc || 'Выполни задание по теме.',
+        starterCode: generated.starterCode || '# TODO: Напиши своё решение здесь:\n\n',
+        expectedKeywords: Array.isArray(generated.expectedKeywords) ? generated.expectedKeywords : ['print'],
+        testVerify: (output) => {
+          if (!output || output.includes('Error')) return false;
+          if (generated.expectedText) {
+            return output.toLowerCase().includes(generated.expectedText.toLowerCase());
+          }
+          return output.trim().length > 0;
+        },
+        hint: generated.hint || 'Внимательно прочитай условие задачи.',
+        xp: activeDifficulty === 1 ? 35 : (activeDifficulty === 2 ? 70 : 140)
+      };
+
+      displayChallengeInUI(currentChallenge);
+      if (statusBox) statusBox.style.display = 'none';
+
+      if (typeof showNotificationToast === 'function') {
+        showNotificationToast('✨ Новая задача от ИИ сгенерирована!');
+      }
+    } catch(err) {
+      console.warn("AI generation fallback to procedural generator:", err);
+      // Fallback на следующую процедурную вариацию
+      currentVariantIndex++;
+      loadActiveChallenge();
+      if (statusBox) statusBox.style.display = 'none';
+    }
+  };
 
   // Сброс к шаблону
   window.resetCodeTestEditor = function() {
     if (!currentChallenge) return;
     const editorEl = document.getElementById('codeTestEditor');
-    if (editorEl && confirm('Сбросить написанный код к исходному шаблону?')) {
+    if (editorEl && confirm('Сбросить написанный код к чистому шаблону?')) {
       editorEl.value = currentChallenge.starterCode;
     }
   };
@@ -550,11 +608,24 @@
     const code = editorEl ? editorEl.value.trim() : '';
 
     if (!code) {
-      alert('Сначала напиши код!');
+      alert('Сначала напиши своё решение в редакторе!');
       return;
     }
 
-    // Сначала запускаем код
+    // Проверяем: написал ли пользователь код или оставил только шаблонные комментарии
+    const codeWithoutComments = code.replace(/#.*$/gm, '').trim();
+    if (!codeWithoutComments) {
+      if (statusBox) {
+        statusBox.style.display = 'block';
+        statusBox.className = 'code-test-status-card error';
+        statusBox.innerHTML = `
+          <div style="font-weight:700;color:#ef4444;margin-bottom:4px;">⚠️ В поле редактора только комментарии!</div>
+          <div style="font-size:12.5px;color:#fca5a5;">Напиши команды Python, чтобы программа что-то вывела.</div>
+        `;
+      }
+      return;
+    }
+
     testOutputBuffer = '';
     const termOutput = document.getElementById('codeTestConsoleOutput');
 
@@ -575,7 +646,6 @@
         termOutput.textContent = testOutputBuffer || '✓ Программа завершилась успешно';
       }
 
-      // Проверяем критерии автотеста
       let passed = true;
       let failureReason = '';
 
@@ -583,7 +653,7 @@
         for (const kw of currentChallenge.expectedKeywords) {
           if (!code.includes(kw)) {
             passed = false;
-            failureReason = `В коде должна использоваться конструкция: «${kw}»`;
+            failureReason = `В твоём коде должна использоваться конструкция или параметр: «${kw}»`;
             break;
           }
         }
@@ -593,7 +663,7 @@
         const isVerified = currentChallenge.testVerify(testOutputBuffer);
         if (!isVerified) {
           passed = false;
-          failureReason = `Вывод программы не соответствует условию задачи.\nПолученный вывод:\n«${testOutputBuffer.trim()}»`;
+          failureReason = `Вывод программы не совпадает с условием задачи.\nТвой вывод:\n«${testOutputBuffer.trim()}»`;
         }
       }
 
@@ -606,18 +676,20 @@
               🎉 ТЕСТ СДАН НА ОТЛИЧНО! (+${currentChallenge.xp} XP)
             </div>
             <div style="font-size:13px;line-height:1.6;color:#e2e8f0;">
-              Твой код полностью удовлетворяет всем условиям задачи и успешно прошёл автотесты!
+              Ты сам написал правильный рабочий код и успешно прошёл все автотесты!
             </div>
-            <div style="margin-top:12px;display:flex;gap:8px;">
-              <button type="button" class="btn-action-art" onclick="setCodeTestDifficulty(${Math.min(3, activeDifficulty + 1)})" style="background:#4f46e5;color:#fff;">
-                🚀 Повысить сложность (${activeDifficulty < 3 ? 'Следующий уровень' : 'Максимум'})
+            <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+              <button type="button" class="btn-action-art" onclick="generateNextChallengeForCurrentTopic()" style="background:#059669;color:#fff;font-weight:700;">
+                ✨ Следующее задание по этой теме (+XP)
               </button>
-              <button type="button" class="btn-action-art" onclick="selectRandomUnlockedTopic()" style="background:#059669;color:#fff;">
-                🎲 Следующая случайная тема
+              <button type="button" class="btn-action-art" onclick="setCodeTestDifficulty(${Math.min(3, activeDifficulty + 1)})" style="background:#4f46e5;color:#fff;">
+                🚀 Повысить сложность (${activeDifficulty < 3 ? 'Уровень ' + (activeDifficulty + 1) : 'Максимум'})
+              </button>
+              <button type="button" class="btn-action-art" onclick="selectRandomUnlockedTopic()" style="background:#3b82f6;color:#fff;">
+                🎲 Другая открытая тема
               </button>
             </div>
           `;
-          // Начисляем XP
           if (typeof addXp === 'function') addXp(currentChallenge.xp);
         } else {
           statusBox.className = 'code-test-status-card error';
@@ -629,7 +701,7 @@
               ${escapeHtml(failureReason)}
             </div>
             <div style="margin-top:10px;font-size:12px;color:#94a3b8;">
-              💡 Нажми «💡 Подсказка (догадайся сам)» или обратись к ИИ-тьютору ниже.
+              💡 Нажми «💡 Подсказка (догадайся сам)» или обратись к ИИ-наставнику ниже.
             </div>
           `;
         }
@@ -661,7 +733,7 @@
     const userCode = editorEl ? editorEl.value.trim() : '';
 
     if (!userCode) {
-      alert('Сначала напиши код!');
+      alert('Сначала напиши хоть пару строк кода!');
       return;
     }
 
@@ -684,10 +756,10 @@ ${userCode}
 \`\`\`
 
 СТРОГИЕ ПРАВИЛА:
-1. НЕ ДАВАЙ ГОТОВЫЙ КОД ОТВЕТА! Ученик должен сам догадаться.
+1. КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО ДАВАТЬ ГОТОВЫЙ КОД РЕШЕНИЯ! Ученик обязан догадаться сам.
 2. Объясни простыми словами, на каком шаге логика расходится с условием задачи.
 3. Задай 1-2 наводящих вопроса, направляющих мысль в нужную сторону.
-4. Ответ дай кратко (не более 4-5 предложений), доброжелательно.`;
+4. Ответ дай кратко (3-4 предложения), доброжелательно.`;
 
     try {
       const resp = await fetch(`${host}/api/generate`, {
@@ -724,7 +796,6 @@ ${userCode}
     }
   };
 
-  // Экранирование HTML
   function escapeHtml(str) {
     if (!str) return '';
     return String(str)

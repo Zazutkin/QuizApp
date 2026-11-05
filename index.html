@@ -1231,7 +1231,233 @@
       color: #475569;
     }
 
-    /* КАРТОЧКА ОШИБКИ */
+        /* Вкладки переключения уровней урока */
+    .lesson-level-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .level-tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .level-tab-btn:hover {
+      background: #1e293b;
+      color: #f1f5f9;
+      border-color: #334155;
+    }
+    .level-tab-btn.active {
+      background: #1e1b4b;
+      border-color: #6366f1;
+      color: #e0e7ff;
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.25);
+    }
+    .lvl-badge {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* РАСШИРЕННАЯ СОКРАТОВСКАЯ КАРТОЧКА ОШИБКИ */
+    .py-error-banner {
+      display: none;
+      margin: 10px 12px;
+      padding: 14px 16px;
+      background: #150a0d;
+      border: 1px solid #991b1b;
+      border-radius: 10px;
+      color: #fee2e2;
+      box-shadow: 0 4px 16px rgba(153, 27, 27, 0.2);
+    }
+    .py-error-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      color: #f87171;
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(248, 113, 113, 0.2);
+      padding-bottom: 6px;
+    }
+    .py-err-close-btn {
+      background: transparent;
+      border: none;
+      color: #fca5a5;
+      font-size: 15px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .py-err-close-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+    .py-error-line-box {
+      margin: 8px 0;
+      padding: 6px 10px;
+      background: #090304;
+      border-left: 3px solid #ef4444;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #fecaca;
+    }
+    .py-socratic-section {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: rgba(30, 10, 15, 0.6);
+      border-radius: 6px;
+      border: 1px solid rgba(239, 68, 68, 0.15);
+    }
+    .py-socratic-sec-title {
+      font-weight: 700;
+      font-size: 12px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #pyErrConfusedBox .py-socratic-sec-title { color: #facc15; }
+    #pyErrForbiddenBox .py-socratic-sec-title { color: #f87171; }
+    #pyErrHintsBox .py-socratic-sec-title { color: #38bdf8; }
+    .py-socratic-text {
+      font-size: 12.5px;
+      line-height: 1.55;
+      color: #e2e8f0;
+    }
+    .py-socratic-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+    .py-socratic-list li {
+      margin-bottom: 4px;
+    }
+    .py-socratic-hints {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #bae6fd;
+    }
+    .py-err-actions-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-err-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-err-action.ai-tutor-btn {
+      background: linear-gradient(135deg, #4338ca, #6366f1);
+      border: 1px solid #818cf8;
+      color: #ffffff;
+    }
+    .btn-err-action.ai-tutor-btn:hover {
+      background: linear-gradient(135deg, #4f46e5, #4f46e5);
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+    }
+    .btn-err-action.spoiler-toggle-btn {
+      background: #1e1b24;
+      border: 1px solid #4a3854;
+      color: #d8b4fe;
+    }
+    .btn-err-action.spoiler-toggle-btn:hover {
+      background: #2e243b;
+      border-color: #a855f7;
+    }
+    .py-err-spoiler-box {
+      margin-top: 10px;
+      padding: 12px;
+      background: #090308;
+      border: 1px solid #7e22ce;
+      border-radius: 6px;
+      animation: fadeIn 0.2s ease-in;
+    }
+    .py-spoiler-badge {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #c084fc;
+      margin-bottom: 6px;
+    }
+    .py-spoiler-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: #14081c;
+      padding: 8px 10px;
+      border-radius: 4px;
+      color: #a7f3d0;
+      white-space: pre-wrap;
+      margin: 6px 0;
+      border: 1px solid #3b0764;
+    }
+    .py-spoiler-desc {
+      font-size: 11.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    /* Спойлер в блоке вердикта ИИ */
+    .py-verdict-spoiler-wrap {
+      margin-top: 8px;
+    }
+    .btn-spoiler-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #1e1b24;
+      border: 1px solid #6366f1;
+      color: #a5b4fc;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-spoiler-toggle:hover {
+      background: #312e81;
+      color: #fff;
+    }
+    .py-verdict-spoiler-content {
+      margin-top: 6px;
+      padding: 10px;
+      background: #090d16;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+    }
+    .py-spoiler-code-block {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #38bdf8;
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    /* КАРТОЧКА ОШИБКИ (СТАРАЯ) */
     .py-error-banner {
       display: none;
       margin: 10px 12px;
@@ -4790,6 +5016,22 @@
           </div>
 
           <!-- Профессиональный редактор кода для урока -->
+                    <!-- Вкладки переключения уровней задания -->
+          <div class="lesson-level-tabs" id="lessonLevelTabs">
+            <button type="button" class="level-tab-btn active" id="lvlTabBtn1" onclick="selectLessonLevel(1)">
+              <span class="lvl-badge">🟢 Уровень 1</span> <span>Разминка</span>
+            </button>
+            <button type="button" class="level-tab-btn" id="lvlTabBtn2" onclick="selectLessonLevel(2)">
+              <span class="lvl-badge">🟡 Уровень 2</span> <span>Боевая задача</span>
+            </button>
+            <button type="button" class="level-tab-btn" id="lvlTabBtn3" onclick="selectLessonLevel(3)">
+              <span class="lvl-badge">🔴 Уровень 3</span> <span>Со звёздочкой ⭐</span>
+            </button>
+            <button type="button" class="level-tab-btn" id="lvlTabBtnAll" onclick="selectLessonLevel('all')">
+              <span class="lvl-badge">✨ Все уровни</span> <span>Полная проверка</span>
+            </button>
+          </div>
+
           <div class="py-editor-wrap">
             <div class="py-editor-header">
               <div class="py-editor-file-tab">
@@ -4921,11 +5163,49 @@
             <div class="py-error-banner" id="pyErrorBanner">
               <div class="py-error-header">
                 <span id="pyErrTitle">🚨 Ошибка выполнения Python</span>
-                <button type="button" style="background:transparent;border:none;color:#fca5a5;font-size:14px;cursor:pointer;" onclick="closePyError()">✕</button>
+                <button type="button" class="py-err-close-btn" onclick="closePyError()" title="Скрыть карточку">✕</button>
               </div>
               <div class="py-error-body" id="pyErrBody"></div>
-              <div class="py-error-tip" id="pyErrTip">
-                <span>💡</span> <span id="pyErrTipText">Проверь двоеточия в конце строк условий/циклов и отступы в 4 пробела.</span>
+
+              <!-- Проблемная строка кода -->
+              <div class="py-error-line-box" id="pyErrLineBox" style="display:none;">
+                <span style="color:#ef4444;font-weight:bold;margin-right:6px;">🔍 Строка <span id="pyErrLineNum">1</span>:</span>
+                <code id="pyErrLineText" style="color:#fef08a;"></code>
+              </div>
+
+              <!-- Что смутило Python -->
+              <div class="py-socratic-section" id="pyErrConfusedBox" style="display:none;">
+                <div class="py-socratic-sec-title">🧐 Что смутило интерпретатор Python:</div>
+                <div class="py-socratic-text" id="pyErrConfusedText"></div>
+              </div>
+
+              <!-- Подробная характеристика: почему так делать нельзя -->
+              <div class="py-socratic-section" id="pyErrForbiddenBox" style="display:none;">
+                <div class="py-socratic-sec-title">🚫 Почему так делать нельзя (правила синтаксиса):</div>
+                <ul class="py-socratic-list" id="pyErrForbiddenList"></ul>
+              </div>
+
+              <!-- Наводящие подсказки (без спойлеров!) -->
+              <div class="py-socratic-section" id="pyErrHintsBox" style="display:none;">
+                <div class="py-socratic-sec-title">💡 Наводящие подсказки (догадайся сам!):</div>
+                <div class="py-socratic-hints" id="pyErrHintsText"></div>
+              </div>
+
+              <!-- Кнопки действий -->
+              <div class="py-err-actions-row">
+                <button type="button" class="btn-err-action ai-tutor-btn" id="btnAskAiTutor" onclick="askAiTutorAboutTerminalError()">
+                  <span>🧠 Спросить у ИИ-тьютора (без спойлеров)</span>
+                </button>
+                <button type="button" class="btn-err-action spoiler-toggle-btn" id="btnToggleErrSolution" onclick="toggleErrSpoilerSolution()">
+                  <span id="btnErrSpoilerText">👁️ Показать готовое решение (если совсем застрял)</span>
+                </button>
+              </div>
+
+              <!-- Скрытый блок готового решения под спойлером -->
+              <div class="py-err-spoiler-box" id="pyErrSpoilerBox" style="display:none;">
+                <div class="py-spoiler-badge">🎯 Готовое правильное решение:</div>
+                <pre class="py-spoiler-code" id="pyErrSpoilerCode"></pre>
+                <div class="py-spoiler-desc" id="pyErrSpoilerDesc"></div>
               </div>
             </div>
 
@@ -7247,7 +7527,7 @@ function initAiProviderSettings() {
     document.getElementById('lessonTitle').textContent = les.title;
     document.getElementById('lessonTheory').innerHTML = les.theory;
     document.getElementById('lessonCode').textContent = les.code;
-    document.getElementById('lessonTask').innerHTML = les.task;
+    document.getElementById('lessonTask').innerHTML = les.task;\n    selectLessonLevel(1);
     
     // Вставляем чистый стартовый шаблон (НЕ готовый ответ!)
     document.getElementById('pyUserCode').value = les.starterCode || les.defaultUserCode;
@@ -7486,6 +7766,90 @@ function initAiProviderSettings() {
     });
   }
 
+  // ==========================================================
+  //  СИСТЕМА УРОВНЕЙ И СОКРАТОВСКОЙ ПРОВЕРКИ ЗАДАНИЙ УРОКА
+  // ==========================================================
+  let currentActiveLessonLevel = 1;
+
+  function selectLessonLevel(lvl) {
+    currentActiveLessonLevel = lvl;
+    const btns = document.querySelectorAll('.level-tab-btn');
+    btns.forEach(b => b.classList.remove('active'));
+
+    const activeBtn = document.getElementById(lvl === 'all' ? 'lvlTabBtnAll' : `lvlTabBtn${lvl}`);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    // Обновляем текст кнопки проверки
+    const btnCheck = document.getElementById('btnCheckPyCode');
+    if (btnCheck) {
+      const label = lvl === 'all' ? 'все уровни' : `Уровень ${lvl}`;
+      const spanEl = btnCheck.querySelector('span:last-child');
+      if (spanEl) spanEl.textContent = `🤖 Проверить ${label} через ИИ`;
+    }
+
+    // Подсвечиваем соответствующий блок задания
+    const taskItems = document.querySelectorAll('.task-level-item');
+    taskItems.forEach((item, idx) => {
+      if (lvl === 'all' || lvl === (idx + 1)) {
+        item.style.opacity = '1';
+        item.style.borderColor = '#6366f1';
+        item.style.background = 'rgba(99, 102, 241, 0.08)';
+      } else {
+        item.style.opacity = '0.45';
+        item.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+        item.style.background = 'transparent';
+      }
+    });
+  }
+
+  function extractLessonLevelInfo(taskHtml, level) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = taskHtml || '';
+    const items = tmp.querySelectorAll('.task-level-item');
+
+    if (level === 1 && items[0]) {
+      return {
+        title: "Уровень 1 (Разминка)",
+        desc: items[0].innerText.replace(/[\n\r]+/g, ' ').trim()
+      };
+    } else if (level === 2 && items[1]) {
+      return {
+        title: "Уровень 2 (Боевая задача)",
+        desc: items[1].innerText.replace(/[\n\r]+/g, ' ').trim()
+      };
+    } else if (level === 3 && items[2]) {
+      return {
+        title: "Уровень 3 (Со звёздочкой ⭐)",
+        desc: items[2].innerText.replace(/[\n\r]+/g, ' ').trim()
+      };
+    }
+    return {
+      title: "Все уровни практического задания",
+      desc: tmp.innerText.replace(/[\n\r]+/g, ' ').trim()
+    };
+  }
+
+  function detectActiveCodeLevel(userCode) {
+    if (currentActiveLessonLevel && currentActiveLessonLevel !== 'all') {
+      return currentActiveLessonLevel;
+    }
+    const hasTodo1 = /TODO\s*1/i.test(userCode);
+    const hasTodo2 = /TODO\s*2/i.test(userCode);
+    const hasTodo3 = /TODO\s*3/i.test(userCode);
+
+    if (hasTodo1 && hasTodo2 && hasTodo3) {
+      const parts = userCode.split(/#\s*TODO\s*[123]/i);
+      const code1 = (parts[1] || '').replace(/#.*$/gm, '').trim();
+      const code2 = (parts[2] || '').replace(/#.*$/gm, '').trim();
+      const code3 = (parts[3] || '').replace(/#.*$/gm, '').trim();
+
+      if (code3) return 3;
+      if (code2) return 2;
+      return 1;
+    }
+    return 1;
+  }
+
   async function checkPythonSolution() {
     const userCode = document.getElementById('pyUserCode').value.trim();
     if (!userCode) { alert('Сначала напиши свой код решения!'); return; }
@@ -7502,31 +7866,53 @@ function initAiProviderSettings() {
     spin.style.display = 'inline-block';
     vBox.style.display = 'block';
     vBox.className = 'py-verdict-box advice';
-    vBox.innerHTML = '🤖 ИИ-наставник изучает твой код...';
 
-    const prompt = `Ты — самый добрый, поддерживающий и терпеливый ментор по Python для человека, который учится С АБСОЛЮТНОГО НУЛЯ (первый день в программировании!).
+    const targetLevel = detectActiveCodeLevel(userCode);
+    const levelInfo = extractLessonLevelInfo(les.task, targetLevel);
 
+    vBox.innerHTML = `🤖 ИИ-наставник проверяет <b>${levelInfo.title}</b>...`;
+
+    let prompt = '';
+    if (targetLevel === 'all') {
+      prompt = `Ты — самый добрый, поддерживающий ментор по Python для новичка (первый день в программировании).
 ТЕМА УРОКА: "${les.title}"
-ЗАДАНИЕ УРОКА: "${les.task}"
+ПОЛНОЕ ЗАДАНИЕ УРОКА:
+${levelInfo.desc}
 
 КОД УЧЕНИКА:
 [КОД PYTHON]
 ${userCode}
 [/КОД PYTHON]
 
-ТВОЯ ИНСТРУКЦИЯ:
-1. Если код решает задачу правильно:
-   - Начни со слова: "🎉 ОТЛИЧНО! Твой код работает правильно!"
-   - Объясни простыми словами, почему решение хорошее.
-   - Похвали за старания.
+ИНСТРУКЦИЯ:
+1. Оцени общее решение заданий. Не раскрывай решения будущих уроков.
+2. Ответ краткий (3-4 предложения).`;
+    } else {
+      prompt = `Ты — самый добрый, поддерживающий ментор по Python для человека, который учится С АБСОЛЮТНОГО НУЛЯ.
 
-2. Если в коде есть ошибка или недочёт:
-   - НИ В КОЕМ СЛУЧАЕ не ругай и не сыпь сложными научными терминами.
+ТЕМА УРОКА: "${les.title}"
+УЧЕНИК СЕЙЧАС ДЕЛАЕТ ТОЛЬКО: "${levelInfo.title}"
+ЗАДАНИЕ ТОЛЬКО ДЛЯ ЭТОГО УРОВНЯ:
+"${levelInfo.desc}"
+
+КОД УЧЕНИКА:
+[КОД PYTHON]
+${userCode}
+[/КОД PYTHON]
+
+СТРОЖАЙШИЕ ПРАВИЛА И ЗАПРЕТЫ:
+1. Ученик решает СТРОГО "${levelInfo.title}"!
+2. КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО писать код, подсказки или готовые ответы для других уровней (Уровень 2, Уровень 3)! Ученик должен решить их сам!
+3. НИ В КОЕМ СЛУЧАЕ не пиши "Вот исправленный код для всех трёх уровней" или списки # Уровень 2, # Уровень 3!
+4. Если код решает "${levelInfo.title}" ПРАВИЛЬНО:
+   - Начни: "🎉 ОТЛИЧНО! Задание ${levelInfo.title} выполнено верно!"
+   - Похвали и предложи перейти к следующему уровню.
+5. Если в коде есть ошибка или недочёт:
    - Начни мягко: "Хорошая попытка! Давай разберём одну деталь на пальцах:"
-   - Объясни ошибку на жизненном примере (на котиках, еде или играх).
-   - Покажи исправленный рабочий вариант кода и объясни исправление.
-
-Пиши дружелюбно, с эмодзи и без воды! Ответ должен быть кратким: не более 3-4 предложений (плюс при ошибке исправленный код).`;
+   - Объясни ошибку на жизненном примере.
+   - Дай НАВОДЯЩУЮ ПОДСКАЗКУ, чтобы ученик сам догадался.
+   - Если приводишь готовый исправленный код ТОЛЬКО для ${levelInfo.title}, ОБЯЗАТЕЛЬНО оберни его в теги <spoiler>...</spoiler>, чтобы на фронтенде он был скрыт под кнопку.`;
+    }
 
     try {
       const resp = await fetch(`${host}/api/generate`, {
@@ -7537,20 +7923,47 @@ ${userCode}
           prompt,
           think: false,
           stream: false,
-          options: { temperature: 0.25, num_predict: 350 }
+          options: { temperature: 0.25, num_predict: 400 }
         })
       });
 
       if (!resp.ok) throw new Error(`Ollama статус: ${resp.status}`);
       const data = await resp.json();
-      const reply = data.response || '';
+      let reply = data.response || '';
+
+      // Защитный фильтр: удаляем любые случайные упоминания других уровней
+      if (targetLevel === 1) {
+        reply = reply.replace(/(?:#?\s*Уровень\s*[23]|#?\s*TODO\s*[23]|Боевая задача|Со звёздочкой)[\s\S]*$/i, '').trim();
+      } else if (targetLevel === 2) {
+        reply = reply.replace(/(?:#?\s*Уровень\s*3|#?\s*TODO\s*3|Со звёздочкой)[\s\S]*$/i, '').trim();
+      }
 
       const isSuccess = reply.includes('🎉') || reply.toLowerCase().includes('отлично') || reply.toLowerCase().includes('правильно');
 
       vBox.className = `py-verdict-box ${isSuccess ? 'success' : 'advice'}`;
-      vBox.innerHTML = escH(reply).replace(/\n/g, '<br>');
 
-      // Награда за решение кода
+      if (reply.includes('<spoiler>')) {
+        const parts = reply.split(/<\/?spoiler>/);
+        const visiblePart = parts[0] || '';
+        const spoilerPart = parts[1] || '';
+        const afterPart = parts[2] || '';
+
+        vBox.innerHTML = `
+          <div style="margin-bottom:6px;">${escH(visiblePart.trim()).replace(/\n/g, '<br>')}</div>
+          <div class="py-verdict-spoiler-wrap">
+            <button type="button" class="btn-spoiler-toggle" onclick="toggleVerdictSpoiler(this)">
+              👁️ Показать готовое решение к ${levelInfo.title} (если совсем застрял)
+            </button>
+            <div class="py-verdict-spoiler-content" style="display:none;">
+              <pre class="py-spoiler-code-block">${escH(spoilerPart.trim())}</pre>
+            </div>
+          </div>
+          ${afterPart ? `<div style="margin-top:6px;">${escH(afterPart.trim()).replace(/\n/g, '<br>')}</div>` : ''}
+        `;
+      } else {
+        vBox.innerHTML = escH(reply).replace(/\n/g, '<br>');
+      }
+
       if (isSuccess) {
         addXp(40);
         userProfile.skills.python = Math.min(100, userProfile.skills.python + 15);
@@ -7559,6 +7972,18 @@ ${userCode}
           userProfile.achievements.pyNovice = true;
         }
         saveProfile();
+
+        if (targetLevel === 1) {
+          setTimeout(() => {
+            selectLessonLevel(2);
+            showNotificationToast('✨ Уровень 1 завершен! Открыт Уровень 2 (Боевая задача)');
+          }, 1500);
+        } else if (targetLevel === 2) {
+          setTimeout(() => {
+            selectLessonLevel(3);
+            showNotificationToast('🌟 Уровень 2 завершен! Открыт Уровень 3 (Со звёздочкой ⭐)');
+          }, 1500);
+        }
       }
     } catch(err) {
       vBox.className = 'py-verdict-box advice';
@@ -7569,6 +7994,18 @@ ${userCode}
     }
   }
 
+  function toggleVerdictSpoiler(btn) {
+    const content = btn.nextElementSibling;
+    if (!content) return;
+    if (content.style.display === 'none' || !content.style.display) {
+      content.style.display = 'block';
+      btn.textContent = '🙈 Скрыть готовое решение';
+    } else {
+      content.style.display = 'none';
+      btn.textContent = '👁️ Показать готовое решение (если совсем застрял)';
+    }
+  }
+
   function generateQuizForCurrentLesson() {
     const les = pythonLessons[currentLessonIndex];
     const text = `Python урок "${les.title}". Ключевая тема: ${les.quizKeyword}. Задание урока: ${les.task}. Пример кода: ${les.code}`;
@@ -7576,6 +8013,126 @@ ${userCode}
     document.getElementById('sourceText').dispatchEvent(new Event('input'));
     switchTab('create');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ==========================================================
+  //  СОКРАТОВСКИЙ ДИАГНОСТИЧЕСКИЙ ДВИЖОК ОШИБОК PYTHON
+  // ==========================================================
+  let lastDiagnosedError = null;
+
+  function diagnosePythonCode(code, rawMsg) {
+    const lines = (code || '').split('\n');
+    let errLineNum = 1;
+    const lineMatch = (rawMsg || '').match(/line\s+(\d+)/i) || (rawMsg || '').match(/строке\s+(\d+)/i);
+    if (lineMatch) {
+      errLineNum = parseInt(lineMatch[1]);
+    }
+    const problemLine = lines[errLineNum - 1] || lines[0] || '';
+    const trimmed = problemLine.trim();
+
+    // 1. Пробелы в имени переменной или дефис вместо присваивания
+    if (/^[a-zA-Z_]\w*\s+[a-zA-Z_]\w*\s*[-=]/.test(trimmed) || /-\s*\(?[a-zA-Z_]\w*\)?\s*;?$/.test(trimmed)) {
+      return {
+        lineNum: errLineNum,
+        lineCode: trimmed,
+        title: "❌ SyntaxError (Синтаксическая ошибка в переменной)",
+        confused: "Python споткнулся в самом начале строки. Он ожидал имя переменной или команду, но встретил два слова через пробел («my name»), знак вычитания («-») вместо присваивания и слово без кавычек в скобках.",
+        forbidden: [
+          "<b>Пробелы в именах переменных запрещены:</b> Переменная в Python обязана быть единым словом (идентификатором). Запись <code>my name</code> воспринимается как два независимых слова подряд, вызывая синтаксический ступор.",
+          "<b>Дефис «-» — это вычитание, а не тире:</b> В русском языке дефис связывает слова, но в Python «-» — это строго математический оператор вычитания. Запись <code>name - ...</code> пытается вычесть что-то из переменной. Для сохранения значения нужен знак присваивания <code>=</code>.",
+          "<b>Текст без кавычек воспринимается как переменная:</b> Запись <code>(anton)</code> без кавычек означает: «найди переменную anton». Если её нет, программа упадет. Обычный текст ВСЕГДА пишется в кавычках: <code>'anton'</code>.",
+          "<b>Точка с запятой «;» избыточна:</b> В Python строки разделяются нажатием Enter, точку с запятой из других языков ставить не нужно."
+        ],
+        hints: [
+          "• Как в Python соединяют слова в названии переменной, когда пробел ставить нельзя? (Вспомни стиль snake_case и клавишу Shift + дефис _).",
+          "• Какой математический знак используется в Python, чтобы положить значение внутрь переменной вместо знака вычитания?",
+          "• Во что нужно обернуть слово anton, чтобы компьютер понял: это текстовая строка, а не системная команда?",
+          "• А во 2-й строке: если ты хочешь напечатать значение переменной, нужны ли кавычки внутри print()?"
+        ],
+        solution: "my_name = 'anton'\nprint(my_name)",
+        explanation: "• my_name — правильное имя переменной через нижнее подчеркивание.\n• = — оператор присваивания значения.\n• 'anton' — строка текста в кавычках.\n• print(my_name) — выводит содержимое переменной ('anton') без кавычек."
+      };
+    }
+
+    // 2. Пропущено двоеточие ':'
+    if (/^\s*(if|elif|else|for|while|def|class|with|try|except|finally)\b[^:\n]*$/.test(trimmed) && !trimmed.endsWith(':')) {
+      const kw = trimmed.split(/\s+/)[0];
+      return {
+        lineNum: errLineNum,
+        lineCode: trimmed,
+        title: "❌ SyntaxError: пропущено двоеточие ':'",
+        confused: `Интерпретатор дочитал конструкцию «${kw}» до конца строки, но не нашел обязательного двоеточия «:». В Python двоеточие сообщает, что дальше начнется блок кода с отступом.`,
+        forbidden: [
+          `<b>Правило синтаксиса:</b> Все составные инструкции (<code>${kw}</code>, <code>def</code>, <code>if</code>, <code>for</code> и др.) ОБЯЗАНЫ заканчиваться двоеточием <code>:</code> перед переходом на новую строку.`
+        ],
+        hints: [
+          `• Посмотри на самый конец строки «${trimmed}». Какой пунктуационный знак открывает блок кода в Python?`
+        ],
+        solution: trimmed + ":\n    # код блока с отступом 4 пробела",
+        explanation: `В конце строки заголовка ${kw} ставится двоеточие :, а следующая строка сдвигается на 4 пробела.`
+      };
+    }
+
+    // 3. Одиночное '=' в условии
+    if (/^\s*(?:if|elif|while)\s+[^=\n]+=[^=]/.test(trimmed)) {
+      return {
+        lineNum: errLineNum,
+        lineCode: trimmed,
+        title: "❌ SyntaxError: присваивание '=' вместо сравнения '=='",
+        confused: "Внутри условия использован один знак равенства '=', который в Python выполняет запись в переменную, а не проверку.",
+        forbidden: [
+          "<b>Один знак '=':</b> Оператор присваивания (кладёт значение в переменную).",
+          "<b>Два знака '==':</b> Оператор проверки на равенство (возвращает True или False)."
+        ],
+        hints: [
+          "• Вспомни: сколько знаков равно нужно поставить в условии проверки?",
+          "• Замени '=' на '=='."
+        ],
+        solution: trimmed.replace(/=([^=])/, '==$1'),
+        explanation: "Для проверки условия всегда используй двойное равенство '=='."
+      };
+    }
+
+    // 4. Незакрытые скобки или кавычки
+    const openParen = (trimmed.match(/\(/g) || []).length;
+    const closeParen = (trimmed.match(/\)/g) || []).length;
+    const singleQuotes = (trimmed.match(/'/g) || []).length;
+    const doubleQuotes = (trimmed.match(/"/g) || []).length;
+    if (openParen !== closeParen || singleQuotes % 2 !== 0 || doubleQuotes % 2 !== 0) {
+      return {
+        lineNum: errLineNum,
+        lineCode: trimmed,
+        title: "❌ SyntaxError: незакрытая скобка или кавычка",
+        confused: "Python начал читать строку, открыл скобку или кавычку, но строка закончилась раньше, чем встретилась закрывающая пара.",
+        forbidden: [
+          "<b>Каждому открывающему символу нужна пара:</b> Открыв кавычку или скобку, ты обязан закрыть её тем же символом.",
+          "Одинарную кавычку нельзя закрывать двойной: 'текст" вызовет ошибку."
+        ],
+        hints: [
+          "• Пересчитай количество открывающих и закрывающих скобок и кавычек в строке."
+        ],
+        solution: trimmed + (openParen > closeParen ? ')' : (singleQuotes % 2 !== 0 ? "'" : '"')),
+        explanation: "Все скобки и кавычки должны быть строго парными."
+      };
+    }
+
+    // Общий разбор
+    return {
+      lineNum: errLineNum,
+      lineCode: trimmed,
+      title: rawMsg.includes('SyntaxError') ? "❌ SyntaxError (Синтаксическая ошибка)" : (rawMsg.includes('NameError') ? "❌ NameError (Неизвестное имя)" : "❌ Ошибка выполнения"),
+      confused: `Интерпретатор споткнулся на строке ${errLineNum}: «${trimmed}». Сообщение: ${rawMsg}`,
+      forbidden: [
+        "Внимательно проверь синтаксис этой строки на соответствие правилам Python.",
+        "Убедись, что все переменные объявлены до их использования, а отступы кратны 4 пробелам."
+      ],
+      hints: [
+        "• Попробуй упростить строку или проверить написание имен переменных.",
+        "• Нажми кнопку «🧠 Спросить у ИИ-тьютора (без спойлеров)», чтобы получить детальный совет без спойлера решения."
+      ],
+      solution: trimmed,
+      explanation: "Изучи сообщение об ошибке выше."
+    };
   }
 
   // ==========================================================
@@ -7633,7 +8190,7 @@ ${userCode}
     // Проверяем доступность Skulpt
     if (typeof window.Sk !== 'undefined') {
       try {
-        window.Sk.execLimit = 3500; // Предохранитель от бесконечных циклов (3.5 сек)
+        window.Sk.execLimit = 3500;
         window.Sk.yieldLimit = 100;
         window.Sk.configure({
           output: outf,
@@ -7667,81 +8224,171 @@ ${userCode}
           }
           addXp(10);
         }).catch((err) => {
-          handlePyTerminalError(err);
+          handlePyTerminalError(err, code);
         }).finally(() => {
           if (btnRun) btnRun.disabled = false;
         });
 
       } catch (err) {
-        handlePyTerminalError(err);
+        handlePyTerminalError(err, code);
         if (btnRun) btnRun.disabled = false;
       }
     } else {
-      // Резервный режим (если скрипт Skulpt ещё подгружается по сети)
       simulatePyFallback(code, startTime);
       if (btnRun) btnRun.disabled = false;
     }
   }
 
-  function handlePyTerminalError(err) {
+  function handlePyTerminalError(err, userCode) {
     const cardEl = document.getElementById('pyTerminalCard');
     const statusBadge = document.getElementById('pyTermStatus');
     const statusText = document.getElementById('pyTermStatusText');
     const outEl = document.getElementById('pyTerminalOutput');
     const errBanner = document.getElementById('pyErrorBanner');
-    const errTitle = document.getElementById('pyErrTitle');
-    const errBody = document.getElementById('pyErrBody');
-    const errTipText = document.getElementById('pyErrTipText');
 
     if (cardEl) {
       cardEl.classList.remove('status-success');
       cardEl.classList.add('status-error');
     }
-    if (statusBadge) {
-      statusBadge.className = 'py-term-badge error';
-    }
+    if (statusBadge) statusBadge.className = 'py-term-badge error';
     if (statusText) statusText.textContent = 'Ошибка в коде!';
 
     const rawMsg = String(err || 'Неизвестная ошибка выполнения');
+    const diag = diagnosePythonCode(userCode, rawMsg);
+    lastDiagnosedError = { diag, rawMsg, userCode };
 
-    // Анализ ошибки и подсказки
-    let typeName = 'Ошибка выполнения';
-    let tip = 'Внимательно проверь синтаксис, скобки и отступы.';
+    const errTitle = document.getElementById('pyErrTitle');
+    const errBody = document.getElementById('pyErrBody');
+    const lineBox = document.getElementById('pyErrLineBox');
+    const lineNum = document.getElementById('pyErrLineNum');
+    const lineText = document.getElementById('pyErrLineText');
 
-    if (rawMsg.includes('SyntaxError')) {
-      typeName = '❌ SyntaxError (Синтаксическая ошибка)';
-      tip = 'Проверь: не забыл ли ты двоеточие ":" в конце if/for/while/def, и все ли скобки ( ) и кавычки " " закрыты.';
-    } else if (rawMsg.includes('IndentationError')) {
-      typeName = '❌ IndentationError (Ошибка отступа)';
-      tip = 'В Python отступы священны! Строки внутри условий, циклов и функций должны сдвигаться ровно на 4 пробела (Tab).';
-    } else if (rawMsg.includes('NameError')) {
-      typeName = '❌ NameError (Неизвестное имя переменной)';
-      tip = 'Переменная или функция не объявлена ранее, либо в названии допущена опечатка (Python чувствителен к регистру!).';
-    } else if (rawMsg.includes('ZeroDivisionError')) {
-      typeName = '❌ ZeroDivisionError (Деление на ноль)';
-      tip = 'В математике и в Python делить на ноль запрещено. Добавь проверку if divisor != 0.';
-    } else if (rawMsg.includes('TypeError')) {
-      typeName = '❌ TypeError (Несовместимые типы данных)';
-      tip = 'Ты пытаешься сложить или смешать разные типы, например строку и число. Используй int() или str().';
-    } else if (rawMsg.includes('IndexError')) {
-      typeName = '❌ IndexError (Выход за границы списка)';
-      tip = 'Элемента с таким индексом нет в списке. Помни: нумерация в Python начинается с 0, а последний элемент — len(lst)-1.';
-    } else if (rawMsg.includes('KeyError')) {
-      typeName = '❌ KeyError (Ключ не найден в словаре)';
-      tip = 'В словаре нет такого ключа. Используй безопасный метод dict.get("ключ", по_умолчанию).';
-    } else if (rawMsg.includes('ValueError')) {
-      typeName = '❌ ValueError (Неверное значение)';
-      tip = 'Функция получила аргумент правильного типа, но некорректного значения (например int("привет")).';
+    const confBox = document.getElementById('pyErrConfusedBox');
+    const confText = document.getElementById('pyErrConfusedText');
+    const forbBox = document.getElementById('pyErrForbiddenBox');
+    const forbList = document.getElementById('pyErrForbiddenList');
+    const hintsBox = document.getElementById('pyErrHintsBox');
+    const hintsText = document.getElementById('pyErrHintsText');
+
+    const spoilerBox = document.getElementById('pyErrSpoilerBox');
+    const spoilerCode = document.getElementById('pyErrSpoilerCode');
+    const spoilerDesc = document.getElementById('pyErrSpoilerDesc');
+    const spoilerBtnText = document.getElementById('btnErrSpoilerText');
+
+    if (errTitle) errTitle.textContent = diag.title;
+    if (errBody) errBody.textContent = rawMsg;
+
+    if (lineBox && diag.lineCode) {
+      lineBox.style.display = 'block';
+      if (lineNum) lineNum.textContent = diag.lineNum;
+      if (lineText) lineText.textContent = diag.lineCode;
     }
 
-    if (errTitle) errTitle.textContent = typeName;
-    if (errBody) errBody.textContent = rawMsg;
-    if (errTipText) errTipText.textContent = tip;
+    if (confBox) {
+      confBox.style.display = 'block';
+      if (confText) confText.innerHTML = diag.confused;
+    }
+
+    if (forbBox && diag.forbidden && diag.forbidden.length) {
+      forbBox.style.display = 'block';
+      if (forbList) {
+        forbList.innerHTML = diag.forbidden.map(item => `<li>${item}</li>`).join('');
+      }
+    }
+
+    if (hintsBox && diag.hints && diag.hints.length) {
+      hintsBox.style.display = 'block';
+      if (hintsText) {
+        hintsText.innerHTML = diag.hints.map(item => `<div>${item}</div>`).join('');
+      }
+    }
+
+    if (spoilerBox) spoilerBox.style.display = 'none';
+    if (spoilerBtnText) spoilerBtnText.textContent = '👁️ Показать готовое решение (если совсем застрял)';
+    if (spoilerCode) spoilerCode.textContent = diag.solution;
+    if (spoilerDesc) spoilerDesc.innerHTML = escH(diag.explanation).replace(/\n/g, '<br>');
+
     if (errBanner) errBanner.style.display = 'block';
 
     if (outEl) {
       outEl.className = 'py-term-output-console has-error';
-      outEl.textContent = `🚨 ${typeName}\n${rawMsg}\n\n💡 Совет: ${tip}`;
+      outEl.textContent = `🚨 ${diag.title}\n${rawMsg}\n\n🧐 Что смутило Python: ${diag.confused.replace(/<[^>]+>/g, '')}\n\n💡 Наводящие подсказки смотри в карточке выше (готовый ответ скрыт, догадайся сам!)`;
+    }
+  }
+
+  function toggleErrSpoilerSolution() {
+    const box = document.getElementById('pyErrSpoilerBox');
+    const btnText = document.getElementById('btnErrSpoilerText');
+    if (!box) return;
+    if (box.style.display === 'none' || !box.style.display) {
+      box.style.display = 'block';
+      if (btnText) btnText.textContent = '🙈 Скрыть готовое решение';
+    } else {
+      box.style.display = 'none';
+      if (btnText) btnText.textContent = '👁️ Показать готовое решение (если совсем застрял)';
+    }
+  }
+
+  async function askAiTutorAboutTerminalError() {
+    if (!lastDiagnosedError) {
+      alert('Сначала запусти код в терминале!');
+      return;
+    }
+    const btn = document.getElementById('btnAskAiTutor');
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳ ИИ-тьютор думает без спойлеров...</span>';
+    }
+
+    const { userCode, rawMsg, diag } = lastDiagnosedError;
+
+    try {
+      const resp = await fetch(`${BRIDGE_HOST}/api/analyze_code_error`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: userCode,
+          error: rawMsg,
+          line: diag.lineCode
+        })
+      });
+
+      if (!resp.ok) throw new Error(`HTTP Error ${resp.status}`);
+      const data = await resp.json();
+      const analysis = data.analysis || '';
+
+      const hintsText = document.getElementById('pyErrHintsText');
+      const hintsBox = document.getElementById('pyErrHintsBox');
+      const spoilerCode = document.getElementById('pyErrSpoilerCode');
+      const spoilerDesc = document.getElementById('pyErrSpoilerDesc');
+
+      if (analysis.includes('<spoiler>')) {
+        const parts = analysis.split(/<\/?spoiler>/);
+        const visibleTutor = parts[0] || '';
+        const hiddenSol = parts[1] || '';
+
+        if (hintsText) {
+          hintsText.innerHTML = `<div style="border-left:3px solid #6366f1;padding-left:8px;margin-bottom:8px;">${escH(visibleTutor.trim()).replace(/\n/g, '<br>')}</div>`;
+        }
+        if (hintsBox) hintsBox.style.display = 'block';
+        if (spoilerCode) spoilerCode.textContent = hiddenSol.trim();
+        if (spoilerDesc) spoilerDesc.textContent = '💡 Решение сгенерировано ИИ-тьютором Qwen.';
+      } else {
+        if (hintsText) {
+          hintsText.innerHTML = `<div style="border-left:3px solid #6366f1;padding-left:8px;">${escH(analysis.trim()).replace(/\n/g, '<br>')}</div>`;
+        }
+        if (hintsBox) hintsBox.style.display = 'block';
+      }
+
+      showNotificationToast('🧠 ИИ-тьютор дал подсказку без спойлеров!');
+    } catch (err) {
+      alert('Не удалось связаться с сервером qwen_server: ' + err.message);
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
     }
   }
 

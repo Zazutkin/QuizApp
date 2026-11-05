@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="app_icon.png">
+  <link rel="shortcut icon" href="favicon.ico">
   <title>QuizGen AI Pro — Твой персональный учебный центр & Python с нуля</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4377,7 +4379,7 @@
   <!-- ШАПКА -->
   <header>
     <div class="logo-block">
-      <div class="logo-icon">🧠</div>
+      <div class="logo-icon" style="padding:0;overflow:hidden;border:2px solid #8b5cf6;box-shadow:0 0 14px rgba(139,92,246,0.5);display:flex;align-items:center;justify-content:center;background:#181824;"><img src="app_icon.png" alt="Miku" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"></div>
       <div class="logo-text">
         <h1>QuizGen AI Pro</h1>
         <p>Умный генератор тестов, аналитика ошибок & Python с нуля</p>
@@ -5135,7 +5137,7 @@
       <!-- ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМОВ: ФОТО / ВИДЕО -->
       <div class="media-studio-mode-bar">
         <button type="button" class="media-mode-btn active" id="btnModePhoto" onclick="switchMediaStudioMode('photo')">
-          🎨 Фотостудия (FLUX.1 Schnell 12B)
+          🎨 Фотостудия (Qwen-Image 2.1 & FLUX.1)
         </button>
         <button type="button" class="media-mode-btn" id="btnModeVideo" onclick="switchMediaStudioMode('video')">
           🎬 AI-Видеогенератор (MiniMax H3 & SVD)
@@ -5146,11 +5148,15 @@
         
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
         <div>
-          <div class="card-title">🎨 Нейро-Арт Студия (FLUX.1 Schnell)</div>
-          <div class="card-subtitle">Создавай фотореалистичные шедевры и иллюстрации. Генерация на мощном 12B движке FLUX!</div>
+          <div class="card-title">🎨 Нейро-Арт Студия (Qwen-Image 2.1 & FLUX.1)</div>
+          <div class="card-subtitle">Создавай фотореалистичные шедевры и иллюстрации. Генерация на моделях Qwen и FLUX!</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <span style="font-size:12px;padding:4px 10px;border-radius:6px;background:rgba(168,85,247,0.15);border:1px solid #a855f7;color:#c084fc;font-weight:700;">⚡ FLUX.1 [schnell]</span>
+          <label for="artModelSelect" style="font-size:12px;color:#94a3b8;font-weight:600;">Движок:</label>
+          <select id="artModelSelect" class="art-select" style="background:#0f172a;border-color:rgba(168,85,247,0.5);font-weight:700;padding:6px 12px;font-size:12.5px;border-radius:8px;color:#c084fc;">
+            <option value="qwen-image" selected>⚡ Qwen-Image 2.1 (Turbo / 2048px)</option>
+            <option value="flux">🌸 FLUX.1 [schnell] (12B)</option>
+          </select>
         </div>
       </div>
 
@@ -5338,16 +5344,9 @@
                 ✨ Кинематографичный Qwen
               </button>
             </div>
-            <textarea id="videoPromptInput" class="art-prompt-input" rows="3" placeholder="Опиши действие и персонажей (например: братья в бане, аниме стиль, парятся вениками и отдыхают, 60 fps, кинематографичный свет)..."></textarea>
+            <textarea id="videoPromptInput" class="art-prompt-input" rows="3" placeholder="Опиши действие, сюжет и атмосферу (например: ночной город, неоновый свет, идущий человек, кинематографичные отражения, 24 fps)..."></textarea>
             
-            <!-- Быстрые кинематографичные идеи для видео -->
-            <div class="art-prompt-chips">
-              <span class="art-chip" onclick="applyVideoChip('Два друга в деревянной бане, аниме стиль, пар клубится, дружеская беседа, slow motion, 8k', 127)">🧖 Братья в бане</span>
-              <span class="art-chip" onclick="applyVideoChip('Адам Смешер стреляет наплечными ракетами, взрывы отражаются в кибер-броне, замедленная съемка 8k', 180)">💥 Адам Смешер (Экшен)</span>
-              <span class="art-chip" onclick="applyVideoChip('Летающий спиннер парит над залитым дождем неоновым городом будущего, кинематографичный облет камеры 360', 140)">🌃 Неоновый пролет</span>
-              <span class="art-chip" onclick="applyVideoChip('Космический кот в скафандре крутит руль звездолета среди звездной туманности, мягкое покачивание', 90)">🐱 Космо-кот</span>
-              <span class="art-chip" onclick="applyVideoChip('Эпичный дракон расправляет огненные крылья на вершине заснеженной горы, slow-mo 60 fps', 160)">🐉 Дракон Slow-Mo</span>
-            </div>
+            
           </div>
 
           <!-- Настройки динамики, FPS и длительности -->
@@ -5378,8 +5377,10 @@
               <select id="videoDurationSelect" class="art-select">
                 <option value="3">3 секунды (Короткий шот)</option>
                 <option value="5">5 секунд (Стандартная сцена)</option>
-                <option value="10" selected>10 секунд (Полный диалог и анимация)</option>
-                <option value="15">15 секунд (Расширенный сюжет)</option>
+                <option value="10">10 секунд (Полный диалог)</option>
+                <option value="15" selected>15 секунд (3 сцены: сюжет + диалоги)</option>
+                <option value="20">20 секунд (Кинематографичный эпизод)</option>
+                <option value="30">30 секунд (Полнометражный сюжет)</option>
               </select>
             </div>
           </div>
@@ -5410,19 +5411,20 @@
                   <span style="font-size:16px;">🎙️</span>
                   <label for="voiceRoleSelect" style="font-size:12.5px;font-weight:700;color:#c4b5fd;">Выбор озвучки:</label>
                 </div>
-                <select id="voiceRoleSelect" class="art-select" style="flex:1;min-width:260px;font-size:12.5px;background:#0f172a;border-color:rgba(168,85,247,0.5);">
+                                <select id="voiceRoleSelect" class="art-select" onchange="onVoiceOrDialogueChanged()" style="flex:1;min-width:260px;font-size:12.5px;background:#0f172a;border-color:rgba(168,85,247,0.5);">
                   <optgroup label="🎭 Автоматический многоголосый дубляж по ролям">
-                    <option value="dialogue_auto" selected>🎭 Многоголосый диалог (Бас + Бодрый + Девушка по ролям)</option>
+                    <option value="dialogue_auto" selected>🎭 Авто-дубляж по ролям (Мужской / Женский)</option>
                   </optgroup>
-                  <optgroup label="👨 Мужские голоса (Studio Neural)">
-                    <option value="male_bass">🎙️ Дмитрий (Глубокий мужской бас / Кино-диктор)</option>
-                    <option value="male_energetic">⚡ Бодрый парень / Брат 2 (Динамичный мужской)</option>
-                    <option value="brutal_warrior">💪 Брутальный батя / Воин (Тяжелый грудной бас)</option>
+                  <optgroup label="👨 Реальные мужские нейросети (GitHub Piper & Edge)">
+                    <option value="male_dmitri">🎙️ Дмитрий (Piper Neural — Глубокий мужской бас)</option>
+                    <option value="male_denis">⚡ Денис (Piper Neural — Бодрый мужской голос)</option>
+                    <option value="male_ostap">🧔 Остап (Edge Neural — Солидный мужской баритон)</option>
                   </optgroup>
-                  <optgroup label="👩 Женские голоса (Studio Neural)">
-                    <option value="female_sweet">🌸 Светлана (Нежный бархатный женский голос)</option>
-                    <option value="female_anime">🎀 Аниме-тян / Подруга (Милый девичий голос)</option>
-                    <option value="female_formal">💼 Деловая ведущая / Кино-рассказчица</option>
+                  <optgroup label="👩 Реальные женские нейросети (GitHub Piper & Edge)">
+                    <option value="female_irina">🌸 Ирина (Piper Neural — Натуральный русский женский)</option>
+                    <option value="female_svetlana">👱‍♀️ Светлана (Edge Neural — Бархатный нежный женский)</option>
+                    <option value="female_polina">🎀 Полина (Edge Neural — Звонкий девичий голос)</option>
+                    <option value="female_anime">✨ Аниме-тян (Piper Neural — Звонкий девичий голос)</option>
                   </optgroup>
                 </select>
                 <button type="button" class="preset-btn" id="btnPreviewVoice" onclick="previewCurrentVoice()" style="padding:6px 14px;background:rgba(56,189,248,0.2);border-color:#38bdf8;color:#38bdf8;font-weight:700;font-size:12px;" title="Прослушать короткий образец выбранного голоса">
@@ -5430,17 +5432,9 @@
                 </button>
               </div>
 
-              <!-- Быстрые сценарии диалогов -->
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
-              <span style="font-size:11.5px;color:#94a3b8;align-self:center;font-weight:600;">Готовые сценарии:</span>
-              <button type="button" class="preset-btn" onclick="applyDialoguePreset('banya')">🧖 Братья в бане</button>
-              <button type="button" class="preset-btn" onclick="applyDialoguePreset('cyberpunk')">🌃 Киберпанк Найт-Сити</button>
-              <button type="button" class="preset-btn" onclick="applyDialoguePreset('anime')">🌸 Аниме диалог</button>
-            </div>
+              
 
-            <textarea id="dialogueInput" class="art-prompt-input" rows="3" placeholder="Напиши реплики персонажей построчно, например:
-Брат 1: Ох, хорошо в баньке, братан! Жар от души пошел!
-Брат 2: Да вообще кайф! День был тяжелый, а сейчас как заново родился!"></textarea>
+            <textarea id="dialogueInput" class="art-prompt-input" rows="3" oninput="onVoiceOrDialogueChanged()" placeholder="Напиши реплики персонажей или озвучиваемый текст..."></textarea>
 
             <!-- Живой индикатор говорящего персонажа -->
             <div id="liveSpeechIndicator" style="display:none;align-items:center;gap:10px;padding:8px 14px;background:rgba(56,189,248,0.15);border:1px solid #38bdf8;border-radius:8px;margin-top:10px;font-size:13px;color:#38bdf8;font-weight:700;">
@@ -5521,6 +5515,7 @@
 
             <!-- Тулбар действий с видео -->
             <div id="videoActionToolbar" class="img-action-toolbar" style="display:none;">
+              <button class="btn-action-art pulse-glow" id="btnVideoSound" onclick="toggleVideoSound()" style="background:linear-gradient(135deg, #10b981, #059669);color:#fff;font-weight:800;padding:8px 16px;">🔊 ВКЛЮЧИТЬ ЗВУК</button>
               <button class="btn-action-art" onclick="downloadCurrentVideo()" title="Скачать MP4 на компьютер">
                 💾 Скачать MP4
               </button>
@@ -11769,24 +11764,31 @@ if (typeof initChatSessions === 'function') initChatSessions();
     try {
       let localUrl = null;
 
-      // 1. Попытка через локальный серверный мост FLUX.1 [schnell] (без лимитов!)
+      const artModel = document.getElementById('artModelSelect')?.value || 'qwen-image';
+
+      // 1. Попытка через локальный серверный мост (Qwen-Image 2.1 / FLUX.1)
       if (hasInternetBridge) {
         try {
           const sResp = await fetch(`${BRIDGE_HOST}/api/generate_image`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: fullPrompt, width, height, seed })
+            body: JSON.stringify({ prompt: fullPrompt, width, height, seed, model: artModel })
           });
           if (sResp.ok) {
             const sData = await sResp.json();
             if (sData.status === 'ok' && sData.image_data) {
               localUrl = sData.image_data;
+              const usedModelName = sData.model_used || (artModel === 'qwen-image' ? 'Qwen-Image 2.1' : 'FLUX.1');
+              if (typeof showNotificationToast === 'function') {
+                showNotificationToast(`🎨 Создано через ${usedModelName}!`);
+              }
             }
           }
         } catch(be) {
           console.warn('Bridge image gen failed, fallback:', be);
         }
       }
+
 
       // 2. Если мост недоступен - fallback через прямой запрос
       if (!localUrl) {
@@ -11990,14 +11992,22 @@ if (typeof initChatSessions === 'function') initChatSessions();
     const photoPanel = document.getElementById('photoGenPanel');
     const videoPanel = document.getElementById('videoGenPanel');
 
-    if (mode === 'video') {
+        if (mode === 'video') {
       if (photoBtn) photoBtn.classList.remove('active');
       if (videoBtn) videoBtn.classList.add('active');
       if (photoPanel) photoPanel.style.display = 'none';
       if (videoPanel) videoPanel.style.display = 'block';
       checkMiniMaxStatus();
+      var minimaxStatusInterval = null;
+      if (!minimaxStatusInterval) {
+        minimaxStatusInterval = setInterval(checkMiniMaxStatus, 3000);
+      }
       renderVideoGalleryUI();
     } else {
+      if (minimaxStatusInterval) {
+        clearInterval(minimaxStatusInterval);
+        minimaxStatusInterval = null;
+      }
       if (videoBtn) videoBtn.classList.remove('active');
       if (photoBtn) photoBtn.classList.add('active');
       if (videoPanel) videoPanel.style.display = 'none';
@@ -12040,6 +12050,8 @@ if (typeof initChatSessions === 'function') initChatSessions();
     }
   }
 
+    minimaxStatusInterval = null;
+  
   async function checkMiniMaxStatus() {
     const badge = document.getElementById('baseModelStatusBadge');
     try {
@@ -12050,9 +12062,12 @@ if (typeof initChatSessions === 'function') initChatSessions();
       });
       if (r.ok) {
         const d = await r.json();
-        if (d.lora_installed && d.turbo_installed) {
-          if (badge) {
-            badge.innerHTML = '🟢 ComfyUI & MiniMax H3 готовы!';
+        if (badge) {
+          if (d.svd_status) {
+            badge.innerHTML = '💾 ' + (d.svd_status || '');
+            badge.style.color = (d.svd_status.includes('100%') || d.svd_status.includes('УСПЕХ')) ? '#34d399' : '#38bdf8';
+          } else if (d.lora_installed && d.turbo_installed) {
+            badge.innerHTML = '💎 MiniMax & SVD готовы!';
             badge.style.color = '#34d399';
           }
         }
@@ -12142,11 +12157,12 @@ if (typeof initChatSessions === 'function') initChatSessions();
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prompt: promptText,
-          image_data: currentArtDataUrl || null,
+          image_data: null,
           motion_bucket: motionBucket,
           fps: fps,
           duration: duration,
           dialogue: dialogueText,
+          voice: document.getElementById('voiceRoleSelect')?.value || 'dialogue_auto',
           audio_data: currentDialogueAudioUrl || null,
           seed: seed
         })
@@ -12181,7 +12197,7 @@ if (typeof initChatSessions === 'function') initChatSessions();
         });
 
         if (typeof showNotificationToast === 'function') {
-          showNotificationToast('🎬 60 FPS видео готово и воспроизводится со звуком!');
+          showNotificationToast(`🎬 ${fps} FPS видео (${duration} сек) готово и воспроизводится со звуком!`);
         }
 
       } else {
@@ -12286,6 +12302,32 @@ if (typeof initChatSessions === 'function') initChatSessions();
     });
   }
 
+  function toggleVideoSound() {
+
+    const player = document.getElementById('videoResultPlayer');
+
+    const btn = document.getElementById('btnVideoSound');
+
+    if (!player) return;
+
+    player.muted = false;
+
+    player.volume = 1.0;
+
+    player.play().catch(() => {});
+
+    if (btn) {
+
+      btn.innerHTML = '🔊 ЗВУК ВКЛЮЧЕН (100%)';
+
+      btn.classList.remove('pulse-glow');
+
+    }
+
+  }
+
+
+
   function downloadCurrentVideo() {
     if (!currentVideoUrl) return;
     const a = document.createElement('a');
@@ -12332,6 +12374,20 @@ if (typeof initChatSessions === 'function') initChatSessions();
   // МНОГОГОЛОСАЯ ИИ-ОЗВУЧКА & FAQ ВИДЕО
   // ====================================================
   let currentDialogueAudioUrl = null;
+
+  function onVoiceOrDialogueChanged() {
+    currentDialogueAudioUrl = null;
+    const card = document.getElementById('dialogueAudioCard');
+    if (card) card.style.display = 'none';
+    const player = document.getElementById('dialogueAudioPlayer');
+    if (player) {
+      try {
+        player.pause();
+        player.removeAttribute('src');
+        player.load();
+      } catch(e) {}
+    }
+  }
   let isDialogueAudioPlaying = false;
   let cachedSystemVoices = [];
 
@@ -12415,19 +12471,7 @@ if (typeof initChatSessions === 'function') initChatSessions();
 
   function applyDialoguePreset(type) {
     const inp = document.getElementById('dialogueInput');
-    if (!inp) return;
-    if (type === 'banya') {
-      inp.value = `брат 1: ох хорошо паримся братец!
-брат 2: и не поспоришь!
-девушка: мальчики, чай с мятой готов, выходите пить!`;
-    } else if (type === 'cyberpunk') {
-      inp.value = `брат 1: в Найт-Сити сегодня снова кислотный дождь льёт стеной.
-брат 2: главное чтобы кибер-импланты не закоротило, погнали в бар!`;
-    } else if (type === 'anime') {
-      inp.value = `девушка: сенпай, ты наконец-то пришёл! Я так долго тебя ждала!
-брат 1: прости, меня задержали на тренировке клана.`;
-    }
-    inp.focus();
+    if (inp) inp.focus();
   }
 
   function initAudioPlayerEvents() {
@@ -12501,7 +12545,7 @@ if (typeof initChatSessions === 'function') initChatSessions();
     const inp = document.getElementById('dialogueInput');
     const text = inp ? inp.value.trim() : '';
     if (!text) {
-      alert('Пожалуйста, напиши реплики персонажей или нажми кнопку «🧖 Братья в бане»!');
+      alert("Пожалуйста, введи реплики персонажей или текст для озвучки!");
       inp?.focus();
       return;
     }
@@ -12562,15 +12606,67 @@ if (typeof initChatSessions === 'function') initChatSessions();
     }
   }
 
-  function playLiveBrowserSpeech() {
+    async function playLiveBrowserSpeech() {
     const inp = document.getElementById('dialogueInput');
     const text = inp ? inp.value.trim() : '';
     if (!text) {
-      alert('Введи реплики для живой озвучки (например: «брат 1: ох хорошо паримся!\nбрат 2: и не поспоришь!»)');
+      alert('Введи реплики для живой озвучки (например:\nБрат 1: Ох хорошо паримся!\nБрат 2: И не поспоришь!)');
       return;
     }
+
+    const banner = document.getElementById('liveSpeechIndicator');
+    const selVoiceRole = document.getElementById('voiceRoleSelect')?.value || 'dialogue_auto';
+    const card = document.getElementById('dialogueAudioCard');
+    const player = document.getElementById('dialogueAudioPlayer');
+    const playBtn = document.getElementById('btnPlayDialogueAudio');
+    const wave = document.getElementById('dialogueSoundWave');
+
+    if (banner) {
+      banner.style.display = 'flex';
+      banner.innerHTML = `<span style="font-size:18px;">⏳</span> <span>Синтезирую живые голоса нейросети (Piper / Edge)...</span>`;
+    }
+
+    // 1. Мгновенный запуск реальной нейросети через локальный бэкенд (Piper TTS)
+    try {
+      const resp = await fetch(`${BRIDGE_HOST}/api/generate_speech`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, voice: selVoiceRole })
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.status === 'ok' && data.audio_data) {
+          currentDialogueAudioUrl = data.audio_data;
+          if (player) {
+            player.src = data.audio_data;
+            player.load();
+            player.play().catch(e => console.warn('Autoplay prevented:', e));
+            isDialogueAudioPlaying = true;
+          }
+          if (card) card.style.display = 'flex';
+          if (playBtn) {
+            playBtn.innerHTML = '⏸️ ПАУЗА';
+            playBtn.classList.remove('pulse-glow');
+          }
+          if (wave) wave.classList.add('playing');
+          if (banner) {
+            banner.innerHTML = `<span style="font-size:18px;">🗣️</span> <span>Воспроизведение: <b>Настоящее многоголосие нейросети</b> (Дмитрий + Денис + Ирина)!</span>`;
+            setTimeout(() => { if (banner) banner.style.display = 'none'; }, 6000);
+          }
+          if (typeof showNotificationToast === 'function') {
+            showNotificationToast('🎙️ Реальная мужская и женская нейро-озвучка включена!');
+          }
+          return;
+        }
+      }
+    } catch(netErr) {
+      console.warn('Backend live speech fallback to system voices:', netErr);
+    }
+
+    // 2. Оффлайн фоллбэк на системный синтезатор речи с разделением мужчин и женщин
     if (!('speechSynthesis' in window)) {
-      alert('Твой браузер не поддерживает Web Speech API');
+      alert('Твой браузер не поддерживает синтез речи');
+      if (banner) banner.style.display = 'none';
       return;
     }
 
@@ -12581,9 +12677,12 @@ if (typeof initChatSessions === 'function') initChatSessions();
       loadSystemVoices();
     }
 
-    const rawLines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+    const rawLines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
     const ruVoices = cachedSystemVoices.filter(v => (v.lang || '').toLowerCase().includes('ru'));
-    const banner = document.getElementById('liveSpeechIndicator');
+    
+    // Ищем настоящий мужской голос (Microsoft Pavel) и женский (Irina)
+    const maleVoice = ruVoices.find(v => (v.name || '').toLowerCase().includes('pavel') || (v.name || '').toLowerCase().includes('male') || (v.name || '').toLowerCase().includes('david')) || ruVoices[0];
+    const femaleVoice = ruVoices.find(v => (v.name || '').toLowerCase().includes('irina') || (v.name || '').toLowerCase().includes('female') || (v.name || '').toLowerCase().includes('zira') || (v.name || '').toLowerCase().includes('google')) || ruVoices[0];
 
     let currentIdx = 0;
     function speakNext() {
@@ -12607,21 +12706,18 @@ if (typeof initChatSessions === 'function') initChatSessions();
       const utter = new SpeechSynthesisUtterance(phrase);
       utter.lang = 'ru-RU';
       utter.volume = 1.0;
-      if (ruVoices.length > 0) {
-        utter.voice = ruVoices[0];
-      }
 
       const lowerSpeaker = speaker.toLowerCase();
-      const selVoiceRole = document.getElementById('voiceRoleSelect')?.value || 'dialogue_auto';
-      if (selVoiceRole === 'female_sweet' || selVoiceRole === 'female_anime' || lowerSpeaker.includes('девушка') || lowerSpeaker.includes('тян') || lowerSpeaker.includes('сестра')) {
-        utter.pitch = 1.45;
-        utter.rate = 1.1;
-      } else if (currentIdx % 2 === 0) {
-        utter.pitch = 0.75; // Глубокий мужской бас для Брата 1
-        utter.rate = 0.95;
+      const isFemale = selVoiceRole.startsWith('female') || lowerSpeaker.includes('девушка') || lowerSpeaker.includes('тян') || lowerSpeaker.includes('сестра') || lowerSpeaker.includes('жен') || lowerSpeaker.includes('мама') || lowerSpeaker.includes('подруга');
+
+      if (isFemale) {
+        utter.voice = femaleVoice;
+        utter.pitch = 1.0;
+        utter.rate = 1.0;
       } else {
-        utter.pitch = 1.25; // Бодрый энергичный голос для Брата 2
-        utter.rate = 1.05;
+        utter.voice = maleVoice;
+        utter.pitch = 1.0;
+        utter.rate = (currentIdx % 2 === 0) ? 0.95 : 1.05;
       }
 
       utter.onend = () => {

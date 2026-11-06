@@ -11,3 +11,6 @@ scratch_script_*
 Thumbs.db
 .vscode/
 .idea/
+
+QuizApp.exe
+*.exe

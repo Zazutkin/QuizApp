@@ -8938,6 +8938,109 @@ function initAiProviderSettings() {
     return 1;
   }
 
+  function extractLevelCode(fullCode, targetLevel) {
+    if (targetLevel === 'all' || !targetLevel) return (fullCode || '').trim();
+    const code = (fullCode || '').trim();
+    if (!code) return '';
+
+    // Ищем маркеры уровней: # Уровень 2, # След, # TODO 2 и т.д.
+    const lines = code.split('\n');
+    const sections = { 1: [], 2: [], 3: [] };
+    let curLvl = 1;
+
+    for (const line of lines) {
+      const lower = line.toLowerCase().trim();
+      if (/#.*?(уровень\s*2|задание\s*2|todo\s*2|level\s*2|\b2\s*задание|\bслед|\bследующ)/i.test(lower)) {
+        curLvl = 2;
+      } else if (/#.*?(уровень\s*3|задание\s*3|todo\s*3|level\s*3|\b3\s*задание|со\s*зв[её]здочк)/i.test(lower)) {
+        curLvl = 3;
+      } else if (/#.*?(уровень\s*1|задание\s*1|todo\s*1|level\s*1|\b1\s*задание|разминк)/i.test(lower)) {
+        curLvl = 1;
+      }
+      if (sections[curLvl]) sections[curLvl].push(line);
+    }
+
+    const targetInt = parseInt(targetLevel, 10);
+    if (sections[targetInt] && sections[targetInt].length > 0) {
+      const snippet = sections[targetInt].join('\n').trim();
+      const nonComment = snippet.split('\n').filter(l => l.trim() && !l.trim().startsWith('#'));
+      if (nonComment.length > 0) return snippet;
+    }
+
+    return code;
+  }
+
+  function formatVerdictMarkdown(text) {
+    if (!text) return '';
+
+    // 1. Извлекаем блок <spoiler>...</spoiler>, если он есть
+    let spoilerContent = '';
+    const spMatch = text.match(/<spoiler>([\s\S]*?)<\/spoiler>/i);
+    if (spMatch) {
+      spoilerContent = spMatch[1].trim();
+      text = text.replace(/<spoiler>[\s\S]*?<\/spoiler>/gi, '').trim();
+    }
+
+    // 2. Временно защищаем блоки кода ```python ... ```
+    const codeBlocks = [];
+    text = text.replace(/```(?:python)?\s*([\s\S]*?)```/gi, function(match, code) {
+      const idx = codeBlocks.length;
+      codeBlocks.push(code.trim());
+      return `__CODE_BLOCK_${idx}__`;
+    });
+
+    // 3. Заголовки
+    text = text.replace(/^###\s*(.*?)$/gm, '<h4 style="margin:12px 0 6px 0;color:#38bdf8;font-size:14px;font-weight:700;">$1</h4>');
+    text = text.replace(/^##\s*(.*?)$/gm, '<h3 style="margin:14px 0 8px 0;color:#67e8f9;font-size:15px;font-weight:700;">$1</h3>');
+
+    // 4. Жирный и курсив
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#f1f5f9;">$1</strong>');
+    text = text.replace(/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
+
+    // 5. Инлайн-код
+    text = text.replace(/`([^`\n]+)`/g, '<code style="background:rgba(56,189,248,0.12);color:#38bdf8;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:12.5px;">$1</code>');
+
+    // 6. Списки
+    text = text.replace(/^\s*[-*•]\s+(.*?)$/gm, '<div style="padding-left:14px;margin:3px 0;">• $1</div>');
+    text = text.replace(/^\s*(\d+)\.\s+(.*?)$/gm, '<div style="padding-left:14px;margin:3px 0;">$1. $2</div>');
+
+    // 7. Восстанавливаем блоки кода
+    for (let i = 0; i < codeBlocks.length; i++) {
+      const escCode = escH(codeBlocks[i]);
+      const htmlBlock = `<pre style="background:#090d16;padding:12px 14px;border-radius:8px;border:1px solid #1e293b;color:#f1f5f9;font-family:monospace;font-size:13px;line-height:1.5;overflow-x:auto;margin:10px 0;"><code>${escCode}</code></pre>`;
+      text = text.replace(`__CODE_BLOCK_${i}__`, htmlBlock);
+    }
+
+    // 8. Переносы строк вне pre-тегов
+    const preParts = text.split('<pre');
+    let res = preParts[0].replace(/\n/g, '<br>');
+    for (let i = 1; i < preParts.length; i++) {
+      const sub = preParts[i].split('</pre>');
+      res += '<pre' + sub[0] + '</pre>';
+      if (sub[1]) {
+        res += sub[1].replace(/\n/g, '<br>');
+      }
+    }
+    text = res.replace(/(?:<br>\s*){3,}/g, '<br><br>');
+
+    // 9. Добавляем блок-спойлер внизу
+    if (spoilerContent) {
+      const escSpoiler = escH(spoilerContent);
+      text += `
+        <div class="py-verdict-spoiler-wrap" style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);">
+          <button type="button" class="btn-spoiler-toggle" onclick="toggleVerdictSpoiler(this)" style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);color:#38bdf8;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+            <span>👁️ Показать подсказку с кодом решения</span>
+          </button>
+          <div class="py-verdict-spoiler-content" style="display:none;margin-top:10px;">
+            <pre style="background:#090d16;padding:12px 14px;border-radius:8px;border:1px solid #1e293b;color:#34d399;font-family:monospace;font-size:13px;line-height:1.5;overflow-x:auto;"><code>${escSpoiler}</code></pre>
+          </div>
+        </div>
+      `;
+    }
+
+    return text;
+  }
+
   async function checkPythonSolution() {
     const userCode = document.getElementById('pyUserCode').value.trim();
     if (!userCode) { alert('Сначала напиши свой код решения!'); return; }
@@ -8957,42 +9060,40 @@ function initAiProviderSettings() {
     vBox.style.display = 'block';
     vBox.className = 'py-verdict-box advice';
 
-    // Определяем, какие задания написаны в коде
-    const hasStars = /\*\s*\*\s*\d+|print\s*\(\s*["']\*/.test(userCode);
-    const hasSep = /sep\s*=/i.test(userCode);
-    const targetLevel = detectActiveCodeLevel(userCode);
+    // 🎯 ТОЧНОЕ ОПРЕДЕЛЕНИЕ ЦЕЛЕВОГО УРОВНЯ
+    const targetLevel = currentActiveLessonLevel || 1;
     const levelInfo = extractLessonLevelInfo(les.task, targetLevel);
+    const codeSnippet = extractLevelCode(userCode, targetLevel);
 
-    vBox.innerHTML = `🤖 ИИ-наставник изучает твой код и готовит подробный разбор...`;
+    vBox.innerHTML = `🤖 ИИ-наставник проверяет <b>${escH(levelInfo.title)}</b>...`;
 
-    const prompt = `Ты — первоклассный, поддерживающий и чуткий ментор по Python для новичка.
+    const prompt = `Ты — первоклассный, поддерживающий и точный ментор по Python для новичка.
+Ученик нажал кнопку проверки ИСКЛЮЧИТЕЛЬНО для: "${levelInfo.title}"!
+
 ТЕМА УРОКА: "${les.title}"
-ТЕКУЩЕЕ ЗАДАНИЕ УЧЕНИКА: "${levelInfo.title}"
-ТЕКСТ ЭТОГО ЗАДАНИЯ:
+ПРОВЕРЯЕМЫЙ УРОВЕНЬ: ${targetLevel === 'all' ? 'Все уровни' : `Уровень ${targetLevel}`} («${levelInfo.title}»)
+УСЛОВИЕ ПРОВЕРЯЕМОГО ЗАДАНИЯ:
 "${levelInfo.desc}"
 
-КОД УЧЕНИКА:
-[КОД PYTHON]
-${userCode}
-[/КОД PYTHON]
+КОД УЧЕНИКА ДЛЯ ЭТОГО ЗАДАНИЯ:
+\`\`\`python
+${codeSnippet}
+\`\`\`
 
-СТРОГИЕ ПРАВИЛА И СТРУКТУРА ОТВЕТА:
-1. 🧐 ОБЪЯСНИ "ПОЧЕМУ ИМЕННО ТАК РАБОТАЕТ":
-   Подробно и доходчиво объясни механику Python под капотом для тех строк, которые ученик уже написал:
-   - Если ученик вывел строки отдельно, объясни почему: каждый вызов print() по умолчанию завершается невидимым end='\n' (перенос строки).
-   - Если ученик использовал sep, объясни почему: sep заменяет стандартный пробел между аргументами на указанную строку-разделитель.
-   - Похвали за правильное понимание синтаксиса.
+СТРОЖАЙШИЕ ПРАВИЛА ПРОВЕРКИ (СОБЛЮДАЙ НЕУКОСНИТЕЛЬНО):
+1. 🎯 ПРОВЕРЯЙ ТОЛЬКО И ИСКЛЮЧИТЕЛЬНО УРОВЕНЬ ${targetLevel}!
+   Оценивай ТОЛЬКО то, решено ли задание «${levelInfo.title}» ("${levelInfo.desc}").
+   КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО проверять, комментировать, критиковать или требовать код от других уровней!
+   Ни слова не пиши про другие уровни! Не говори "В Уровне 1 ты забыл..." или "Сделай Уровень 3". Оценивай ТОЛЬКО текущий уровень!
 
-2. 🚫 СТРОЖАЙШИЙ ЗАПРЕТ НА СПОЙЛЕРЫ ДЛЯ СЛЕДУЮЩИХ УРОВНЕЙ!
-   ${!hasStars ? `Ученик ещё НЕ решал Уровень 3 (Со звёздочкой ⭐)!
-   КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО писать готовый код для Уровня 3 (никаких print('*' * 30))!
-   Не пиши фразы "А для уровня со звёздочкой добавим..." с готовым решением!
-   Дай ТОЛЬКО наводящую подсказку на размышление (например: "На Уровне 3 тебе предстоит сделать рамку. В Python можно умножать строку на число: '*' * 30. Попробуй сам!").` : ''}
+2. 🎉 ЕСЛИ ЗАДАНИЕ РЕШЕНО ВЕРНО:
+   Начни ответ со слов: "🎉 Отлично! ${levelInfo.title} решён верно!"
+   Коротко и ёмко (2-3 предложения) объясни, как именно этот код работает под капотом в Python.
 
-3. ЕСЛИ В ТЕКУЩЕМ УРОВНЕ ЕСТЬ ОШИБКА:
+3. ⚠️ ЕСЛИ В РЕШЕНИИ ЕСТЬ ОШИБКА:
    - Объясни ошибку на простом жизненном примере.
-   - Дай наводящую подсказку.
-   - Готовое исправление ОБЯЗАТЕЛЬНО оберни в тег <spoiler>...</spoiler>, чтобы на фронтенде оно было скрыто под кнопку.`;
+   - Дай понятную наводящую подсказку (например: как правильно использовать синтаксис).
+   - Правильное готовое исправление кода ОБЯЗАТЕЛЬНО помести в тег <spoiler>...</spoiler> в самом конце своего ответа!`;
 
     try {
       const resp = await fetch(`${host}/api/generate`, {
@@ -9003,71 +9104,46 @@ ${userCode}
           prompt,
           think: false,
           stream: false,
-          options: { temperature: 0.25, num_predict: 450 }
+          options: { temperature: 0.25, num_predict: 1200 }
         })
       });
 
       if (!resp.ok) throw new Error(`Ollama статус: ${resp.status}`);
       const data = await resp.json();
-      let reply = data.response || '';
+      const reply = data.response || '';
 
-      // АНТИ-СПОЙЛЕРНЫЙ ЩИТ: Если Уровень 3 ещё не написан учеником, прячем любой просочившийся код Уровня 3 под спойлер!
-      if (!hasStars) {
-        reply = reply.replace(/(`{3}python[\s\S]*?\*[\s\S]*?`{3})/gi, '<spoiler>\n$1\n</spoiler>');
-      }
-
-      const isSuccess = reply.includes('🎉') || reply.toLowerCase().includes('отлично') || reply.toLowerCase().includes('правильно') || reply.toLowerCase().includes('справился');
+      const isSuccess = reply.includes('🎉') || reply.toLowerCase().includes('отлично') || reply.toLowerCase().includes('правильно') || reply.toLowerCase().includes('справился') || reply.toLowerCase().includes('решен верно') || reply.toLowerCase().includes('решён верно');
 
       vBox.className = `py-verdict-box ${isSuccess ? 'success' : 'advice'}`;
+      vBox.innerHTML = formatVerdictMarkdown(reply);
 
-      if (reply.includes('<spoiler>')) {
-        const parts = reply.split(/<\/?spoiler>/);
-        const visiblePart = parts[0] || '';
-        const spoilerPart = parts[1] || '';
-        const afterPart = parts[2] || '';
-
-        vBox.innerHTML = `
-          <div style="margin-bottom:8px;line-height:1.6;">${escH(visiblePart.trim()).replace(/\n/g, '<br>')}</div>
-          <div class="py-verdict-spoiler-wrap">
-            <button type="button" class="btn-spoiler-toggle" onclick="toggleVerdictSpoiler(this)">
-              👁️ Показать решение-подсказку к следующему уровню (если застрял)
-            </button>
-            <div class="py-verdict-spoiler-content" style="display:none;">
-              <pre class="py-spoiler-code-block">${escH(spoilerPart.trim())}</pre>
-            </div>
-          </div>
-          ${afterPart ? `<div style="margin-top:8px;line-height:1.6;">${escH(afterPart.trim()).replace(/\n/g, '<br>')}</div>` : ''}
-        `;
-      } else {
-        vBox.innerHTML = escH(reply).replace(/\n/g, '<br>');
-      }
-
-      // Если решение успешно, засчитываем пройденный уровень в статистику профиля
+      // Если решение успешно, засчитываем пройденный уровень
       if (isSuccess) {
-        markLevelDone(currentLessonIndex, targetLevel === 'all' ? 1 : targetLevel);
-        if (hasSep) markLevelDone(currentLessonIndex, 2);
-        if (hasStars) markLevelDone(currentLessonIndex, 3);
-
-        addXp(40);
-        userProfile.skills.python = Math.min(100, (userProfile.skills.python || 0) + 15);
-        userProfile.dailyQuests.python = true;
-        saveProfile();
-
-        if (targetLevel === 1 && !hasSep) {
-          setTimeout(() => {
-            selectLessonLevel(2);
-            showNotificationToast('✨ Уровень 1 завершен! Открыт Уровень 2 (Боевая задача)');
-          }, 1500);
-        } else if (hasSep && !hasStars) {
-          setTimeout(() => {
-            selectLessonLevel(3);
-            showNotificationToast('🌟 Уровень 2 завершен! Открыт Уровень 3 (Со звёздочкой ⭐)');
-          }, 1500);
+        if (targetLevel === 'all') {
+          markLevelDone(currentLessonIndex, 1);
+          markLevelDone(currentLessonIndex, 2);
+          markLevelDone(currentLessonIndex, 3);
+          showNotificationToast('🎉 Все уровни урока успешно сданы!');
+        } else {
+          markLevelDone(currentLessonIndex, parseInt(targetLevel, 10));
+          if (targetLevel === 1) {
+            setTimeout(() => {
+              selectLessonLevel(2);
+              showNotificationToast('✨ Уровень 1 завершен! Открыт Уровень 2 (Боевая задача)');
+            }, 1200);
+          } else if (targetLevel === 2) {
+            setTimeout(() => {
+              selectLessonLevel(3);
+              showNotificationToast('✨ Уровень 2 завершен! Открыт Уровень 3 (Со звёздочкой ⭐)');
+            }, 1200);
+          } else if (targetLevel === 3) {
+            showNotificationToast('🏆 Уровень 3 со звёздочкой сдан на максимум!');
+          }
         }
       }
     } catch(err) {
       vBox.className = 'py-verdict-box advice';
-      vBox.innerHTML = `⚠️ Ошибка соединения с Ollama: ${escH(err.message)}. Убедись, что сервер запущен.`;
+      vBox.innerHTML = `⚠️ Ошибка соединения с Ollama: ${escH(err.message)}. Убедись, что Ollama запущена.`;
     } finally {
       btn.disabled = false;
       spin.style.display = 'none';
@@ -9075,14 +9151,17 @@ ${userCode}
   }
 
   function toggleVerdictSpoiler(btn) {
-    const content = btn.nextElementSibling;
+    const wrap = btn.closest('.py-verdict-spoiler-wrap');
+    if (!wrap) return;
+    const content = wrap.querySelector('.py-verdict-spoiler-content');
     if (!content) return;
+
     if (content.style.display === 'none' || !content.style.display) {
       content.style.display = 'block';
-      btn.textContent = '🙈 Скрыть решение-подсказку';
+      btn.innerHTML = '<span>🙈 Скрыть решение-подсказку</span>';
     } else {
       content.style.display = 'none';
-      btn.textContent = '👁️ Показать решение-подсказку к следующему уровню (если застрял)';
+      btn.innerHTML = '<span>👁️ Показать подсказку с кодом решения</span>';
     }
   }
 
@@ -10991,29 +11070,61 @@ function addManualFlashcard() {
     const statusEl = document.getElementById('bridgeStatus');
     const textEl   = document.getElementById('bridgeText');
     if (!statusEl || !textEl) return;
-    textEl.textContent = '🌐 Веб-поиск...';
+
+    // 1. Проверяем системное подключение ПК к сети navigator.onLine
+    const browserOnline = typeof navigator.onLine === 'boolean' ? navigator.onLine : true;
+    if (!browserOnline) {
+      hasInternetBridge = false;
+      statusEl.className = 'status-pill offline';
+      textEl.textContent = '🌐 Сеть: Офлайн';
+      statusEl.title = 'Кабель или Wi-Fi отключён. Приложение и локальный ИИ работают автономно (офлайн)!';
+      return;
+    }
+
+    textEl.textContent = '🌐 Проверка сети...';
     statusEl.className = 'status-pill';
+
     try {
       const ctrl = new AbortController();
-      const tid = setTimeout(() => ctrl.abort(), 2500);
+      const tid = setTimeout(() => ctrl.abort(), 2000);
       const resp = await fetch(`${BRIDGE_HOST}/api/status`, { signal: ctrl.signal });
       clearTimeout(tid);
-      if (!resp.ok) throw new Error();
+
+      if (!resp.ok) throw new Error('Bridge status not ok');
       const data = await resp.json();
-      if (data.status === 'online') {
+
+      // Честная проверка: интернет есть, только если сервер подтвердил доступ во внешнюю сеть
+      if (data.internet_online) {
         hasInternetBridge = true;
         statusEl.className = 'status-pill online';
         textEl.textContent = '🌐 Интернет: Онлайн';
-        statusEl.title = 'ReAct веб-поиск активен! Qwen в реальном времени ищет факты в сети.';
-        return;
+        statusEl.title = 'Интернет активен! ReAct веб-поиск и актуальные факты подключены.';
+      } else {
+        hasInternetBridge = false;
+        statusEl.className = 'status-pill offline';
+        textEl.textContent = '🌐 Сеть: Офлайн (ИИ локально)';
+        statusEl.title = 'Сервер запущен, но реального выхода в интернет нет. ИИ отвечает строго из локальной памяти (офлайн).';
       }
     } catch(e) {
       hasInternetBridge = false;
       statusEl.className = 'status-pill offline';
       textEl.textContent = '🌐 Интернет: Офлайн';
-      statusEl.title = 'Сервер веб-поиска не запущен. Кликните дважды по "Запустить_Qwen_Интернет.bat" на рабочем столе.';
+      statusEl.title = 'Сервер веб-поиска не отвечает или интернет отключён. Локальная Ollama работает офлайн.';
     }
   }
+
+  // Моментальная реакция на отключение / подключение интернета Windows в реальном времени
+  window.addEventListener('online', checkBridge);
+  window.addEventListener('offline', () => {
+    hasInternetBridge = false;
+    const statusEl = document.getElementById('bridgeStatus');
+    const textEl   = document.getElementById('bridgeText');
+    if (statusEl && textEl) {
+      statusEl.className = 'status-pill offline';
+      textEl.textContent = '🌐 Сеть: Офлайн';
+      statusEl.title = 'Интернет отключён! Локальные тесты и Ollama работают офлайн.';
+    }
+  });
 
   function updateFooterModel() {
     const sel = document.getElementById('modelSelect');

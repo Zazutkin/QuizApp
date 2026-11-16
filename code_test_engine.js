@@ -50,11 +50,31 @@
         {
           id: 'top0_diff1_v3',
           title: "Разминка (Вариант 3): Статус сервера в одну строку",
-          desc: "Выведи статус сервера двумя командами print(): сначала «Сервер Базы Данных: », затем «ОНЛАЙН» на той же строке с помощью end=''.",
+          desc: "Выведи статус сервера двумя командами print(): сначала «Сервер: », затем «ОНЛАЙН» на той же строке с помощью end=''.",
           starterCode: "# Твой Python код здесь:\n\n",
           expectedRegex: [/print/i, /end\s*=/i],
           testVerify: (out, code) => out.includes("Сервер") && out.includes("ОНЛАЙН") && out.trim().split('\n').length === 1,
-          hint: "print(\"Сервер Базы Данных: \", end=\"\") объединит обе строки.",
+          hint: "print(\"Сервер: \", end=\"\") объединит обе строки.",
+          xp: 30
+        },
+        {
+          id: 'top0_diff1_v4',
+          title: "Разминка (Вариант 4): Координаты точки",
+          desc: "Выведи координаты двумя print(): сначала 'X: 10, ' с параметром end='', затем 'Y: 20' на той же строке.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/print/i, /end\s*=/i],
+          testVerify: (out) => out.includes("X: 10") && out.includes("Y: 20") && out.trim().split('\n').length === 1,
+          hint: "print('X: 10, ', end='')",
+          xp: 30
+        },
+        {
+          id: 'top0_diff1_v5',
+          title: "Разминка (Вариант 5): Тройной вывод в строку",
+          desc: "Напечатай слова 'Раз', 'Два', 'Три' тремя отдельными print(), но чтобы между ними стояло тире ' - ' с помощью end=' - '.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/print/i, /end\s*=/i],
+          testVerify: (out) => out.includes("Раз - Два - Три") || (out.includes("Раз") && out.includes("Три")),
+          hint: "print('Раз', end=' - ')",
           xp: 30
         }
       ],
@@ -72,7 +92,7 @@
         {
           id: 'top0_diff2_v2',
           title: "Боевая задача (Вариант 2): Генератор пути к файлу через sep",
-          desc: "Выведи путь к файлу одной командой print(). Передай элементы пути: 'C:', 'Users', 'Damir', 'Python', 'main.py' с разделителем sep='/'.",
+          desc: "Выведи путь к файлу одной командой print(). Передай элементы: 'C:', 'Users', 'Damir', 'Python', 'main.py' с разделителем sep='/'.",
           starterCode: "# Твой Python код здесь:\n\n",
           expectedRegex: [/print/i, /sep\s*=/i],
           testVerify: (out, code) => (out.includes("C:/Users") || (out.includes("C:") && out.includes("/"))) && /sep\s*=/i.test(code),
@@ -87,6 +107,16 @@
           expectedRegex: [/print/i, /sep\s*=/i],
           testVerify: (out, code) => (out.includes("3 : 1") || out.includes(" : ")) && /sep\s*=/i.test(code),
           hint: "print(\"Реал Мадрид\", 3, 1, \"Барселона\", sep=\" : \")",
+          xp: 60
+        },
+        {
+          id: 'top0_diff2_v4',
+          title: "Боевая задача (Вариант 4): Сигналы светофора",
+          desc: "Выведи одной командой print(): 'КРАСНЫЙ', 'ЖЕЛТЫЙ', 'ЗЕЛЕНЫЙ' с разделителем-стрелкой sep=' ➜ '.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/print/i, /sep\s*=/i],
+          testVerify: (out) => out.includes("КРАСНЫЙ") && out.includes("ЗЕЛЕНЫЙ") && out.includes("➜"),
+          hint: "print('КРАСНЫЙ', 'ЖЕЛТЫЙ', 'ЗЕЛЕНЫЙ', sep=' ➜ ')",
           xp: 60
         }
       ],
@@ -116,6 +146,16 @@
           },
           hint: "print('#' * 1), print('#' * 2), print('#' * 3), print('#' * 4)",
           xp: 120
+        },
+        {
+          id: 'top0_diff3_v3',
+          title: "Хардкор со звёздочкой (Вариант 3): Шахматный узор",
+          desc: "Напечатай шахматный узор 3x3: строка 1: '■ □ ■', строка 2: '□ ■ □', строка 3: '■ □ ■'.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/print/i],
+          testVerify: (out) => out.includes("■") && out.includes("□") && out.trim().split('\n').length >= 3,
+          hint: "print('■ □ ■')\nprint('□ ■ □')\nprint('■ □ ■')",
+          xp: 120
         }
       ]
     },
@@ -125,7 +165,7 @@
       1: [
         {
           id: 'top1_diff1_v1',
-          title: "Разминка: Конвертер валюты",
+          title: "Разминка (Вариант 1): Конвертер валюты",
           desc: "Создай переменную usd = 100 и курс rub_rate = 92.5. Вычисли общую сумму total_rub (произведение usd и rub_rate) и напечатай результат.",
           starterCode: "# Твой Python код здесь:\n\n",
           expectedRegex: [/usd/i, /rub_rate/i, /print/i],
@@ -135,36 +175,236 @@
         },
         {
           id: 'top1_diff1_v2',
-          title: "Разминка: Площадь и периметр прямоугольника",
+          title: "Разминка (Вариант 2): Площадь и периметр прямоугольника",
           desc: "Создай переменные a = 15 (ширина) и b = 8 (длина). Вычисли площадь area = a * b и периметр perimeter = 2 * (a + b). Напечатай оба числа через пробел.",
           starterCode: "# Твой Python код здесь:\n\n",
           expectedRegex: [/print/i],
           testVerify: (out) => out.includes("120") && out.includes("46"),
           hint: "area = a * b, perim = 2 * (a + b)",
           xp: 30
+        },
+        {
+          id: 'top1_diff1_v3',
+          title: "Разминка (Вариант 3): Скидка в магазине",
+          desc: "Создай price = 2500 и discount_percent = 20. Посчитай финальную цену final_price с учетом скидки (price - price * discount_percent / 100) и выведи её.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/print/i],
+          testVerify: (out) => out.includes("2000"),
+          hint: "final_price = price * 0.8\nprint(final_price)",
+          xp: 30
+        },
+        {
+          id: 'top1_diff1_v4',
+          title: "Разминка (Вариант 4): Чай и кофе (Множественный обмен)",
+          desc: "Создай cup_tea = 'Чай' и cup_coffee = 'Кофе'. Поменяй их значения местами в одну строчку синтаксисом cup_tea, cup_coffee = cup_coffee, cup_tea и напечатай их.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/cup_tea/i, /cup_coffee/i, /print/i],
+          testVerify: (out) => out.includes("Кофе") && out.includes("Чай"),
+          hint: "cup_tea, cup_coffee = cup_coffee, cup_tea",
+          xp: 30
         }
       ],
       2: [
         {
           id: 'top1_diff2_v1',
-          title: "Боевая задача: Форматированная f-строка карточки",
-          desc: "Создай переменные name = 'Дамир', age = 22, score = 98.5. Выведи f-строку строго в формате: «Студент: Дамир | Возраст: 22 | Балл: 98.5».",
+          title: "Боевая задача (Вариант 1): Форматированная f-строка карточки",
+          desc: "Создай name = 'Дамир', age = 22, score = 98.5. Выведи f-строку формата: «Студент: Дамир | Возраст: 22 | Балл: 98.5».",
           starterCode: "# Твой Python код здесь:\n\n",
           expectedRegex: [/f["']/i, /print/i],
           testVerify: (out) => out.includes("Студент: Дамир") && out.includes("Возраст: 22") && out.includes("98.5"),
           hint: "print(f\"Студент: {name} | Возраст: {age} | Балл: {score}\")",
+          xp: 60
+        },
+        {
+          id: 'top1_diff2_v2',
+          title: "Боевая задача (Вариант 2): Карточка товара на маркетплейсе",
+          desc: "Создай product = 'Мышь', price = 1250, in_stock = True. Выведи f-строку: «Товар: Мышь, Цена: 1250 руб., В наличии: True».",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/f["']/i, /print/i],
+          testVerify: (out) => out.includes("Мышь") && out.includes("1250") && out.includes("True"),
+          hint: "print(f'Товар: {product}, Цена: {price} руб., В наличии: {in_stock}')",
+          xp: 60
+        },
+        {
+          id: 'top1_diff2_v3',
+          title: "Боевая задача (Вариант 3): Калькулятор возраста",
+          desc: "Создай birth_year = 2005 и current_year = 2026. Вычисли age = current_year - birth_year и выведи f-строку: «Возраст: {age} лет».",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/print/i],
+          testVerify: (out) => out.includes("21") || out.includes("Возраст:"),
+          hint: "age = current_year - birth_year\nprint(f'Возраст: {age} лет')",
           xp: 60
         }
       ],
       3: [
         {
           id: 'top1_diff3_v1',
-          title: "Хардкор: Калькулятор ИМТ (BMI) с округлением",
-          desc: "Создай переменные weight = 70 (кг) и height = 1.75 (м). Рассчитай индекс массы тела: bmi = weight / (height ** 2). Округли до двух знаков через round(bmi, 2) и напечатай.",
+          title: "Хардкор со звёздочкой (Вариант 1): Индекс массы тела (BMI)",
+          desc: "Создай weight = 74 (кг) и height = 1.80 (м). Вычисли индекс bmi = weight / (height ** 2). Округли его с помощью round(bmi, 2) и напечатай результат.",
           starterCode: "# Твой Python код здесь:\n\n",
           expectedRegex: [/\*\*/i, /round/i, /print/i],
           testVerify: (out) => out.includes("22.86"),
           hint: "bmi = round(weight / (height ** 2), 2)",
+          xp: 120
+        },
+        {
+          id: 'top1_diff3_v2',
+          title: "Хардкор со звёздочкой (Вариант 2): Циклический обмен трёх переменных",
+          desc: "Создай x = 10, y = 20, z = 30. Сделай сдвиг по кругу в одну строчку (x получает z, y получает x, z получает y) и выведи x, y, z.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/print/i],
+          testVerify: (out) => out.includes("30") && out.includes("10") && out.includes("20"),
+          hint: "x, y, z = z, x, y\nprint(x, y, z)",
+          xp: 120
+        }
+      ]
+    },
+
+    // Урок 3: Ввод input(), приведение типов и арифметика // и %
+    2: {
+      1: [
+        {
+          id: 'top2_diff1_v1',
+          title: "Разминка (Вариант 1): Перевод секунд в минуты и секунды",
+          desc: "Дано total_sec = 135. С помощью // найди количество целых минут (mins), а с помощью % найди остаток секунд (secs). Напечатай mins и secs через двоеточие 'mins:secs'.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/\/\//i, /%/i, /print/i],
+          testVerify: (out) => out.includes("2:15") || (out.includes("2") && out.includes("15")),
+          hint: "mins = total_sec // 60\nsecs = total_sec % 60\nprint(f'{mins}:{secs}')",
+          xp: 30
+        },
+        {
+          id: 'top2_diff1_v2',
+          title: "Разминка (Вариант 2): Квадрат и куб числа",
+          desc: "Создай число n = 6. Вычисли его квадрат (n ** 2) и куб (n ** 3). Выведи оба значения через пробел.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/\*\*/i, /print/i],
+          testVerify: (out) => out.includes("36") && out.includes("216"),
+          hint: "print(n ** 2, n ** 3)",
+          xp: 30
+        }
+      ],
+      2: [
+        {
+          id: 'top2_diff2_v1',
+          title: "Боевая задача (Вариант 1): Делёжка золота между пиратами",
+          desc: "Дано coins = 53 и pirates = 4. Найди per_pirate (сколько монет получит каждый поровну через //) и captain_bonus (остаток монет капитану через %). Напечатай оба числа.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/\/\//i, /%/i, /print/i],
+          testVerify: (out) => out.includes("13") && out.includes("1"),
+          hint: "per_pirate = coins // pirates\ncaptain_bonus = coins % pirates",
+          xp: 60
+        },
+        {
+          id: 'top2_diff2_v2',
+          title: "Боевая задача (Вариант 2): Сумма цифр двузначного числа",
+          desc: "Дано число n = 85. Без преобразования в строку, ТОЛЬКО с помощью // и %, извлеки десятки и единицы, и напечатай их сумму (8 + 5 = 13).",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/\/\//i, /%/i, /print/i],
+          testVerify: (out) => out.includes("13"),
+          hint: "tens = n // 10\nunits = n % 10\nprint(tens + units)",
+          xp: 60
+        }
+      ],
+      3: [
+        {
+          id: 'top2_diff3_v1',
+          title: "Хардкор со звёздочкой (Вариант 1): Сумма цифр трёхзначного числа",
+          desc: "Дано number = 749. Только математикой (// и %), найди сотни, десятки и единицы, и напечатай их сумму (7 + 4 + 9 = 20).",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/\/\//i, /%/i, /print/i],
+          testVerify: (out) => out.includes("20"),
+          hint: "h = number // 100\nt = (number % 100) // 10\nu = number % 10\nprint(h + t + u)",
+          xp: 120
+        }
+      ]
+    },
+
+    // Урок 4: Условия if, elif, else и булева логика
+    3: {
+      1: [
+        {
+          id: 'top3_diff1_v1',
+          title: "Разминка (Вариант 1): Проверка чётности числа",
+          desc: "Создай число n = 18. Если число чётное (n % 2 == 0), напечатай 'ЧЁТНОЕ', иначе напечатай 'НЕЧЁТНОЕ'.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/if/i, /else/i, /print/i],
+          testVerify: (out) => out.includes("ЧЁТНОЕ") || out.includes("ЧЕТНОЕ"),
+          hint: "if n % 2 == 0:\n    print('ЧЁТНОЕ')\nelse:\n    print('НЕЧЁТНОЕ')",
+          xp: 30
+        },
+        {
+          id: 'top3_diff1_v2',
+          title: "Разминка (Вариант 2): Проверка совершеннолетия",
+          desc: "Создай age = 19. Если age >= 18, выведи 'Доступ разрешён', иначе 'Доступ запрещён'.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/if/i, /print/i],
+          testVerify: (out) => out.includes("Доступ разрешён") || out.includes("разрешен"),
+          hint: "if age >= 18: print('Доступ разрешён')",
+          xp: 30
+        }
+      ],
+      2: [
+        {
+          id: 'top3_diff2_v1',
+          title: "Боевая задача (Вариант 1): Время суток по часам",
+          desc: "Создай hour = 14 (от 0 до 23). Если от 6 до 11 — напечатай 'Утро', если от 12 до 17 — 'День', если от 18 до 22 — 'Вечер', иначе 'Ночь'.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/if/i, /elif/i, /else/i],
+          testVerify: (out) => out.includes("День"),
+          hint: "if 6 <= hour <= 11: ... elif 12 <= hour <= 17: ...",
+          xp: 60
+        }
+      ],
+      3: [
+        {
+          id: 'top3_diff3_v1',
+          title: "Хардкор со звёздочкой (Вариант 1): Проверка високосного года",
+          desc: "Создай year = 2024. Год високосный, если (year % 4 == 0 и year % 100 != 0) или (year % 400 == 0). Напечатай 'ВИСОКОСНЫЙ' или 'ОБЫЧНЫЙ'.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/if/i, /%/i, /print/i],
+          testVerify: (out) => out.includes("ВИСОКОСНЫЙ"),
+          hint: "if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):",
+          xp: 120
+        }
+      ]
+    },
+
+    // Урок 5: Списки list, методы и срезы
+    4: {
+      1: [
+        {
+          id: 'top4_diff1_v1',
+          title: "Разминка (Вариант 1): Добавление и длина списка",
+          desc: "Создай список items = ['меч', 'щит']. Добавь в конец элемент 'зелье' через .append(). Напечатай список и его длину через len().",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/append/i, /len/i, /print/i],
+          testVerify: (out) => out.includes("зелье") && out.includes("3"),
+          hint: "items.append('зелье')\nprint(items, len(items))",
+          xp: 30
+        }
+      ],
+      2: [
+        {
+          id: 'top4_diff2_v1',
+          title: "Боевая задача (Вариант 1): Срезы и разворот списка",
+          desc: "Дан список numbers = [10, 20, 30, 40, 50]. С помощью среза [::-1] разверни его задом наперёд и напечатай результат.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/\[::-1\]/i, /print/i],
+          testVerify: (out) => out.includes("50") && out.includes("10"),
+          hint: "reversed_nums = numbers[::-1]\nprint(reversed_nums)",
+          xp: 60
+        }
+      ],
+      3: [
+        {
+          id: 'top4_diff3_v1',
+          title: "Хардкор со звёздочкой (Вариант 1): Анализ оценок студента",
+          desc: "Дан список grades = [4, 5, 3, 5, 2, 4, 5]. Найди min_g = min(grades), max_g = max(grades) и средний avg_g = round(sum(grades) / len(grades), 2). Выведи их.",
+          starterCode: "# Твой Python код здесь:\n\n",
+          expectedRegex: [/min/i, /max/i, /sum/i, /len/i],
+          testVerify: (out) => out.includes("2") && out.includes("5") && out.includes("4"),
+          hint: "print(min(grades), max(grades), round(sum(grades) / len(grades), 2))",
           xp: 120
         }
       ]
@@ -402,17 +642,23 @@
   // ---------------------------------------------------------------------
   window.generateNextChallengeForCurrentTopic = function() {
     const variantsForTopic = CODE_TEST_VARIANTS[activeTopicIndex];
-    if (variantsForTopic && variantsForTopic[activeDifficulty] && variantsForTopic[activeDifficulty].length > 1) {
-      const arr = variantsForTopic[activeDifficulty];
-      currentVariantIndex = (currentVariantIndex + 1) % arr.length;
+    const arr = (variantsForTopic && variantsForTopic[activeDifficulty]) ? variantsForTopic[activeDifficulty] : [];
+
+    // Если есть статические варианты, которые еще не все показаны по кругу:
+    if (arr.length > 0 && currentVariantIndex < arr.length - 1) {
+      currentVariantIndex++;
       loadActiveChallenge();
       if (typeof showNotificationToast === 'function') {
-        showNotificationToast('✨ Загружена новая задача по этой теме!');
+        showNotificationToast(`✨ Вариант ${currentVariantIndex + 1} из ${arr.length} загружен!`);
       }
       return;
     }
 
-    // Если статических вариаций в банке больше нет — генерируем через нейросеть Qwen!
+    // Если все статические варианты в банке пройдены — автоматически генерируем совершенно новую задачу через ИИ Qwen!
+    currentVariantIndex = 0; // Сбрасываем счетчик для следующего круга
+    if (typeof showNotificationToast === 'function') {
+      showNotificationToast('🤖 Все варианты пройдены! Генерирую новую задачу через нейросеть...');
+    }
     generateAiChallengeForTopic();
   };
 
@@ -496,7 +742,7 @@
 {
   "title": "Краткое название задачи",
   "desc": "Чёткое понятное условие: что дано, что должна напечатать программа.",
-  "starterCode": "# ==========================================\\n# ✍️ ТВОЙ КОД ЗДЕСЬ\\n# ==========================================\\n\\n# TODO: Напиши решение по условию задачи:\\n\\n",
+  "starterCode": "# Твой Python код здесь:\\n\\n",
   "expectedText": "слово или фраза, которая должна появиться на выводе",
   "hint": "наводящая подсказка без готового решения"
 }`;

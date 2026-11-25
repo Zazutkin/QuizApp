@@ -6513,12 +6513,10 @@
             <div>
               <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:6px;">Длительность сцены:</label>
               <select id="videoDurationSelect" class="art-select">
-                <option value="3">3 секунды (Короткий шот)</option>
-                <option value="5">5 секунд (Стандартная сцена)</option>
-                <option value="10">10 секунд (Полный диалог)</option>
-                <option value="15" selected>15 секунд (3 сцены: сюжет + диалоги)</option>
-                <option value="20">20 секунд (Кинематографичный эпизод)</option>
-                <option value="30">30 секунд (Полнометражный сюжет)</option>
+                <option value="5">5 секунд (1 полная AI-сцена)</option>
+                <option value="10" selected>10 секунд (2 сменяющиеся сцены)</option>
+                <option value="15">15 секунд (3 сцены: сюжет + диалоги)</option>
+                <option value="20">20 секунд (Расширенный ролик)</option>
               </select>
             </div>
           </div>
@@ -6550,19 +6548,19 @@
                   <label for="voiceRoleSelect" style="font-size:12.5px;font-weight:700;color:#c4b5fd;">Выбор озвучки:</label>
                 </div>
                                 <select id="voiceRoleSelect" class="art-select" onchange="onVoiceOrDialogueChanged()" style="flex:1;min-width:260px;font-size:12.5px;background:#0f172a;border-color:rgba(168,85,247,0.5);">
-                  <optgroup label="🎭 Автоматический многоголосый дубляж по ролям">
-                    <option value="dialogue_auto" selected>🎭 Авто-дубляж по ролям (Мужской / Женский)</option>
+                  <optgroup label="🎭 Автоматический многоголосый дубляж (Silero 48 кГц)">
+                    <option value="dialogue_auto" selected>🎭 Авто-дубляж по ролям (Мужские / Женские)</option>
                   </optgroup>
-                  <optgroup label="👨 Реальные мужские нейросети (GitHub Piper & Edge)">
-                    <option value="male_dmitri">🎙️ Дмитрий (Piper Neural — Глубокий мужской бас)</option>
-                    <option value="male_denis">⚡ Денис (Piper Neural — Бодрый мужской голос)</option>
-                    <option value="male_ostap">🧔 Остап (Edge Neural — Солидный мужской баритон)</option>
+                  <optgroup label="👨 Студийные мужские голоса (Silero v4 48 кГц)">
+                    <option value="male_dmitri">🎙️ Айдар / Дмитрий (Глубокий уверенный мужской)</option>
+                    <option value="male_denis">⚡ Евгений / Денис (Бодрый живой мужской)</option>
+                    <option value="male_ostap">🧔 Остап (Edge Neural — Баритон)</option>
                   </optgroup>
-                  <optgroup label="👩 Реальные женские нейросети (GitHub Piper & Edge)">
-                    <option value="female_irina">🌸 Ирина (Piper Neural — Натуральный русский женский)</option>
-                    <option value="female_svetlana">👱‍♀️ Светлана (Edge Neural — Бархатный нежный женский)</option>
-                    <option value="female_polina">🎀 Полина (Edge Neural — Звонкий девичий голос)</option>
-                    <option value="female_anime">✨ Аниме-тян (Piper Neural — Звонкий девичий голос)</option>
+                  <optgroup label="👩 Студийные женские голоса (Silero v4 48 кГц)">
+                    <option value="female_svetlana">👱‍♀️ Ксения / Светлана (Чистый мягкий женский)</option>
+                    <option value="female_irina">🌸 Ксения (Выразительный женский)</option>
+                    <option value="female_anime">✨ Байя (Звонкий живой девичий голос)</option>
+                    <option value="female_polina">🎀 Полина (Edge Neural — Девичий)</option>
                   </optgroup>
                 </select>
                 <button type="button" class="preset-btn" id="btnPreviewVoice" onclick="previewCurrentVoice()" style="padding:6px 14px;background:rgba(56,189,248,0.2);border-color:#38bdf8;color:#38bdf8;font-weight:700;font-size:12px;" title="Прослушать короткий образец выбранного голоса">
@@ -14306,7 +14304,10 @@ function clearCurrentChat() {
       if (turboBadge) turboBadge.textContent = d.turbo_installed ? '⚡ Turbo 8-step ✅ Установлен' : '⚡ Turbo 8-step ❌ Не найден';
       if (wfBadge) wfBadge.textContent = d.workflows_available ? '📐 H3 Workflows ✅ В наличии' : '📐 H3 Workflows ❌ Не найдены';
       if (badge) {
-        if (d.svd_status) {
+        if (d.wan21_ready) {
+          badge.textContent = '🚀 Wan 2.1 T2V 1.3B ✅ Готова (Реальное Text-to-Video)';
+          badge.style.color = '#34d399';
+        } else if (d.svd_status) {
           badge.textContent = '💾 ' + d.svd_status;
           badge.style.color = (d.svd_status.includes('100%') || d.svd_status.includes('УСПЕХ')) ? '#34d399' : '#38bdf8';
         } else if (d.lora_installed && d.turbo_installed) {
@@ -14418,7 +14419,7 @@ function clearCurrentChat() {
     const btnSpin = document.getElementById('btnVideoSpinner');
     if (btn) btn.disabled = true;
     if (btnSpin) btnSpin.style.display = 'inline-block';
-    if (btnText) btnText.textContent = '🎬 Генерация AI-видео (SVD-XT + TTS)...';
+    if (btnText) btnText.textContent = '🎬 Генерация AI-видео (Wan 2.1 + Edge TTS)...';
 
     const placeholder = document.getElementById('videoPlaceholder');
     const loadingState = document.getElementById('videoLoadingState');
@@ -14437,7 +14438,7 @@ function clearCurrentChat() {
     if (loadingTitle) {
       loadingTitle.textContent = uploadedVideoHeroImageDataUrl
         ? '🎬 Подготовка твоего фото и запуск SVD-XT 1.1...'
-        : '🎨 Генерация ключевой сцены по твоему описанию...';
+        : '🎬 Планирование сцен и запуск локальной видеомодели на RTX 4060...';
     }
 
     let elapsed = 0;
@@ -14445,12 +14446,12 @@ function clearCurrentChat() {
     if (videoTimerInterval) clearInterval(videoTimerInterval);
     videoTimerInterval = setInterval(() => {
       elapsed++;
-      if (timerEl) timerEl.textContent = `Прошло ${elapsed} сек (SVD-XT на RTX 4060 обычно 25–45 сек)...`;
-      if (elapsed > 4 && loadingTitle) {
-        loadingTitle.textContent = '🎬 Нейросеть SVD-XT 1.1 создаёт реальное движение кадров на RTX 4060...';
+      if (timerEl) timerEl.textContent = `Прошло ${elapsed} сек (настоящий рендер на RTX 4060)...`;
+      if (elapsed > 5 && loadingTitle) {
+        loadingTitle.textContent = '🎬 Нейросеть рисует живые видеокадры + синтезирует озвучку...';
       }
-      if (elapsed > 28 && loadingTitle) {
-        loadingTitle.textContent = '🎙️ Синтез озвучки Piper TTS и сборка MP4...';
+      if (elapsed > 45 && loadingTitle) {
+        loadingTitle.textContent = '🎞️ Сборка сцен в плавный MP4 со звуком...';
       }
     }, 1000);
 

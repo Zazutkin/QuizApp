@@ -142,21 +142,33 @@
     .status-pill {
       display: inline-flex; align-items: center; gap: 7px;
       padding: 6px 12px;
-      border-radius: 8px;
-      background: #131620;
+      border-radius: 10px;
+      background: rgba(19, 22, 32, 0.9);
       border: 1px solid var(--card-border);
-      font-size: 12px; font-weight: 500;
+      font-size: 12px; font-weight: 600;
       color: #cbd5e1;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .status-pill.online {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.32);
+      color: #d1fae5;
+    }
+    .status-pill.offline {
+      background: rgba(239, 68, 68, 0.09);
+      border-color: rgba(239, 68, 68, 0.35);
+      color: #fecaca;
     }
 
     .status-dot {
-      width: 7px; height: 7px;
+      width: 8px; height: 8px;
       border-radius: 50%;
       background: var(--warning);
+      flex-shrink: 0;
     }
 
-    .status-pill.online .status-dot  { background: var(--success); }
-    .status-pill.offline .status-dot { background: var(--error); }
+    .status-pill.online .status-dot  { background: var(--success); box-shadow: 0 0 8px rgba(16, 185, 129, 0.7); }
+    .status-pill.offline .status-dot { background: var(--error); box-shadow: 0 0 8px rgba(239, 68, 68, 0.7); }
 
     .search-badge-row {
       display: block;
@@ -238,10 +250,12 @@
     /* НАВИГАЦИОННЫЕ ВКЛАДКИ */
     .tabs {
       display: flex; gap: 6px;
-      background: #101218;
-      padding: 5px;
-      border-radius: 12px;
-      border: 1px solid var(--card-border);
+      background: rgba(14, 17, 25, 0.92);
+      backdrop-filter: blur(12px);
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
       margin-bottom: 22px;
       width: 100%;
       max-width: 100%;
@@ -249,37 +263,55 @@
     }
 
     .tab-btn {
-      padding: 8px 15px; border-radius: 8px;
+      padding: 8px 14px; border-radius: 9px;
       border: 1px solid transparent; background: transparent;
-      color: var(--text-muted); font-size: 13px; font-weight: 600;
-      cursor: pointer; transition: all 0.15s ease;
-      display: flex; align-items: center; gap: 6px;
+      color: var(--text-muted); font-size: 12.5px; font-weight: 600;
+      cursor: pointer; transition: all 0.18s ease;
+      display: inline-flex; align-items: center; gap: 6px;
       font-family: inherit;
+      white-space: nowrap;
     }
 
-    .tab-btn:hover { color: #f4f4f5; background: #151821; }
+    .tab-btn:hover { color: #f4f4f5; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.08); }
 
     .tab-btn.active {
-      background: #181c26;
+      background: linear-gradient(135deg, #1d2436, #181c28);
       color: #fff;
-      border-color: #2b3345;
+      border-color: rgba(96, 165, 250, 0.45);
+      box-shadow: 0 2px 10px rgba(37, 99, 235, 0.22);
     }
 
+    .tab-btn.teacher-tab { color: #fde047; border-color: rgba(234, 179, 8, 0.22); background: rgba(234, 179, 8, 0.06); }
+    .tab-btn.teacher-tab.active { background: rgba(234, 179, 8, 0.18); border-color: rgba(250, 204, 21, 0.55); color: #fef08a; box-shadow: 0 2px 12px rgba(234, 179, 8, 0.2); }
+
+    .tab-btn.python-tab { color: #93c5fd; }
     .tab-btn.python-tab.active {
-      background: #131c2c;
+      background: linear-gradient(135deg, rgba(14, 116, 144, 0.28), rgba(30, 64, 175, 0.28));
       border-color: #0284c7;
       color: #7dd3fc;
     }
 
+    .tab-btn.codetest-tab { color: #34d399; border-color: rgba(16, 185, 129, 0.22); background: rgba(16, 185, 129, 0.06); }
+    .tab-btn.codetest-tab.active { background: rgba(16, 185, 129, 0.18); border-color: rgba(52, 211, 153, 0.55); color: #6ee7b7; box-shadow: 0 2px 12px rgba(16, 185, 129, 0.2); }
+
+    .tab-btn.imagegen-tab { color: #d8b4fe; }
+    .tab-btn.imagegen-tab.active { background: rgba(168, 85, 247, 0.18); border-color: rgba(192, 132, 252, 0.55); color: #f3e8ff; }
+
+    .tab-btn.videogen-tab { color: #38bdf8; border-color: rgba(56, 189, 248, 0.22); background: rgba(56, 189, 248, 0.06); }
+    .tab-btn.videogen-tab.active { background: rgba(56, 189, 248, 0.18); border-color: rgba(56, 189, 248, 0.55); color: #bae6fd; box-shadow: 0 2px 12px rgba(56, 189, 248, 0.22); }
+
+    .tab-btn.flashcards-tab { color: #c4b5fd; border-color: rgba(139, 92, 246, 0.22); background: rgba(139, 92, 246, 0.06); }
+    .tab-btn.flashcards-tab.active { background: rgba(139, 92, 246, 0.2); border-color: rgba(167, 139, 250, 0.55); color: #ede9fe; box-shadow: 0 2px 12px rgba(139, 92, 246, 0.22); }
+
     /* КАРТОЧКИ */
     .glass-card {
-      background: var(--card-bg);
+      background: linear-gradient(180deg, rgba(20, 24, 36, 0.94), rgba(14, 17, 26, 0.96));
       border: 1px solid var(--card-border);
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 24px;
       margin-bottom: 20px;
-      transition: border-color 0.2s ease;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
     }
 
     .glass-card:hover { border-color: var(--card-hover-border); }
@@ -1079,13 +1111,13 @@
     }
     .py-verdict-box.success {
       background: rgba(16, 185, 129, 0.1);
-      border: 1px solid #10b981;
-      color: #a7f3d0;
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #d1fae5;
     }
     .py-verdict-box.advice {
-      background: rgba(14, 165, 233, 0.1);
-      border: 1px solid #38bdf8;
-      color: #bae6fd;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fde68a;
     }
 
     /* ====================================================
@@ -1176,13 +1208,6 @@
       color: #fca5a5;
     }
 
-    /* БЫСТРЫЕ ПОДСКАЗКИ */
-    /* flex wrap chips */
-      flex-wrap: wrap;
-      gap: 7px;
-      scrollbar-width: thin;
-      min-width: 0;
-    }
     .py-snippet-label {
       font-size: 11px;
       color: var(--text-dim);
@@ -3932,6 +3957,10 @@
       font-size: 14px !important;
       line-height: 1.65 !important;
       box-shadow: 0 4px 16px rgba(0,0,0,0.3) !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      overflow-wrap: break-word !important;
+      word-break: break-word !important;
     }
 
     /* Исправление сниппетов терминала — чистый wrap без кривого горизонтального скролла */
@@ -5145,11 +5174,12 @@
   <!-- ВКЛАДКИ -->
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('create')">✍️ Создать тест</button>
-    <button class="tab-btn teacher-tab" style="background:rgba(234,179,8,0.15);border:1px solid rgba(234,179,8,0.45);color:#fde047;font-weight:700;" onclick="switchTab('teacher')">📖 Кабинет учителя (А4 · 2 варианта)</button>
-        <button class="tab-btn python-tab" onclick="switchTab('python')">🐍 Python с нуля</button>
-    <button class="tab-btn codetest-tab" id="tabBtnCodeTest" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.45);color:#34d399;font-weight:700;" onclick="switchTab('codetest')">💻 Практика Кода (Тест)</button>
+    <button class="tab-btn teacher-tab" onclick="switchTab('teacher')">📖 Кабинет учителя (А4 · 2 варианта)</button>
+    <button class="tab-btn python-tab" onclick="switchTab('python')">🐍 Python с нуля</button>
+    <button class="tab-btn codetest-tab" id="tabBtnCodeTest" onclick="switchTab('codetest')">💻 Практика Кода (Тест)</button>
     <button class="tab-btn imagegen-tab" id="tabBtnImageGen" onclick="switchTab('imagegen')">🎨 Нейро-Арт</button>
-    <button class="tab-btn videogen-tab" id="tabBtnVideoGen" style="background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.45);color:#38bdf8;font-weight:700;" onclick="switchTab('videogen')">🎬 Генератор видео</button>
+    <button class="tab-btn videogen-tab" id="tabBtnVideoGen" onclick="switchTab('videogen')">🎬 Генератор видео</button>
+    <button class="tab-btn flashcards-tab" id="tabBtnFlashcards" onclick="switchTab('flashcards')">🎴 Карточки</button>
     <button class="tab-btn" onclick="switchTab('chat')">💬 ИИ-Ассистент</button>
     <button class="tab-btn" onclick="switchTab('mistakes')">📓 Ошибки (<span id="mistakesBadgeCount">0</span>)</button>
     <button class="tab-btn" onclick="switchTab('profile')">👤 Профиль</button>
@@ -5261,7 +5291,7 @@
               <span style="font-size:11px;color:#34d399;font-weight:700;display:flex;align-items:center;gap:4px;">
                 ⭐ Выбор автора: <b>qwen3.5:9b</b>
               </span>
-              <button type="button" class="preset-btn" onclick="showTab('settings')" style="font-size:10.5px;padding:2px 8px;border-radius:6px;">
+              <button type="button" class="preset-btn" onclick="switchTab('settings')" style="font-size:10.5px;padding:2px 8px;border-radius:6px;">
                 ⚙️ Добавить свою
               </button>
             </div>
@@ -5813,7 +5843,7 @@
         </div>
       </div>
       <div class="progress-bar-wrap"><div id="progressFill" class="progress-bar-fill"></div></div>
-      <div id="quizSourcesBadge" style="display:none;margin:12px 0;padding:10px 14px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.35);border-radius:12px;font-size:12px;color:#7dd3fc;display:none;align-items:center;gap:8px;flex-wrap:wrap;">
+      <div id="quizSourcesBadge" style="display:none;margin:12px 0;padding:10px 14px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.35);border-radius:12px;font-size:12px;color:#7dd3fc;align-items:center;gap:8px;flex-wrap:wrap;">
         <span>🌐 <b>Факты проверены по 3-4 сайтам в интернете:</b></span>
         <span id="quizSourcesLinks" style="display:inline-flex;gap:8px;flex-wrap:wrap;"></span>
       </div>
@@ -5928,8 +5958,152 @@
   </div>
 
   <!-- ВКЛАДКА: УМНЫЕ КАРТОЧКИ ДЛЯ ИНТЕРВАЛЬНОГО ПОВТОРЕНИЯ (V2) -->
-    <!-- ВКЛАДКА: НЕЙРО-АРТ (ГЕНЕРАТОР ИЗОБРАЖЕНИЙ FLUX) -->
-    <!-- ВКЛАДКА: ПРАКТИЧЕСКИЙ КОД-ТЕСТ ПО ПРОЙДЕННЫМ ТЕМАМ PYTHON -->
+  <div id="tabFlashcards" style="display:none;">
+    <div class="glass-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+        <div>
+          <div class="card-title">🎴 Умные флеш-карточки (3D & Мнемоники)</div>
+          <div class="card-subtitle">Тренируй ключевые понятия, просматривай шпаргалку или генерируй колоды по любой теме. Горячие клавиши: Space (переворот), ← / → (навигация), 1 (повторить), 2 (знаю).</div>
+        </div>
+        <div class="fc-header-stats">
+          <span class="fc-stat-chip" style="color:#34d399;">✅ Выучено: <b id="fcMasteredCount">0</b></span>
+          <span class="fc-stat-chip" style="color:#fbbf24;">🟡 Осталось: <b id="fcRemainingCount">0</b></span>
+          <span class="fc-stat-chip" style="color:#60a5fa;">📊 Прогресс: <b id="fcProgressPercent">0%</b></span>
+        </div>
+      </div>
+
+      <div class="fc-progress-wrap">
+        <div class="fc-progress-fill" id="fcProgressFill"></div>
+      </div>
+
+      <!-- Выбор колоды -->
+      <div class="deck-selector">
+        <button type="button" class="deck-chip active" id="chipDeckPython" onclick="selectDeck('python')">🐍 Python Core & Pro</button>
+        <button type="button" class="deck-chip" id="chipDeckLiterature" onclick="selectDeck('literature')">📚 Русская классика</button>
+        <button type="button" class="deck-chip" id="chipDeckPhysics" onclick="selectDeck('physics')">⚛️ Физика & Наука</button>
+        <button type="button" class="deck-chip" id="chipDeckHistory" onclick="selectDeck('history')">🌍 Общество & История</button>
+        <button type="button" class="deck-chip" id="chipDeckCustom" onclick="selectDeck('custom')">✨ Мои карточки</button>
+      </div>
+
+      <!-- Переключатель режимов карточек -->
+      <div class="fc-nav-tabs">
+        <button type="button" class="fc-tab-btn active" id="fcModeBtnTrain" onclick="setFlashcardMode('train')">🎯 Тренировка 3D</button>
+        <button type="button" class="fc-tab-btn" id="fcModeBtnList" onclick="setFlashcardMode('list')">📋 Список и шпаргалка</button>
+        <button type="button" class="fc-tab-btn" id="fcModeBtnCreate" onclick="setFlashcardMode('create')">➕ Создать / ИИ</button>
+        <span class="deck-stats-badge" id="fcActiveDeckTitle" style="margin-left:auto;">🐍 Python Core & Pro</span>
+      </div>
+
+      <!-- РЕЖИМ 1: ТРЕНИРОВКА -->
+      <div id="fcTrainSection">
+        <div class="fc-controls-bar">
+          <div style="font-size:12.5px;color:var(--text-muted);">Кликни по карточке или нажми <kbd style="background:#1e293b;padding:2px 6px;border-radius:4px;border:1px solid #334155;">Space</kbd>, чтобы увидеть ответ</div>
+          <div class="fc-subactions">
+            <button type="button" class="fc-sub-btn" onclick="shuffleCurrentDeck()">🔀 Перемешать</button>
+            <button type="button" class="fc-sub-btn" onclick="resetCurrentDeckProgress()">↺ Сбросить прогресс</button>
+          </div>
+        </div>
+
+        <div id="fcCardView" class="fc-scene-container">
+          <div class="flashcard-scene" onclick="flipCurrentCard()">
+            <div class="flashcard-card" id="activeFlashcard">
+              <div class="flashcard-face flashcard-front">
+                <div class="card-top-bar">
+                  <span class="card-category-tag" id="fcFrontCategory">🐍 Python Core</span>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <span id="fcCardStatusBadge" style="font-size:11px;padding:2px 8px;border-radius:6px;font-weight:700;">🟡 Учу</span>
+                    <button type="button" class="fc-sub-btn" onclick="event.stopPropagation(); speakActiveCardFront(this)" title="Озвучить вопрос">🔊</button>
+                    <span class="card-counter" id="fcCardCounter">1 / 1</span>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="card-question" id="fcFrontText">Загрузка карточки...</div>
+                </div>
+                <div class="card-bottom-hint">↻ Нажми, чтобы перевернуть карточку</div>
+              </div>
+
+              <div class="flashcard-face flashcard-back">
+                <div class="card-top-bar">
+                  <span class="card-category-tag" style="background:rgba(16,185,129,0.16);border-color:#10b981;color:#6ee7b7;">💡 Ответ и разбор</span>
+                  <button type="button" class="fc-sub-btn" onclick="event.stopPropagation(); speakActiveCardBack(this)" title="Озвучить ответ">🔊 Озвучить</button>
+                </div>
+                <div class="card-body" style="justify-content:flex-start;overflow-y:auto;">
+                  <div class="card-answer" id="fcBackText">...</div>
+                  <div class="card-mnemonic" id="fcMnemonicBox" style="display:none;">
+                    🐱 <b>Мнемоника:</b> <span id="fcMnemonicText"></span>
+                  </div>
+                </div>
+                <div class="card-bottom-hint">↻ Кликни снова, чтобы вернуться к вопросу</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fc-actions-row">
+            <button type="button" class="fc-act-btn fc-btn-flip" onclick="prevFlashcard()">← Назад</button>
+            <button type="button" class="fc-act-btn fc-btn-repeat" onclick="markCardRepeat()">🔁 Повторить позже (1)</button>
+            <button type="button" class="fc-act-btn fc-btn-flip" onclick="flipCurrentCard()">🔄 Перевернуть</button>
+            <button type="button" class="fc-act-btn fc-btn-know" onclick="markCardMastered()">✅ Знаю отлично! (2)</button>
+            <button type="button" class="fc-act-btn fc-btn-flip" onclick="nextFlashcard()">Вперёд →</button>
+          </div>
+        </div>
+
+        <div id="fcVictoryScreen" class="fc-victory-card" style="display:none;">
+          <div style="font-size:48px;margin-bottom:10px;">🏆</div>
+          <div class="fc-victory-title">Вся колода освоена на 100%!</div>
+          <div class="fc-victory-desc">Отличная работа! Все карточки этой темы отмечены как изученные. Выбери другую колоду или повтори заново.</div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button type="button" class="btn-primary" onclick="resetCurrentDeckProgress()">🔄 Повторить колоду заново</button>
+            <button type="button" class="btn-secondary" onclick="setFlashcardMode('list')">📋 Открыть список шпаргалкой</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- РЕЖИМ 2: СПИСОК И ШПАРГАЛКА -->
+      <div id="fcListSection" style="display:none;">
+        <div class="fc-list-filters">
+          <input type="text" id="fcListSearch" class="fc-search-input" placeholder="🔍 Поиск по вопросу, ответу или мнемонике..." oninput="filterFlashcardsList()">
+          <button type="button" class="fc-filter-btn active" id="fcFilterAll" onclick="setFlashcardListFilter('all')">Все (<span id="fcFilterCountAll">0</span>)</button>
+          <button type="button" class="fc-filter-btn" id="fcFilterLearning" onclick="setFlashcardListFilter('learning')">🟡 На изучении (<span id="fcFilterCountLearning">0</span>)</button>
+          <button type="button" class="fc-filter-btn" id="fcFilterMastered" onclick="setFlashcardListFilter('mastered')">🟢 Выучено (<span id="fcFilterCountMastered">0</span>)</button>
+        </div>
+        <div class="fc-list-grid" id="fcListGrid"></div>
+      </div>
+
+      <!-- РЕЖИМ 3: СОЗДАНИЕ СВОИХ КАРТОЧЕК / ИИ-ГЕНЕРАЦИЯ -->
+      <div id="fcCreateSection" style="display:none;">
+        <div class="fc-create-box">
+          <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;">✨ ИИ-генерация колоды по теме</div>
+          <div class="fc-generate-bar">
+            <input type="text" id="fcTopicInput" class="fc-input" placeholder="Например: Лирика Пушкина, Декораторы в Python, Законы Ньютона...">
+            <button type="button" id="fcGenBtn" class="fc-gen-btn" onclick="generateAiFlashcards()">✨ Сгенерировать</button>
+          </div>
+        </div>
+
+        <div class="fc-create-box">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+            <div style="font-size:14px;font-weight:700;color:#fff;">➕ Добавить карточку вручную</div>
+            <button type="button" class="fc-sub-btn" onclick="clearCustomDeck()" style="color:#f87171;border-color:rgba(239,68,68,0.35);">🗑️ Очистить «Мои карточки»</button>
+          </div>
+          <div class="fc-create-grid">
+            <div>
+              <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:6px;">Лицевая сторона (вопрос / термин):</label>
+              <textarea id="fcNewFront" class="fc-input" style="height:90px;width:100%;" placeholder="Что делает функция zip() в Python?"></textarea>
+            </div>
+            <div>
+              <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:6px;">Обратная сторона (ответ / определение):</label>
+              <textarea id="fcNewBack" class="fc-input" style="height:90px;width:100%;" placeholder="Объединяет несколько коллекций поэлементно в кортежи."></textarea>
+            </div>
+          </div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:6px;">Мнемоника / ассоциация (необязательно):</label>
+            <input type="text" id="fcNewMnemonic" class="fc-input" style="width:100%;" placeholder="Представь застёжку-молнию (zipper), которая соединяет две стороны!">
+          </div>
+          <button type="button" class="btn-primary" onclick="addManualFlashcard()">💾 Сохранить в «Мои карточки» (+20 XP)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ВКЛАДКА: ПРАКТИЧЕСКИЙ КОД-ТЕСТ ПО ПРОЙДЕННЫМ ТЕМАМ PYTHON -->
   <div id="tabCodeTest" style="display:none;">
     <div class="glass-card">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
@@ -6251,18 +6425,18 @@
           <div class="comfy-minimax-box">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;">
               <div>
-                <div style="font-weight:700;font-size:14px;color:#f8fafc;display:flex;align-items:center;gap:8px;">
+                <div style="font-weight:700;font-size:14px;color:#f8fafc;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                   <span>🖥️ Твоя локальная видео-студия на видеокарте NVIDIA RTX 4060 (8 ГБ VRAM)</span>
-                  <span style="font-size:11px;padding:3px 9px;border-radius:6px;background:#059669;color:#fff;font-weight:700;">🟢 ComfyUI активен (порт 8188)</span>
+                  <span id="comfyUiStatusBadge" style="font-size:11px;padding:3px 9px;border-radius:6px;background:rgba(148,163,184,0.2);border:1px solid rgba(148,163,184,0.35);color:#cbd5e1;font-weight:700;">⚪ Проверка ComfyUI (8188)...</span>
                 </div>
                 <div style="font-size:12px;color:#94a3b8;margin-top:4px;">
-                  Рендеринг на твоем компьютере <b>без ограничений по времени, без очередей и без интернета</b>:
+                  Локальный рендер через ComfyUI (без интернета) и fallback-генератор видео на сервере 5005:
                 </div>
                 <div class="minimax-badge-row" style="margin-top:8px;">
-                  <span class="minimax-badge" title="Умная замена персонажей и лиц без искажений">💎 LoRA v1.5 (155 Мб) ✅ Установлена</span>
-                  <span class="minimax-badge" title="Турбо-ускоритель: генерирует видео всего за 8 шагов вместо 50">⚡ Turbo 8-step (1.86 Гб) ✅ Установлен</span>
-                  <span class="minimax-badge" title="Готовые схемы соединения блоков для ComfyUI">📐 H3 Relay Workflows ✅ В наличии</span>
-                  <span class="minimax-badge" id="baseModelStatusBadge" title="Базовые веса модели MiniMax">💾 Base Model Suite (фон ~50%)</span>
+                  <span class="minimax-badge" id="loraStatusBadge" title="Умная замена персонажей и лиц без искажений">💎 LoRA v1.5: проверка...</span>
+                  <span class="minimax-badge" id="turboStatusBadge" title="Турбо-ускоритель: генерирует видео всего за 8 шагов вместо 50">⚡ Turbo 8-step: проверка...</span>
+                  <span class="minimax-badge" id="workflowsStatusBadge" title="Готовые схемы соединения блоков для ComfyUI">📐 H3 Workflows: проверка...</span>
+                  <span class="minimax-badge" id="baseModelStatusBadge" title="Базовые веса модели MiniMax/SVD">💾 Base Model: проверка...</span>
                 </div>
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -6439,8 +6613,7 @@
               </label>
             </div>
           </div>
-        </div>
-        <!-- Кнопка генерации видео -->
+          <!-- Кнопка генерации видео -->
           <div style="margin-top:18px;">
             <button type="button" id="btnGenerateVideo" class="btn-generate-art" onclick="startGenerateVideo()" style="background:linear-gradient(135deg, #0284c7, #7c3aed);">
               <span class="spinner" id="btnVideoSpinner" style="display:none;width:18px;height:18px;border-width:2px;margin-right:8px;"></span>
@@ -6501,7 +6674,6 @@
               <!-- Заполняется динамически -->
             </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -6951,7 +7123,7 @@
     </div>
 
     <div class="footer-tips">
-      <div class="footer-tip">🔒 100% Офлайн</div>
+      <div class="footer-tip" id="footerNetStatus">🌐 Проверка сети...</div>
       <div class="footer-tip">🧠 Модель: <span id="footerModel" style="color:#c4b5fd;margin-left:3px;">qwen2.5:7b</span></div>
       <div class="footer-tip">💾 Сохранение локально</div>
     </div>
@@ -7365,44 +7537,6 @@
     window.speechSynthesis.onvoiceschanged = populateVoiceList;
     setTimeout(populateVoiceList, 150);
   }
-
-function initAiProviderSettings() {
-    const savedProv = safeStorageGet('quiz_ai_provider', 'ollama');
-    const savedHost = safeStorageGet('quiz_custom_host', 'http://localhost:11434');
-    const savedCustomModel = safeStorageGet('quiz_custom_model', '');
-    const savedEp = safeStorageGet('quiz_api_endpoint', 'https://api.groq.com/openai/v1/chat/completions');
-    const savedModel = safeStorageGet('quiz_api_model', 'llama-3.3-70b-versatile');
-    const savedKey = safeStorageGet('quiz_api_key', '');
-
-    const hostInp = document.getElementById('ollamaHost');
-    const custModInp = document.getElementById('customModelInput');
-    const epInp = document.getElementById('apiEndpointInput');
-    const modInp = document.getElementById('apiModelInput');
-    const keyInp = document.getElementById('apiKeyInput');
-
-    if (hostInp && savedHost) hostInp.value = savedHost;
-    if (custModInp && savedCustomModel) custModInp.value = savedCustomModel;
-    if (epInp && savedEp) epInp.value = savedEp;
-    if (modInp && savedModel) modInp.value = savedModel;
-    if (keyInp && savedKey) keyInp.value = savedKey;
-
-    if (savedCustomModel) {
-      const sel = document.getElementById('modelSelect');
-      if (sel) {
-        const opt = new Option(`⚡ ${savedCustomModel} (Кастомная модель)`, savedCustomModel, true, true);
-        sel.add(opt, 0);
-        sel.value = savedCustomModel;
-      }
-    }
-
-    const savedSysPrompt = safeStorageGet('quiz_custom_system_prompt', DEFAULT_AI_SYSTEM_PROMPT);
-    const sysPromptEl = document.getElementById('customSystemPromptInput');
-    if (sysPromptEl) sysPromptEl.value = savedSysPrompt;
-    populateVoiceList();
-
-    switchAiProvider(savedProv);
-  }
-
 
   // ==========================================================
   //  🛡️ СИСТЕМНЫЙ ПРОМПТ ПО УМОЛЧАНИЮ ДЛЯ КАСТОМНЫХ МОДЕЛЕЙ (v1.2+)
@@ -8577,15 +8711,22 @@ function initAiProviderSettings() {
   // ==========================================================
   function changeAppFont(fontName) {
     let fontRule = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+    let activeBtnId = 'btnFontInter';
     if (fontName === 'Manrope') {
       fontRule = "'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      activeBtnId = 'btnFontManrope';
     } else if (fontName === 'System') {
       fontRule = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      activeBtnId = 'btnFontSystem';
     } else if (fontName === 'JetBrains Mono') {
       fontRule = "'JetBrains Mono', monospace";
+      activeBtnId = 'btnFontJetBrainsMono';
     }
     document.documentElement.style.setProperty('--app-font-family', fontRule);
     document.body.style.fontFamily = fontRule;
+    document.querySelectorAll('.font-select-btn').forEach(btn => btn.classList.remove('active'));
+    const activeBtn = document.getElementById(activeBtnId);
+    if (activeBtn) activeBtn.classList.add('active');
     try { localStorage.setItem('quizgen_selected_font', fontName); } catch(e) {}
   }
 
@@ -8594,8 +8735,6 @@ function initAiProviderSettings() {
       const saved = localStorage.getItem('quizgen_selected_font');
       if (saved) {
         changeAppFont(saved);
-        const fontSel = document.getElementById('appFontSelect');
-        if (fontSel) fontSel.value = saved;
       }
     } catch(e) {}
   }
@@ -8970,75 +9109,95 @@ function initAiProviderSettings() {
     return code;
   }
 
-  function formatVerdictMarkdown(text) {
-    if (!text) return '';
+  function _renderVerdictMarkdownBody(raw, codeColor = '#f1f5f9') {
+    if (!raw) return '';
+    let text = String(raw).replace(/\r\n/g, '\n');
 
-    // 1. Извлекаем блок <spoiler>...</spoiler>, если он есть
-    let spoilerContent = '';
-    const spMatch = text.match(/<spoiler>([\s\S]*?)<\/spoiler>/i);
-    if (spMatch) {
-      spoilerContent = spMatch[1].trim();
-      text = text.replace(/<spoiler>[\s\S]*?<\/spoiler>/gi, '').trim();
-    }
-
-    // 2. Временно защищаем блоки кода ```python ... ```
+    // 1. Защищаем закрытые и незакрытые блоки кода ```...```
     const codeBlocks = [];
-    text = text.replace(/```(?:python)?\s*([\s\S]*?)```/gi, function(match, code) {
+    text = text.replace(/```[a-zA-Z0-9_\-#+]*\n?([\s\S]*?)```/gi, function(match, code) {
       const idx = codeBlocks.length;
       codeBlocks.push(code.trim());
-      return `__CODE_BLOCK_${idx}__`;
+      return `§§§CODEBLOCK_${idx}§§§`;
+    });
+    text = text.replace(/```[a-zA-Z0-9_\-#+]*\n([\s\S]+)$/gi, function(match, code) {
+      const idx = codeBlocks.length;
+      codeBlocks.push(code.trim());
+      return `§§§CODEBLOCK_${idx}§§§`;
     });
 
-    // 3. Заголовки
-    text = text.replace(/^###\s*(.*?)$/gm, '<h4 style="margin:12px 0 6px 0;color:#38bdf8;font-size:14px;font-weight:700;">$1</h4>');
-    text = text.replace(/^##\s*(.*?)$/gm, '<h3 style="margin:14px 0 8px 0;color:#67e8f9;font-size:15px;font-weight:700;">$1</h3>');
+    // 2. Защищаем инлайн-код `...`
+    const inlineCodes = [];
+    text = text.replace(/`([^`\n]+)`/g, function(match, code) {
+      const idx = inlineCodes.length;
+      inlineCodes.push(code);
+      return `§§§INLINECODE_${idx}§§§`;
+    });
 
-    // 4. Жирный и курсив
+    // 3. Безопасно экранируем HTML в остальном тексте
+    text = escH(text);
+
+    // 4. Заголовки ###, ##, #, ####
+    text = text.replace(/^\s*#{1,4}\s+(.+)$/gm, '<h4 style="margin:12px 0 6px 0;color:#38bdf8;font-size:14px;font-weight:700;">$1</h4>');
+
+    // 5. Жирный и курсив
     text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#f1f5f9;">$1</strong>');
-    text = text.replace(/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
-
-    // 5. Инлайн-код
-    text = text.replace(/`([^`\n]+)`/g, '<code style="background:rgba(56,189,248,0.12);color:#38bdf8;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:12.5px;">$1</code>');
+    text = text.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
 
     // 6. Списки
     text = text.replace(/^\s*[-*•]\s+(.*?)$/gm, '<div style="padding-left:14px;margin:3px 0;">• $1</div>');
     text = text.replace(/^\s*(\d+)\.\s+(.*?)$/gm, '<div style="padding-left:14px;margin:3px 0;">$1. $2</div>');
 
-    // 7. Восстанавливаем блоки кода
-    for (let i = 0; i < codeBlocks.length; i++) {
-      const escCode = escH(codeBlocks[i]);
-      const htmlBlock = `<pre style="background:#090d16;padding:12px 14px;border-radius:8px;border:1px solid #1e293b;color:#f1f5f9;font-family:monospace;font-size:13px;line-height:1.5;overflow-x:auto;margin:10px 0;"><code>${escCode}</code></pre>`;
-      text = text.replace(`__CODE_BLOCK_${i}__`, htmlBlock);
+    // 7. Переносы строк вне pre-блоков
+    text = text.replace(/\n{3,}/g, '\n\n').replace(/\n/g, '<br>');
+    text = text.replace(/<br>\s*(<(?:h4|div) )/g, '$1');
+    text = text.replace(/(<\/(?:h4|div)>)\s*<br>/g, '$1');
+
+    // 8. Возвращаем инлайн-код и блоки кода
+    inlineCodes.forEach((code, idx) => {
+      text = text.replace(`§§§INLINECODE_${idx}§§§`, `<code style="background:rgba(56,189,248,0.12);color:#38bdf8;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12.5px;">${escH(code)}</code>`);
+    });
+    codeBlocks.forEach((code, idx) => {
+      text = text.replace(`§§§CODEBLOCK_${idx}§§§`, `<pre style="background:#090d16;padding:12px 14px;border-radius:8px;border:1px solid #1e293b;color:${codeColor};font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.5;overflow-x:auto;margin:10px 0;"><code>${escH(code)}</code></pre>`);
+    });
+
+    return text;
+  }
+
+  function formatVerdictMarkdown(text) {
+    if (!text) return '';
+    let mainText = String(text).replace(/\r\n/g, '\n');
+
+    // 1. Извлекаем блок <spoiler>...</spoiler> (включая случай незакрытого тега при обрезке)
+    let spoilerContent = '';
+    const spMatch = mainText.match(/<spoiler>([\s\S]*?)(?:<\/spoiler>|$)/i);
+    if (spMatch) {
+      spoilerContent = spMatch[1].trim();
+      mainText = mainText.replace(/<spoiler>[\s\S]*?(?:<\/spoiler>|$)/gi, '').trim();
     }
 
-    // 8. Переносы строк вне pre-тегов
-    const preParts = text.split('<pre');
-    let res = preParts[0].replace(/\n/g, '<br>');
-    for (let i = 1; i < preParts.length; i++) {
-      const sub = preParts[i].split('</pre>');
-      res += '<pre' + sub[0] + '</pre>';
-      if (sub[1]) {
-        res += sub[1].replace(/\n/g, '<br>');
-      }
-    }
-    text = res.replace(/(?:<br>\s*){3,}/g, '<br><br>');
+    let html = _renderVerdictMarkdownBody(mainText, '#f1f5f9');
 
-    // 9. Добавляем блок-спойлер внизу
+    // 2. Добавляем блок-спойлер внизу; если внутри спойлера есть ```python или текст — красиво форматируем
     if (spoilerContent) {
-      const escSpoiler = escH(spoilerContent);
-      text += `
+      const hasMarkdownInSpoiler = /```|^\s*#{1,4}\s|\*\*/m.test(spoilerContent);
+      const renderedSpoiler = hasMarkdownInSpoiler
+        ? _renderVerdictMarkdownBody(spoilerContent, '#34d399')
+        : `<pre style="background:#090d16;padding:12px 14px;border-radius:8px;border:1px solid #1e293b;color:#34d399;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.5;overflow-x:auto;"><code>${escH(spoilerContent)}</code></pre>`;
+
+      html += `
         <div class="py-verdict-spoiler-wrap" style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);">
           <button type="button" class="btn-spoiler-toggle" onclick="toggleVerdictSpoiler(this)" style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);color:#38bdf8;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
             <span>👁️ Показать подсказку с кодом решения</span>
           </button>
           <div class="py-verdict-spoiler-content" style="display:none;margin-top:10px;">
-            <pre style="background:#090d16;padding:12px 14px;border-radius:8px;border:1px solid #1e293b;color:#34d399;font-family:monospace;font-size:13px;line-height:1.5;overflow-x:auto;"><code>${escSpoiler}</code></pre>
+            ${renderedSpoiler}
           </div>
         </div>
       `;
     }
 
-    return text;
+    return html;
   }
 
   async function checkPythonSolution() {
@@ -9111,8 +9270,17 @@ ${codeSnippet}
       if (!resp.ok) throw new Error(`Ollama статус: ${resp.status}`);
       const data = await resp.json();
       const reply = data.response || '';
-
-      const isSuccess = reply.includes('🎉') || reply.toLowerCase().includes('отлично') || reply.toLowerCase().includes('правильно') || reply.toLowerCase().includes('справился') || reply.toLowerCase().includes('решен верно') || reply.toLowerCase().includes('решён верно');
+      const lowerReply = reply.toLowerCase();
+      const hasNegativeOrSpoiler =
+        /<spoiler>/i.test(reply) ||
+        /(?:\bошибк|\bневерн|\bнеправильн|\bне\s+работ|\bнужно\s+исправ|\bне\s+хватает|\bсинтаксическ)/i.test(lowerReply) ||
+        reply.includes('⚠️') ||
+        reply.includes('❌') ||
+        reply.includes('🚫');
+      const hasExplicitSuccess =
+        /реш[её]н[аоы]?\s+верно|задание\s+выполнено\s+верно|всё\s+верно|все\s+верно/i.test(lowerReply) ||
+        (/🎉\s*отлично/i.test(reply) && !hasNegativeOrSpoiler);
+      const isSuccess = hasExplicitSuccess && !hasNegativeOrSpoiler;
 
       vBox.className = `py-verdict-box ${isSuccess ? 'success' : 'advice'}`;
       vBox.innerHTML = formatVerdictMarkdown(reply);
@@ -9503,46 +9671,58 @@ ${codeSnippet}
     const { userCode, rawMsg, diag } = lastDiagnosedError;
 
     try {
-      const resp = await fetch(`${BRIDGE_HOST}/api/analyze_code_error`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          code: userCode,
-          error: rawMsg,
-          line: diag.lineCode
-        })
-      });
+      let analysis = '';
+      if (hasLocalBridge) {
+        try {
+          const resp = await fetch(`${BRIDGE_HOST}/api/analyze_code_error`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              code: userCode,
+              error: rawMsg,
+              line: diag.lineCode
+            })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            analysis = data.analysis || '';
+          }
+        } catch(e) {}
+      }
 
-      if (!resp.ok) throw new Error(`HTTP Error ${resp.status}`);
-      const data = await resp.json();
-      const analysis = data.analysis || '';
+      if (!analysis && typeof callUnifiedAi === 'function') {
+        const fallbackPrompt = `Объясни новичку ошибку Python без готового ответа сразу, а в конце помести готовое исправление в тег <spoiler>...</spoiler>.\nКод:\n\`\`\`python\n${userCode}\n\`\`\`\nОшибка: ${rawMsg}`;
+        analysis = await callUnifiedAi({ prompt: fallbackPrompt, temperature: 0.3, maxTokens: 1200 });
+      }
+
+      if (!analysis) throw new Error('Не удалось получить разбор ошибки (Ollama / Bridge не отвечают).');
 
       const hintsText = document.getElementById('pyErrHintsText');
       const hintsBox = document.getElementById('pyErrHintsBox');
       const spoilerCode = document.getElementById('pyErrSpoilerCode');
       const spoilerDesc = document.getElementById('pyErrSpoilerDesc');
 
-      if (analysis.includes('<spoiler>')) {
-        const parts = analysis.split(/<\/?spoiler>/);
-        const visibleTutor = parts[0] || '';
-        const hiddenSol = parts[1] || '';
+      if (/<spoiler>/i.test(analysis)) {
+        const spMatch = analysis.match(/<spoiler>([\s\S]*?)(?:<\/spoiler>|$)/i);
+        const visibleTutor = analysis.replace(/<spoiler>[\s\S]*?(?:<\/spoiler>|$)/gi, '').trim();
+        const hiddenSol = spMatch ? spMatch[1].replace(/```[a-z]*\n?|```/gi, '').trim() : '';
 
         if (hintsText) {
-          hintsText.innerHTML = `<div style="border-left:3px solid #6366f1;padding-left:8px;margin-bottom:8px;">${escH(visibleTutor.trim()).replace(/\n/g, '<br>')}</div>`;
+          hintsText.innerHTML = `<div style="border-left:3px solid #6366f1;padding-left:10px;margin-bottom:8px;">${_renderVerdictMarkdownBody(visibleTutor)}</div>`;
         }
         if (hintsBox) hintsBox.style.display = 'block';
-        if (spoilerCode) spoilerCode.textContent = hiddenSol.trim();
-        if (spoilerDesc) spoilerDesc.textContent = '💡 Решение сгенерировано ИИ-тьютором Qwen.';
+        if (spoilerCode && hiddenSol) spoilerCode.textContent = hiddenSol;
+        if (spoilerDesc) spoilerDesc.textContent = '💡 Решение подготовлено ИИ-тьютором.';
       } else {
         if (hintsText) {
-          hintsText.innerHTML = `<div style="border-left:3px solid #6366f1;padding-left:8px;">${escH(analysis.trim()).replace(/\n/g, '<br>')}</div>`;
+          hintsText.innerHTML = `<div style="border-left:3px solid #6366f1;padding-left:10px;">${_renderVerdictMarkdownBody(analysis.trim())}</div>`;
         }
         if (hintsBox) hintsBox.style.display = 'block';
       }
 
       showNotificationToast('🧠 ИИ-тьютор дал подсказку без спойлеров!');
     } catch (err) {
-      alert('Не удалось связаться с сервером qwen_server: ' + err.message);
+      alert('Не удалось получить помощь ИИ-тьютора: ' + err.message);
     } finally {
       if (btn) {
         btn.disabled = false;
@@ -9759,12 +9939,27 @@ ${codeSnippet}
   // ==========================================================
   //  ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
   // ==========================================================
-  function switchTab(tab) {
+  const ALL_MAIN_TAB_IDS = [
+    'tabCreate','tabTeacher','tabPython','tabCodeTest','tabQuiz',
+    'tabResult','tabHistory','tabSettings','tabChat','tabProfile',
+    'tabImageGen','tabFlashcards','tabMistakes'
+  ];
+
+  function hideAllMainTabs() {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    ['tabCreate','tabTeacher','tabPython','tabCodeTest','tabQuiz','tabResult','tabHistory','tabSettings','tabChat','tabProfile','tabImageGen','tabFlashcards','tabMistakes'].forEach(id => {
+    ALL_MAIN_TAB_IDS.forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = 'none';
     });
+  }
+
+  function switchTab(tab) {
+    hideAllMainTabs();
+
+    if (tab !== 'videogen' && typeof minimaxStatusInterval !== 'undefined' && minimaxStatusInterval) {
+      clearInterval(minimaxStatusInterval);
+      minimaxStatusInterval = null;
+    }
 
     const map = {
       create:     ['tabCreate', 0],
@@ -9773,27 +9968,32 @@ ${codeSnippet}
       codetest:   ['tabCodeTest', 3],
       imagegen:   ['tabImageGen', 4],
       videogen:   ['tabImageGen', 5],
-      flashcards: ['tabImageGen', 4],
-      chat:       ['tabChat', 6],
-      mistakes:   ['tabMistakes', 7],
-      profile:    ['tabProfile', 8],
-      history:    ['tabHistory', 9],
-      settings:   ['tabSettings', 10]
+      flashcards: ['tabFlashcards', 6],
+      chat:       ['tabChat', 7],
+      mistakes:   ['tabMistakes', 8],
+      profile:    ['tabProfile', 9],
+      history:    ['tabHistory', 10],
+      settings:   ['tabSettings', 11]
     };
 
     if (map[tab]) {
-      document.getElementById(map[tab][0]).style.display = 'block';
+      const targetEl = document.getElementById(map[tab][0]);
+      if (targetEl) targetEl.style.display = 'block';
       const btns = document.querySelectorAll('.tab-btn');
       if (btns[map[tab][1]]) btns[map[tab][1]].classList.add('active');
     }
 
     if (typeof stopSpeaking === 'function') stopSpeaking();
     if (tab === 'codetest' && typeof initCodeTestTab === 'function') initCodeTestTab();
+    if (tab === 'flashcards') {
+      if (typeof renderFlashcardsUI === 'function') renderFlashcardsUI();
+      if (typeof renderFlashcardsList === 'function' && fcActiveMode === 'list') renderFlashcardsList();
+    }
     if (tab === 'history') renderHistory();
     if (tab === 'profile') renderProfile();
     if (tab === 'videogen') {
       if (typeof switchMediaStudioMode === 'function') switchMediaStudioMode('video');
-    } else if (tab === 'imagegen' || tab === 'flashcards') {
+    } else if (tab === 'imagegen') {
       if (typeof switchMediaStudioMode === 'function') switchMediaStudioMode('photo');
       if (typeof renderImageGalleryUI === 'function') renderImageGalleryUI();
     }
@@ -10872,11 +11072,7 @@ function addManualFlashcard() {
     hintsUsedCount = 0;
     quizStartTime = Date.now();
 
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    ['tabCreate','tabPython','tabResult','tabHistory','tabSettings','tabChat','tabProfile','tabFlashcards','tabMistakes'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.display = 'none';
-    });
+    hideAllMainTabs();
     document.getElementById('tabQuiz').style.display = 'block';
     document.getElementById('quizTitle').textContent = currentQuiz.title;
 
@@ -11064,67 +11260,115 @@ function addManualFlashcard() {
   }
 
   let hasInternetBridge = false;
+  let hasLocalBridge = false;
+  let isCheckingBridge = false;
+  let lastBridgeCheckTs = 0;
   const BRIDGE_HOST = 'http://localhost:5005';
 
-  async function checkBridge() {
+  function _setNetworkPillState(isOnline, labelText, tooltipText, footerText) {
+    const statusEl = document.getElementById('bridgeStatus');
+    const textEl   = document.getElementById('bridgeText');
+    const footerEl = document.getElementById('footerNetStatus');
+    if (statusEl && textEl) {
+      statusEl.className = `status-pill ${isOnline ? 'online' : 'offline'}`;
+      textEl.textContent = labelText;
+      statusEl.title = tooltipText;
+    }
+    if (footerEl && footerText) {
+      footerEl.textContent = footerText;
+    }
+  }
+
+  async function checkBridge(silent = false) {
+    if (isCheckingBridge) return;
     const statusEl = document.getElementById('bridgeStatus');
     const textEl   = document.getElementById('bridgeText');
     if (!statusEl || !textEl) return;
 
-    // 1. Проверяем системное подключение ПК к сети navigator.onLine
     const browserOnline = typeof navigator.onLine === 'boolean' ? navigator.onLine : true;
     if (!browserOnline) {
       hasInternetBridge = false;
-      statusEl.className = 'status-pill offline';
-      textEl.textContent = '🌐 Сеть: Офлайн';
-      statusEl.title = 'Кабель или Wi-Fi отключён. Приложение и локальный ИИ работают автономно (офлайн)!';
+      hasLocalBridge = false;
+      lastBridgeCheckTs = Date.now();
+      _setNetworkPillState(
+        false,
+        '🌐 Интернет: Офлайн',
+        'Системная сеть отключена. Локальные уроки, карточки и Ollama работают офлайн.',
+        '🔒 Офлайн (ИИ локально)'
+      );
       return;
     }
 
-    textEl.textContent = '🌐 Проверка сети...';
-    statusEl.className = 'status-pill';
+    isCheckingBridge = true;
+    if (!silent) {
+      textEl.textContent = '🌐 Проверка сети...';
+      statusEl.className = 'status-pill';
+    }
 
     try {
       const ctrl = new AbortController();
-      const tid = setTimeout(() => ctrl.abort(), 2000);
-      const resp = await fetch(`${BRIDGE_HOST}/api/status`, { signal: ctrl.signal });
+      const tid = setTimeout(() => ctrl.abort(), 3200);
+      const resp = await fetch(`${BRIDGE_HOST}/api/status?t=${Date.now()}`, {
+        signal: ctrl.signal,
+        cache: 'no-store'
+      });
       clearTimeout(tid);
 
       if (!resp.ok) throw new Error('Bridge status not ok');
       const data = await resp.json();
+      hasLocalBridge = true;
+      lastBridgeCheckTs = Date.now();
 
-      // Честная проверка: интернет есть, только если сервер подтвердил доступ во внешнюю сеть
-      if (data.internet_online) {
+      // Честная проверка: интернет есть ТОЛЬКО если внешний HTTP/HTTPS-зонд реально ответил
+      if (data.internet_online === true) {
         hasInternetBridge = true;
-        statusEl.className = 'status-pill online';
-        textEl.textContent = '🌐 Интернет: Онлайн';
-        statusEl.title = 'Интернет активен! ReAct веб-поиск и актуальные факты подключены.';
+        _setNetworkPillState(
+          true,
+          '🌐 Интернет: Онлайн',
+          'Интернет подтверждён (HTTP/HTTPS). ReAct веб-поиск и генерация медиа активны.',
+          '🌐 Онлайн + Поиск в сети'
+        );
       } else {
         hasInternetBridge = false;
-        statusEl.className = 'status-pill offline';
-        textEl.textContent = '🌐 Сеть: Офлайн (ИИ локально)';
-        statusEl.title = 'Сервер запущен, но реального выхода в интернет нет. ИИ отвечает строго из локальной памяти (офлайн).';
+        _setNetworkPillState(
+          false,
+          '🌐 Интернет: Офлайн',
+          'Локальный сервер работает (порт 5005), но реального выхода в интернет сейчас нет (виртуальные VPN-адаптеры не считаются).',
+          '🔒 Офлайн (Сервер локально)'
+        );
       }
     } catch(e) {
       hasInternetBridge = false;
-      statusEl.className = 'status-pill offline';
-      textEl.textContent = '🌐 Интернет: Офлайн';
-      statusEl.title = 'Сервер веб-поиска не отвечает или интернет отключён. Локальная Ollama работает офлайн.';
+      hasLocalBridge = false;
+      lastBridgeCheckTs = Date.now();
+      _setNetworkPillState(
+        false,
+        '🌐 Веб-мост 5005 выкл.',
+        'Сервер веб-поиска (qwen_server на порту 5005) не запущен или недоступен. Локальная Ollama работает.',
+        '🔌 Веб-мост отключён'
+      );
+    } finally {
+      isCheckingBridge = false;
     }
   }
 
-  // Моментальная реакция на отключение / подключение интернета Windows в реальном времени
-  window.addEventListener('online', checkBridge);
+  window.addEventListener('online', () => checkBridge(false));
   window.addEventListener('offline', () => {
     hasInternetBridge = false;
-    const statusEl = document.getElementById('bridgeStatus');
-    const textEl   = document.getElementById('bridgeText');
-    if (statusEl && textEl) {
-      statusEl.className = 'status-pill offline';
-      textEl.textContent = '🌐 Сеть: Офлайн';
-      statusEl.title = 'Интернет отключён! Локальные тесты и Ollama работают офлайн.';
-    }
+    _setNetworkPillState(
+      false,
+      '🌐 Интернет: Офлайн',
+      'Интернет отключён! Локальные тесты и Ollama работают офлайн.',
+      '🔒 Офлайн (ИИ локально)'
+    );
   });
+  window.addEventListener('focus', () => {
+    if (Date.now() - lastBridgeCheckTs > 5000) checkBridge(true);
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && Date.now() - lastBridgeCheckTs > 5000) checkBridge(true);
+  });
+  setInterval(() => checkBridge(true), 15000);
 
   function updateFooterModel() {
     const sel = document.getElementById('modelSelect');
@@ -11585,9 +11829,8 @@ ${partInstruction}
       }
     } else if (isShortInput) {
       const proceed = confirm(
-        "⚠️ Внимание: Сервер поиска в интернете (порт 5005) сейчас не запущен!\n\n" +
-        "Без него нейросеть НЕ сможет проверить факты на 3-4 сайтах в сети и будет отвечать только по своей локальной памяти (офлайн), что может приводить к фактическим ошибкам.\n\n" +
-        "Чтобы активировать поиск в интернете, запустите 'Запустить_Qwen_Интернет.bat' на Рабочем столе.\n\n" +
+        "⚠️ Внимание: Выход в интернет сейчас недоступен или сервер поиска (порт 5005) не запущен!\n\n" +
+        "Без онлайн-поиска нейросеть будет отвечать только по своей локальной памяти (офлайн), что может приводить к фактическим неточностям.\n\n" +
         "Вы хотите продолжить генерацию в офлайн-режиме?"
       );
       if (!proceed) {
@@ -11891,9 +12134,7 @@ ${JSON.stringify(draftQuiz, null, 2)}
     clearInterval(quizTimerInterval);
     quizTimerInterval = setInterval(updateQuizTimer, 1000);
 
-    ['tabCreate','tabPython','tabResult','tabChat','tabHistory','tabSettings','tabProfile'].forEach(id => {
-      const el = document.getElementById(id); if (el) el.style.display = 'none';
-    });
+    hideAllMainTabs();
     document.getElementById('tabQuiz').style.display = 'block';
     document.getElementById('quizTitle').textContent = quiz.title || 'Тест';
 
@@ -13100,21 +13341,28 @@ function clearCurrentChat() {
   // ==========================================================
   //  ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ
   // ==========================================================
+  let _appInitialized = false;
   function initApp() {
+    if (_appInitialized) return;
+    _appInitialized = true;
     loadStats();
     loadHistory();
+    if (typeof loadSavedFont === 'function') loadSavedFont();
     if (typeof loadProfile === 'function') loadProfile();
     if (typeof checkOllama === 'function') checkOllama();
-        if (typeof initAiProviderSettings === 'function') initAiProviderSettings();
-if (typeof initChatSessions === 'function') initChatSessions();
+    if (typeof initAiProviderSettings === 'function') initAiProviderSettings();
+    if (typeof initChatSessions === 'function') initChatSessions();
     if (typeof initPomodoro === 'function') initPomodoro();
     if (typeof initFlashcards === 'function') initFlashcards();
     if (typeof initMistakesBank === 'function') initMistakesBank();
     if (typeof nextQuote === 'function') nextQuote();
   }
 
-  window.addEventListener('DOMContentLoaded', initApp);
-  initApp();
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', initApp);
+  } else {
+    initApp();
+  }
 
   // ==========================================================
   //  КАБИНЕТ УЧИТЕЛЯ: ШКОЛЬНЫЕ ПРЕСЕТЫ, 2 ВАРИАНТА, ПЕЧАТЬ А4
@@ -13950,6 +14198,7 @@ if (typeof initChatSessions === 'function') initChatSessions();
   let currentVideoPrompt = '';
   let isVideoGenerating = false;
   let videoTimerInterval = null;
+  let minimaxStatusInterval = null;
   let currentVideoSpeed = 1.0;
 
   function switchMediaStudioMode(mode) {
@@ -13958,15 +14207,14 @@ if (typeof initChatSessions === 'function') initChatSessions();
     const photoPanel = document.getElementById('photoGenPanel');
     const videoPanel = document.getElementById('videoGenPanel');
 
-        if (mode === 'video') {
+    if (mode === 'video') {
       if (photoBtn) photoBtn.classList.remove('active');
       if (videoBtn) videoBtn.classList.add('active');
       if (photoPanel) photoPanel.style.display = 'none';
       if (videoPanel) videoPanel.style.display = 'block';
       checkMiniMaxStatus();
-      var minimaxStatusInterval = null;
       if (!minimaxStatusInterval) {
-        minimaxStatusInterval = setInterval(checkMiniMaxStatus, 3000);
+        minimaxStatusInterval = setInterval(checkMiniMaxStatus, 5000);
       }
       renderVideoGalleryUI();
     } else {
@@ -14016,9 +14264,11 @@ if (typeof initChatSessions === 'function') initChatSessions();
     }
   }
 
-    minimaxStatusInterval = null;
-  
   async function checkMiniMaxStatus() {
+    const comfyBadge = document.getElementById('comfyUiStatusBadge');
+    const loraBadge = document.getElementById('loraStatusBadge');
+    const turboBadge = document.getElementById('turboStatusBadge');
+    const wfBadge = document.getElementById('workflowsStatusBadge');
     const badge = document.getElementById('baseModelStatusBadge');
     try {
       const r = await fetch(`${BRIDGE_HOST}/api/minimax_status`, {
@@ -14026,19 +14276,44 @@ if (typeof initChatSessions === 'function') initChatSessions();
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({})
       });
-      if (r.ok) {
-        const d = await r.json();
-        if (badge) {
-          if (d.svd_status) {
-            badge.innerHTML = '💾 ' + (d.svd_status || '');
-            badge.style.color = (d.svd_status.includes('100%') || d.svd_status.includes('УСПЕХ')) ? '#34d399' : '#38bdf8';
-          } else if (d.lora_installed && d.turbo_installed) {
-            badge.innerHTML = '💎 MiniMax & SVD готовы!';
-            badge.style.color = '#34d399';
-          }
+      if (!r.ok) throw new Error('status not ok');
+      const d = await r.json();
+      if (comfyBadge) {
+        if (d.comfy_running) {
+          comfyBadge.textContent = '🟢 ComfyUI активен (порт 8188)';
+          comfyBadge.style.background = '#059669';
+          comfyBadge.style.borderColor = '#10b981';
+          comfyBadge.style.color = '#fff';
+        } else {
+          comfyBadge.textContent = d.comfy_portable ? '⚪ ComfyUI не запущен (порт 8188)' : '🔴 ComfyUI не найден';
+          comfyBadge.style.background = 'rgba(148,163,184,0.16)';
+          comfyBadge.style.borderColor = 'rgba(148,163,184,0.35)';
+          comfyBadge.style.color = '#cbd5e1';
         }
       }
-    } catch(e) {}
+      if (loraBadge) loraBadge.textContent = d.lora_installed ? '💎 LoRA v1.5 ✅ Установлена' : '💎 LoRA v1.5 ❌ Не найдена';
+      if (turboBadge) turboBadge.textContent = d.turbo_installed ? '⚡ Turbo 8-step ✅ Установлен' : '⚡ Turbo 8-step ❌ Не найден';
+      if (wfBadge) wfBadge.textContent = d.workflows_available ? '📐 H3 Workflows ✅ В наличии' : '📐 H3 Workflows ❌ Не найдены';
+      if (badge) {
+        if (d.svd_status) {
+          badge.textContent = '💾 ' + d.svd_status;
+          badge.style.color = (d.svd_status.includes('100%') || d.svd_status.includes('УСПЕХ')) ? '#34d399' : '#38bdf8';
+        } else if (d.lora_installed && d.turbo_installed) {
+          badge.textContent = '💎 MiniMax LoRA готовы';
+          badge.style.color = '#34d399';
+        } else {
+          badge.textContent = '💾 Модели не загружены';
+          badge.style.color = '#94a3b8';
+        }
+      }
+    } catch(e) {
+      if (comfyBadge) {
+        comfyBadge.textContent = '🔴 Сервер 5005 недоступен';
+        comfyBadge.style.background = 'rgba(239,68,68,0.16)';
+        comfyBadge.style.borderColor = 'rgba(239,68,68,0.35)';
+        comfyBadge.style.color = '#fca5a5';
+      }
+    }
   }
 
   async function launchComfyUIWorkstation() {
@@ -14051,16 +14326,18 @@ if (typeof initChatSessions === 'function') initChatSessions();
       if (resp.ok) {
         const d = await resp.json();
         if (d.status === 'ok') {
-          alert('🚀 ComfyUI MiniMax H3 запущен! Через пару секунд откроется окно в браузере (порт 8188).');
-          setTimeout(() => {
+          if (d.already_running) {
             window.open('http://127.0.0.1:8188', '_blank');
-          }, 2000);
+          } else {
+            showNotificationToast(d.message || '🚀 Запускаю ComfyUI... Подождите 10-15 сек перед открытием порта 8188.');
+            setTimeout(() => checkMiniMaxStatus(), 4000);
+          }
         } else {
           alert('Ошибка запуска ComfyUI: ' + (d.error || 'Проверьте run_nvidia_gpu.bat'));
         }
       }
     } catch(e) {
-      alert('Серверный мост недоступен. Запустите вручную run_nvidia_gpu.bat на рабочем столе!');
+      alert('Серверный мост недоступен. Запустите вручную run_nvidia_gpu.bat на Рабочем столе!');
     }
   }
 
@@ -14778,7 +15055,8 @@ if (typeof initChatSessions === 'function') initChatSessions();
   </div>
 
 
-  <script src="code_test_engine.js">
+  <script src="code_test_engine.js"></script>
+  <script>
   // Автоматическая калибровка честного прогресса Дамира (230 XP, 2 задачи)
   (function calibrateHonestOnce() {
     try {

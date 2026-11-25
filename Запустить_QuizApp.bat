@@ -24,7 +24,7 @@ if %errorlevel% neq 0 (
 :: 3. Проверка сервера веб-поиска Qwen (порт 5005)
 echo.
 echo [2/3] Проверка сервера интернет-поиска (порт 5005)...
-curl -s --max-time 1 http://127.0.0.1:5005/api/status >nul 2>&1
+curl -s --max-time 3 http://127.0.0.1:5005/api/status >nul 2>&1
 if %errorlevel% neq 0 (
     echo [*] Запуск Qwen моста в фоновом режиме...
     if exist "%LOCALAPPDATA%\Programs\Python\Python312\pythonw.exe" (

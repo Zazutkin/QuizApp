@@ -997,7 +997,7 @@
               ⚠️ ТЕСТ НЕ ПРОЙДЕН
             </div>
             <div style="font-size:13px;line-height:1.6;color:#e2e8f0;">
-              ${escapeHtml(failureReason)}
+              ${escapeHtml(failureReason).replace(/\n/g, '<br>')}
             </div>
             <div style="margin-top:10px;font-size:12px;color:#94a3b8;">
               💡 Нажми «💡 Подсказка» или обратись к ИИ-тьютору ниже.
@@ -1061,31 +1061,42 @@ ${userCode}
 4. Ответ дай кратко (3-4 предложения), доброжелательно.`;
 
     try {
-      const resp = await fetch(`${host}/api/generate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: model,
-          prompt: prompt,
-          think: false,
-          stream: false,
-          options: { temperature: 0.3, num_predict: 350 }
-        })
-      });
+      let reply = '';
+      try {
+        const resp = await fetch(`${host}/api/generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: model,
+            prompt: prompt,
+            think: false,
+            stream: false,
+            options: { temperature: 0.3, num_predict: 650 }
+          })
+        });
+        if (!resp.ok) throw new Error(`Ollama статус: ${resp.status}`);
+        const data = await resp.json();
+        reply = data.response || '';
+      } catch (ollamaErr) {
+        if (typeof window.callUnifiedAi === 'function') {
+          reply = await window.callUnifiedAi({ prompt, temperature: 0.3, maxTokens: 650 });
+        } else {
+          throw ollamaErr;
+        }
+      }
 
-      if (!resp.ok) throw new Error(`Ollama статус: ${resp.status}`);
-      const data = await resp.json();
-      const reply = data.response || 'Совет не получен.';
+      if (!reply) reply = 'Совет не получен.';
 
       if (statusBox) {
         statusBox.className = 'code-test-status-card advice';
+        const formatted = (typeof window.formatAiMessage === 'function')
+          ? window.formatAiMessage(reply)
+          : `<div style="font-size:13px;line-height:1.6;color:#e0e7ff;">${escapeHtml(reply).replace(/\n/g, '<br>')}</div>`;
         statusBox.innerHTML = `
           <div style="font-weight:700;color:#a5b4fc;margin-bottom:6px;">
             🤖 Совет ИИ-тьютора (без спойлеров):
           </div>
-          <div style="font-size:13px;line-height:1.6;color:#e0e7ff;">
-            ${escapeHtml(reply).replace(/\\n/g, '<br>')}
-          </div>
+          ${formatted}
         `;
       }
     } catch(err) {
